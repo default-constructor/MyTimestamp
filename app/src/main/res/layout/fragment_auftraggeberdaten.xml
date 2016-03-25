@@ -13,14 +13,14 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:paddingTop="14dp"
-        android:text="Auftraggeberdaten"
+        android:text="Arbeitgeberdaten"
         android:textAllCaps="true"
         android:textSize="16dp"/>
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <EditText
-            android:id="@+id/editTextAuftraggeberdatenFirma"
+            android:id="@+id/editTextArbeitgeberdatenFirma"
             style="?android:editTextPreferenceStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <EditText
-            android:id="@+id/editTextAuftraggeberdatenStraszeUndHausnummer"
+            android:id="@+id/editTextArbeitgeberdatenStraszeUndHausnummer"
             style="?android:editTextPreferenceStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <EditText
-            android:id="@+id/editTextAuftraggeberdatenPostleitzahl"
+            android:id="@+id/editTextArbeitgeberdatenPostleitzahl"
             style="?android:editTextPreferenceStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <EditText
-            android:id="@+id/editTextAuftraggeberdatenFirmensitz"
+            android:id="@+id/editTextArbeitgeberdatenFirmensitz"
             style="?android:editTextPreferenceStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <EditText
-            android:id="@+id/editTextAuftraggeberdatenStaat"
+            android:id="@+id/editTextArbeitgeberdatenStaat"
             style="?android:editTextPreferenceStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
             android:paddingTop="8dp"/>
     </android.support.design.widget.TextInputLayout>
     <de.defaultconstructor.mytimestamp.app.android.widgets.components.AccordionView
-        android:id="@+id/accordionViewAuftraggeberdatenKontaktdaten"
+        android:id="@+id/accordionViewArbeitgeberdatenKontaktdaten"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         custom:caption_background="#c6c6c6"
@@ -93,12 +93,12 @@
         custom:caption_text="Kontaktdaten"
         custom:caption_textAllCaps="true"
         custom:caption_textSize="16dp"
-        custom:collapsed="false">
+        custom:collapsed="true">
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <EditText
-                android:id="@+id/editTextAuftraggeberdatenTelefon"
+                android:id="@+id/editTextArbeitgeberdatenTelefon"
                 style="?android:editTextPreferenceStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -111,7 +111,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <EditText
-                android:id="@+id/editTextAuftraggeberdatenEmail"
+                android:id="@+id/editTextArbeitgeberdatenEmail"
                 style="?android:editTextPreferenceStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -124,7 +124,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <EditText
-                android:id="@+id/editTextAuftraggeberdatenWebseite"
+                android:id="@+id/editTextArbeitgeberdatenWebseite"
                 style="?android:editTextPreferenceStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

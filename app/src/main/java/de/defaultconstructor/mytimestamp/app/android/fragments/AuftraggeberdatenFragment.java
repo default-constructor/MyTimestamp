@@ -35,7 +35,7 @@ public class AuftraggeberdatenFragment extends SettingsFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        this.view = inflater.inflate(R.layout.fragment_arbeitgeberdaten, container, false);
+        this.view = inflater.inflate(R.layout.fragment_auftraggeberdaten, container, false);
         initialize();
         setEnableButtonSubmit();
         return this.view;
