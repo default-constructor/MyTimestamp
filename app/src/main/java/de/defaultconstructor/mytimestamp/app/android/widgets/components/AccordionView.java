@@ -21,7 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by thre on 29.02.2016.
+ * Created by Thomas Reno on 29.02.2016.
  */
 public class AccordionView extends LinearLayout {
 

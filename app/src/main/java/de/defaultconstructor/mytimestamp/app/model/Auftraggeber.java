@@ -6,7 +6,7 @@ import android.database.Cursor;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
 
 /**
- * Created by thre on 12.03.2016.
+ * Created by Thomas Reno on 12.03.2016.
  */
 public class Auftraggeber extends Person implements DatabaseEntity {
 

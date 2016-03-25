@@ -24,7 +24,7 @@ import de.defaultconstructor.mytimestamp.app.model.Person;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseAdapter;
 
 /**
- * Created by thre on 27.02.2016.
+ * Created by Thomas Reno on 27.02.2016.
  */
 public class SettingsActivity extends AppCompatActivity implements SettingsFragment.FragmentListener {
 

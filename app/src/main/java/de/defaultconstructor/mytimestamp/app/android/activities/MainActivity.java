@@ -12,6 +12,9 @@ import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
 import de.defaultconstructor.mytimestamp.app.model.Benutzer;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseAdapter;
 
+/**
+ * Created by Thomas Reno on 27.02.2016.
+ */
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "activity_main";

@@ -8,7 +8,7 @@ import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseAdapter;
 
 /**
- * Created by thre on 20.03.2016.
+ * Created by Thomas Reno on 20.03.2016.
  */
 public class SettingsServiceImpl extends AppServiceImpl {
 

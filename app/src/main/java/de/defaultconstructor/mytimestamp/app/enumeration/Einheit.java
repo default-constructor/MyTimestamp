@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.math.BigDecimal;
 
 /**
- * Created by thre on 20.03.2016.
+ * Created by Thomas Reno on 20.03.2016.
  */
 public enum Einheit {
 

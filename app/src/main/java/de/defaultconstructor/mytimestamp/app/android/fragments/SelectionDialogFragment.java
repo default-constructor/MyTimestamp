@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import de.thre.mytimestamp.R;
 
 /**
- * Created by thre on 28.02.2016.
+ * Created by Thomas Reno on 28.02.2016.
  */
 public class SelectionDialogFragment extends DialogFragment {
 

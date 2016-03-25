@@ -12,7 +12,7 @@ import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
 import de.defaultconstructor.mytimestamp.app.util.DateUtil;
 
 /**
- * Created by thre on 27.02.2016.
+ * Created by Thomas Reno on 27.02.2016.
  */
 public class Benutzer extends Person implements DatabaseEntity {
 

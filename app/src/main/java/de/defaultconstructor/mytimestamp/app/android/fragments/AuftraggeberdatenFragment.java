@@ -18,7 +18,7 @@ import de.defaultconstructor.mytimestamp.app.exception.AppException;
 import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
 
 /**
- * Created by thre on 28.02.2016.
+ * Created by Thomas Reno on 28.02.2016.
  */
 public class AuftraggeberdatenFragment extends SettingsFragment {
 

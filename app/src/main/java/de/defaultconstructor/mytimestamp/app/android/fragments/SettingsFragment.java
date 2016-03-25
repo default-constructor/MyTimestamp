@@ -10,7 +10,7 @@ import de.defaultconstructor.mytimestamp.app.exception.AppException;
 import de.defaultconstructor.mytimestamp.app.model.Person;
 
 /**
- * Created by thre on 13.03.2016.
+ * Created by Thomas Reno on 13.03.2016.
  */
 public class SettingsFragment extends Fragment {
 

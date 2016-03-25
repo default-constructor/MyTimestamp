@@ -7,7 +7,7 @@ import de.defaultconstructor.mytimestamp.app.enumeration.Status;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
 
 /**
- * Created by thre on 19.03.2016.
+ * Created by Thomas Reno on 19.03.2016.
  */
 public class Auftrag implements DatabaseEntity {
 

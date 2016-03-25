@@ -6,7 +6,7 @@ import android.database.Cursor;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
 
 /**
- * Created by thre on 13.03.2016.
+ * Created by Thomas Reno on 13.03.2016.
  */
 public class Kontakt implements DatabaseEntity {
 

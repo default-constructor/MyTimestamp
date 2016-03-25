@@ -11,7 +11,7 @@ import de.defaultconstructor.mytimestamp.app.model.Benutzer;
 import de.defaultconstructor.mytimestamp.app.service.AppServiceImpl;
 
 /**
- * Created by thre on 20.03.2016.
+ * Created by Thomas Reno on 20.03.2016.
  */
 public class App extends Application {
 

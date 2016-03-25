@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
- * Created by thre on 28.02.2016.
+ * Created by Thomas Reno on 28.02.2016.
  */
 public class DatePickerDialogFragment extends DialogFragment {
 

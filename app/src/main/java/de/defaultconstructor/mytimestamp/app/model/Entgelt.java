@@ -9,7 +9,7 @@ import de.defaultconstructor.mytimestamp.app.enumeration.EntgeltHaeufigkeit;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
 
 /**
- * Created by thre on 20.03.2016.
+ * Created by Thomas Reno on 20.03.2016.
  */
 public class Entgelt implements DatabaseEntity {
 

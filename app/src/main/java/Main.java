@@ -1,7 +1,7 @@
 import de.defaultconstructor.mytimestamp.app.enumeration.Praefix;
 
 /**
- * Created by thre on 20.03.2016.
+ * Created by Thomas Reno on 20.03.2016.
  */
 public class Main {
 
