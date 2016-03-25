@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="AccordionView">
+        <attr name="caption_background" format="color"/>
+        <attr name="caption_paddingBottom" format="dimension"/>
+        <attr name="caption_paddingLeft" format="dimension"/>
+        <attr name="caption_paddingRight" format="dimension"/>
+        <attr name="caption_paddingTop" format="dimension"/>
+        <attr name="caption_text" format="string"/>
+        <attr name="caption_textAllCaps" format="boolean"/>
+        <attr name="caption_textSize" format="dimension"/>
+        <attr name="collapsed" format="boolean"/>
+    </declare-styleable>
+</resources>

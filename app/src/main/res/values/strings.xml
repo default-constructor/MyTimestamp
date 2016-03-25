@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">MyTimestamp</string>
+    <string name="title_activity_main">MainActivity</string>
+    
+    <string-array name="listBerufsstatus">
+        <item>angestellt</item>
+        <item>freiberuflich</item>
+        <item>keinen</item>
+        <item>selbständig</item>
+    </string-array>
+</resources>
