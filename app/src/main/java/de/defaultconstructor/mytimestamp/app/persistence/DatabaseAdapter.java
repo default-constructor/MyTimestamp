@@ -51,7 +51,7 @@ public class DatabaseAdapter {
      * Deletes desired entity of the appropriate table.
      *
      * @param databaseEntity
-     *              {@Link DatabaseEntity}
+     *              {@link DatabaseEntity}
      *
      * @return the count of deleted rows
      */
@@ -68,7 +68,7 @@ public class DatabaseAdapter {
      * Inserts the given entity into the appropriate table.
      *
      * @param databaseEntity
-     *              {@Link DatabaseEntity}
+     *              {@link DatabaseEntity}
      *
      * @return the id of the inserted entity
      *
@@ -89,7 +89,7 @@ public class DatabaseAdapter {
      *
      * @return the selected entity
      *
-     * @throws {@Link PersistenceException}
+     * @throws {@link PersistenceException}
      */
     public DatabaseEntity select(String tableName, String whereClause) throws PersistenceException {
         SQLiteCursor cursor = (SQLiteCursor) this.database.query(true, tableName,
@@ -109,7 +109,7 @@ public class DatabaseAdapter {
      * Updates the appropriate table by the given entity.
      *
      * @param databaseEntity
-     *              {@Link DatabaseEntity}
+     *              {@link DatabaseEntity}
      *
      * @return the updated entity
      */
