@@ -15,7 +15,7 @@ import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
 import static de.defaultconstructor.mytimestamp.app.persistence.DatabaseAdapter.DatabaseConstants.*;
 
 /**
- * Created by thre on 19.03.2016.
+ * Created by Thomas Reno on 19.03.2016.
  */
 public final class DatabaseUtil {
 
