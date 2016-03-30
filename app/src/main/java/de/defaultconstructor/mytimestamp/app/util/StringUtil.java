@@ -1,7 +1,7 @@
 package de.defaultconstructor.mytimestamp.app.util;
 
 /**
- * Created by thre on 30.03.2016.
+ * Created by Thomas Reno on 30.03.2016.
  */
 public class StringUtil {
 
