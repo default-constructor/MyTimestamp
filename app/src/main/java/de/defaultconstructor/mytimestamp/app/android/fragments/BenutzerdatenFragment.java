@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.regex.Pattern;
 
-import de.thre.mytimestamp.R;
+import de.defaultconstructor.mytimestamp.R;
 import de.defaultconstructor.mytimestamp.app.android.activities.SettingsActivity;
 import de.defaultconstructor.mytimestamp.app.android.widgets.components.AccordionView;
 import de.defaultconstructor.mytimestamp.app.exception.AppException;
@@ -29,9 +29,10 @@ import de.defaultconstructor.mytimestamp.app.model.Benutzer;
 /**
  * Created by Thomas Reno on 28.02.2016.
  */
-public class BenutzerdatenFragment extends SettingsFragment implements AccordionView.Listener, SelectionDialogFragment.Callback, DatePickerDialogFragment.Callback {
+public class BenutzerdatenFragment extends SettingsFragment implements AccordionView.Listener,
+        SelectionDialogFragment.Callback, DatePickerDialogFragment.Callback {
 
-    public static final String TAG = "fragment_benutzerdaten";
+    public static final String TAG = "BenutzerdatenFragment";
 
     @Override
     public void onClickCaption(TextView caption) {
@@ -168,7 +169,7 @@ public class BenutzerdatenFragment extends SettingsFragment implements Accordion
                 ((SettingsActivity) getActivity()).showDialogFragment(dialogFragment, "selection-berufsstatus");
             }
         });
-        this.editTextBerufsstatus.setText("");
+        this.editTextBerufsstatus.setText(this.benutzer.getBerufsstatus().getBezeichnung());
         this.editTextBerufsstatus.addTextChangedListener(getTextWatcherForEditText(null, this.editTextBerufsstatus));
 
         this.editTextFamilienname = (EditText) this.view.findViewById(R.id.editTextBenutzerdatenFamilienname);

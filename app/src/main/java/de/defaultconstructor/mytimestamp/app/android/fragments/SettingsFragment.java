@@ -43,7 +43,7 @@ public class SettingsFragment extends Fragment {
     }
 
     public String getFragmentTag() {
-        return fragmentTag;
+        return this.fragmentTag;
     }
 
     public void setFragmentTag(String fragmentTag) {

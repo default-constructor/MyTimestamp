@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import de.thre.mytimestamp.R;
+import de.defaultconstructor.mytimestamp.R;
 import de.defaultconstructor.mytimestamp.app.App;
 import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
 import de.defaultconstructor.mytimestamp.app.model.Benutzer;

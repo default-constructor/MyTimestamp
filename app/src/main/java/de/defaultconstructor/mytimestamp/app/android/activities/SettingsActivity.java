@@ -12,7 +12,8 @@ import android.util.Log;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.thre.mytimestamp.R;
+import de.defaultconstructor.mytimestamp.app.service.SettingsServiceImpl;
+import de.defaultconstructor.mytimestamp.R;
 import de.defaultconstructor.mytimestamp.app.App;
 import de.defaultconstructor.mytimestamp.app.android.fragments.AuftraggeberdatenFragment;
 import de.defaultconstructor.mytimestamp.app.android.fragments.SettingsFragment;
@@ -28,7 +29,7 @@ import de.defaultconstructor.mytimestamp.app.persistence.DatabaseAdapter;
  */
 public class SettingsActivity extends AppCompatActivity implements SettingsFragment.FragmentListener {
 
-    private static final String TAG = "activity_settings";
+    private static final String TAG = "SettingsActivity";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,7 +54,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
         } else if (person instanceof Auftraggeber) {
             this.auftraggeber = (Auftraggeber) person;
             saveSettings();
-            if (this.preferences.getBoolean("firstRun", true)) {
+            if (App.firstRun) {
                 this.preferences.edit().putBoolean("firstRun", false).commit();
             }
             finish();
@@ -65,6 +66,8 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
 
     private Map<String, SettingsFragment> mapFragments = new HashMap<>();
 
+    private SettingsServiceImpl settingsService;
+
     private SharedPreferences preferences;
 
     private String tagCurrentFragment;
@@ -74,6 +77,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
     public SettingsActivity() {
         super();
         this.databaseAdapter = new DatabaseAdapter(this);
+        this.settingsService = new SettingsServiceImpl(this);
     }
 
     public Person getPersonendaten(String tagFragment) {
@@ -82,12 +86,10 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
         try {
             switch (tagFragment) {
                 case AuftraggeberdatenFragment.TAG:
-                    person = this.auftraggeber =
-                            (Auftraggeber) this.databaseAdapter.select("auftraggeber", "aktiv=1");
+                    person = this.auftraggeber = ((App) getApplication()).getAuftraggeber();
                     break;
                 case BenutzerdatenFragment.TAG:
-                    person = this.benutzer =
-                            (Benutzer) this.databaseAdapter.select("benutzer", null);
+                    person = this.benutzer = this.settingsService.getCurrentBenutzer();
                     break;
                 default:
                     throw new AppException("No such fragment found");
@@ -113,12 +115,17 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
 
     private void saveSettings() throws AppException {
         this.databaseAdapter.open();
-        Benutzer benutzer = null;
-        if (null == (benutzer = (Benutzer) this.databaseAdapter.update(this.benutzer))) {
-            throw new AppException("Fehler beim Speichern der Person Benutzer");
+        long benutzerId;
+        if (App.firstRun) {
+            benutzerId = this.databaseAdapter.insert(this.benutzer);
+        } else {
+            benutzerId = this.databaseAdapter.update(this.benutzer);
+        }
+        if (0 > benutzerId) {
+            throw new AppException("Fehler beim Speichern der Person Benutzer.");
         }
         if (0 > this.databaseAdapter.insert(this.auftraggeber)) {
-            throw new AppException("Fehler beim Speichern der Person Auftraggeber");
+            throw new AppException("Fehler beim Speichern der Person Auftraggeber.");
         }
         this.databaseAdapter.close();
     }

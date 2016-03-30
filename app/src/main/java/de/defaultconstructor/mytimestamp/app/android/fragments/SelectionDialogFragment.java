@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 
-import de.thre.mytimestamp.R;
+import de.defaultconstructor.mytimestamp.R;
 
 /**
  * Created by Thomas Reno on 28.02.2016.

@@ -2,10 +2,14 @@ package de.defaultconstructor.mytimestamp.app.persistence;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.defaultconstructor.mytimestamp.app.App;
 import de.defaultconstructor.mytimestamp.app.enumeration.EntgeltHaeufigkeit;
@@ -92,6 +96,7 @@ public class DatabaseAdapter {
      * @throws {@link PersistenceException}
      */
     public DatabaseEntity select(String tableName, String whereClause) throws PersistenceException {
+        whereClause = null != whereClause ? whereClause : "id > 0";
         SQLiteCursor cursor = (SQLiteCursor) this.database.query(true, tableName,
                 DatabaseUtil.getTableColumns(tableName), whereClause, null, null, null, null, null);
         if (null == cursor || 0 == cursor.getCount()) {
@@ -106,14 +111,44 @@ public class DatabaseAdapter {
     }
 
     /**
+     *
+     * @param tableName
+     * @param joinedTable
+     * @param onClause
+     * @param whereClause
+     * @return
+     * @throws PersistenceException
+     */
+    public List<DatabaseEntity> selectInnerJoin(String tableName, String joinedTable, String onClause,
+                                                String whereClause) throws PersistenceException {
+        String leftJoin = tableName + "." + onClause.substring(0, onClause.indexOf("="));
+        String rightJoin = joinedTable + "." + onClause.substring(onClause.indexOf("=") + 1);
+        String sql = "SELECT " + "auftraggeber.firma" + " FROM " + tableName + " INNER JOIN " +
+                joinedTable + " ON " + leftJoin + "=" + rightJoin + " WHERE " + whereClause + ";";
+        Cursor cursor = this.database.rawQuery(sql, null);
+        if (null == cursor || 0 == cursor.getCount()) {
+            throw new PersistenceException(MESSAGE_INFO_NO_RESULT.replace("{tableName}", tableName +
+                    " INNER JOIN " + joinedTable));
+        }
+        List<DatabaseEntity> databaseEntityList = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                databaseEntityList.add(DatabaseUtil.mapResult(cursor, tableName));
+                cursor.moveToNext();
+            }
+        }
+        return databaseEntityList;
+    }
+
+    /**
      * Updates the appropriate table by the given entity.
      *
      * @param databaseEntity
      *              {@link DatabaseEntity}
      *
-     * @return the updated entity
+     * @return the id of the updated entity
      */
-    public DatabaseEntity update(DatabaseEntity databaseEntity) throws PersistenceException {
+    public long update(DatabaseEntity databaseEntity) throws PersistenceException {
         String tableName = databaseEntity.getClass().getSimpleName().toLowerCase();
         return update(tableName, databaseEntity);
     }
@@ -127,14 +162,14 @@ public class DatabaseAdapter {
         return this.database.insertWithOnConflict(tableName, null, values, SQLiteDatabase.CONFLICT_ROLLBACK);
     }
 
-    private DatabaseEntity update(String tableName, DatabaseEntity databaseEntity) throws PersistenceException {
+    private long update(String tableName, DatabaseEntity databaseEntity) throws PersistenceException {
         String[] columns = DatabaseUtil.getTableColumns(tableName);
         ContentValues values = DatabaseUtil.mapDatabaseEntity(databaseEntity, tableName);
         if (1 != this.database.updateWithOnConflict(tableName, values, "id=" + databaseEntity.getId(), null, SQLiteDatabase.CONFLICT_ROLLBACK)) {
             throw new PersistenceException(MESSAGE_ERROR_DATABASE_TRANSACTION_FAILED
-                    .replace("{reason}", "DatabaseEntity:" + databaseEntity.toString() + " could not be updated."));
+                    .replace("{reason}", "DatabaseEntity: " + databaseEntity.toString() + " could not be updated."));
         }
-        return databaseEntity;
+        return databaseEntity.getId();
     }
 
     public static final class DatabaseConstants {
@@ -152,13 +187,13 @@ public class DatabaseAdapter {
         public static final String[] COLUMNS_TABLE_ADRESSE = new String[] {
                 "id", "adresszusatz", "ortschaft", "postleitzahl", "staat", "straszeUndHaus"};
         public static final String[] COLUMNS_TABLE_AUFTRAG = new String[] {
-                "id", "aktiv", "auftragsart", "entgelt", "entgelt_haeufigkeit", NAME_TABLE_BENUTZER,
+                "id", "aktiv", "auftragsart", "entgelt", "entgeltHaeufigkeit", NAME_TABLE_BENUTZER,
                 NAME_TABLE_AUFTRAGGEBER};
         public static final String[] COLUMNS_TABLE_AUFTRAGGEBER = new String[] {
                 "id", "firma", NAME_TABLE_ADRESSE, NAME_TABLE_KONTAKT};
         public static final String[] COLUMNS_TABLE_BENUTZER = new String[] {
-                "id", "aktiv", "familienname", "geburtsdatum", "vorname", NAME_TABLE_ADRESSE,
-                NAME_TABLE_KONTAKT};
+                "id", "aktiv", "berufsstatus", "familienname", "geburtsdatum", "vorname",
+                NAME_TABLE_ADRESSE, NAME_TABLE_KONTAKT};
         public static final String[] COLUMNS_TABLE_KONTAKT = new String[] {
                 "id", "email", "mobil", "telefax", "telefon", "webseite"};
 
@@ -176,9 +211,15 @@ public class DatabaseAdapter {
                 "CREATE TABLE " + NAME_TABLE_AUFTRAG + " (" +
                         COLUMNS_TABLE_AUFTRAG[0] + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         COLUMNS_TABLE_AUFTRAG[1] + " INTEGER DEFAULT 0, " +
-                        COLUMNS_TABLE_AUFTRAG[2] + " TEXT NOT NULL, " +
+                        COLUMNS_TABLE_AUFTRAG[2] + " TEXT, " + // TODO auftragsart TEXT NOT NULL
                         COLUMNS_TABLE_AUFTRAG[3] + " REAL, " +
-                        COLUMNS_TABLE_AUFTRAG[4] + " INTEGER DEFAULT " + EntgeltHaeufigkeit.EINMALIG.getHaeufigkeit() + ");";
+                        COLUMNS_TABLE_AUFTRAG[4] + " INTEGER DEFAULT " + EntgeltHaeufigkeit.EINMALIG.getHaeufigkeit() + ", " +
+                        COLUMNS_TABLE_AUFTRAG[5] + " INTEGER NOT NULL, " +
+                        COLUMNS_TABLE_AUFTRAG[6] + " INTEGER NOT NULL, " +
+                        "FOREIGN KEY (" + COLUMNS_TABLE_AUFTRAG[5] + ") " +
+                        "REFERENCES " + COLUMNS_TABLE_AUFTRAG[5] + " (id), " +
+                        "FOREIGN KEY (" + COLUMNS_TABLE_AUFTRAG[6] + ") " +
+                        "REFERENCES " + COLUMNS_TABLE_AUFTRAG[6] + "(id));";
         static final String SQL_CREATE_TABLE_AUFTRAGGEBER =
                 "CREATE TABLE " + NAME_TABLE_AUFTRAGGEBER + " (" +
                         COLUMNS_TABLE_AUFTRAGGEBER[0] + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -196,12 +237,13 @@ public class DatabaseAdapter {
                         COLUMNS_TABLE_BENUTZER[2] + " TEXT NOT NULL, " +
                         COLUMNS_TABLE_BENUTZER[3] + " DATE NOT NULL, " +
                         COLUMNS_TABLE_BENUTZER[4] + " TEXT NOT NULL, " +
-                        COLUMNS_TABLE_BENUTZER[5] + " INTEGER, " +
+                        COLUMNS_TABLE_BENUTZER[5] + " TEXT NOT NULL, " +
                         COLUMNS_TABLE_BENUTZER[6] + " INTEGER, " +
-                        "FOREIGN KEY (" + COLUMNS_TABLE_BENUTZER[5] + ") " +
-                        "REFERENCES " + COLUMNS_TABLE_BENUTZER[5] + " (id), " +
+                        COLUMNS_TABLE_BENUTZER[7] + " INTEGER, " +
                         "FOREIGN KEY (" + COLUMNS_TABLE_BENUTZER[6] + ") " +
-                        "REFERENCES " + COLUMNS_TABLE_BENUTZER[6] + " (id));";
+                        "REFERENCES " + COLUMNS_TABLE_BENUTZER[6] + " (id), " +
+                        "FOREIGN KEY (" + COLUMNS_TABLE_BENUTZER[7] + ") " +
+                        "REFERENCES " + COLUMNS_TABLE_BENUTZER[7] + " (id));";
         static final String SQL_CREATE_TABLE_KONTAKT =
                 "CREATE TABLE " + NAME_TABLE_KONTAKT + " (" +
                         COLUMNS_TABLE_KONTAKT[0] + " INTEGER PRIMARY KEY AUTOINCREMENT, " +

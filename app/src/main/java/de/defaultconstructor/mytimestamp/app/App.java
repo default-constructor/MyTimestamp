@@ -26,30 +26,35 @@ public class App extends Application {
         SharedPreferences sharedPreferences = getSharedPreferences("preferenceName", MODE_PRIVATE);
         App.firstRun = sharedPreferences.getBoolean("firstRun", true);
 
-        Log.d(TAG, "on create - first run: " + App.firstRun);
+        Log.d(TAG, "first run: " + App.firstRun);
 
         if (App.firstRun) {
-            if (-1 == this.applicationService.persistDummyBenutzer()) {
+            if (null == (this.currentBenutzer = this.applicationService.persistDummies())) {
                 Log.e(TAG, "Kein Dummy-Benutzer. Die App wird abgebrochen.");
                 System.exit(1);
             }
+        } else {
+            if (null == (this.currentBenutzer = this.applicationService.getCurrentBenutzer())) {
+                Log.e(TAG, "Der aktuelle Benutzer konnte nicht geladen werden. Die App wird abgebrochen.");
+                System.exit(1);
+            }
         }
-
-        if (null == (this.currentBenutzer = this.applicationService.getCurrentBenutzer())) {
-            Log.e(TAG, "Der aktuelle Benutzer konnte nicht geladen werden. Die App wird abgebrochen.");
-            System.exit(1);
-        }
+        this.aktiveAuftraggeber = this.applicationService.getAktiveAuftraggeber(this.currentBenutzer);
     }
 
     private AppServiceImpl applicationService;
 
     private Benutzer currentBenutzer;
 
-    private List<Auftraggeber> listAuftraggeber;
+    private List<Auftraggeber> aktiveAuftraggeber;
 
     private SharedPreferences sharedPreferences;
 
     public App() {
         this.applicationService = new AppServiceImpl(this);
+    }
+
+    public Auftraggeber getAuftraggeber() {
+        return this.aktiveAuftraggeber.get(0);
     }
 }

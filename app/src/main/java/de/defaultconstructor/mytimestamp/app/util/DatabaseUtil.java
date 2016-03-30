@@ -2,6 +2,7 @@ package de.defaultconstructor.mytimestamp.app.util;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.util.Log;
 
 import de.defaultconstructor.mytimestamp.app.exception.PersistenceException;
 import de.defaultconstructor.mytimestamp.app.model.Adresse;
@@ -56,6 +57,7 @@ public final class DatabaseUtil {
      * @throws PersistenceException
      */
     public static DatabaseEntity mapResult(Cursor cursor, String tableName) throws PersistenceException {
+        Log.d(TAG, "mapResult Cursor count: " + cursor.getCount());
         switch (tableName) {
             case NAME_TABLE_ADRESSE:
                 return Adresse.getInstance(cursor);

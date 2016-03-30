@@ -3,7 +3,12 @@ package de.defaultconstructor.mytimestamp.app.service;
 import android.content.Context;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.defaultconstructor.mytimestamp.app.exception.PersistenceException;
+import de.defaultconstructor.mytimestamp.app.model.Auftrag;
+import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
 import de.defaultconstructor.mytimestamp.app.model.Benutzer;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseAdapter;
 
@@ -47,20 +52,40 @@ public class AppServiceImpl {
      *
      * @return die Id des Benutzers oder -1, falls etwas schiefgelaufen ist
      */
-    public long persistDummyBenutzer() {
+    public Benutzer persistDummies() {
         try {
             this.databaseAdapter.open();
             clearTableBenutzer();
-            Benutzer dummyBenutzer = Benutzer.dummy;
-            Log.d(TAG, "persistDummyBenutzer geburtsdatum: " + dummyBenutzer.getGeburtsdatum());
-            long idAdresse = this.databaseAdapter.insert(dummyBenutzer.getAdresse());
-            long idKontakt = this.databaseAdapter.insert(dummyBenutzer.getKontakt());
+
+            Auftraggeber dummyAuftraggeber = Auftraggeber.DUMMY;
+            Log.d(TAG, "persistDummies Auftraggeber: " + dummyAuftraggeber.toString());
+            long idAdresse = this.databaseAdapter.insert(dummyAuftraggeber.getAdresse());
+            long idKontakt = this.databaseAdapter.insert(dummyAuftraggeber.getKontakt());
+            dummyAuftraggeber.getAdresse().setId(idAdresse);
+            dummyAuftraggeber.getKontakt().setId(idKontakt);
+            long idAuftraggeber = this.databaseAdapter.insert(dummyAuftraggeber);
+            dummyAuftraggeber.setId(idAuftraggeber);
+
+            Benutzer dummyBenutzer = Benutzer.DUMMY;
+            Log.d(TAG, "persistDummies Benutzer: " + dummyBenutzer.toString());
+            idAdresse = this.databaseAdapter.insert(dummyBenutzer.getAdresse());
+            idKontakt = this.databaseAdapter.insert(dummyBenutzer.getKontakt());
             dummyBenutzer.getAdresse().setId(idAdresse);
             dummyBenutzer.getKontakt().setId(idKontakt);
-            return this.databaseAdapter.insert(dummyBenutzer);
+            long idBenutzer = this.databaseAdapter.insert(dummyBenutzer);
+            dummyBenutzer.setId(idBenutzer);
+
+            Auftrag dummyAuftrag = Auftrag.DUMMY;
+            Log.d(TAG, "persistDummies Auftrag: " + dummyAuftrag.toString());
+            dummyAuftrag.setAuftraggeber(dummyAuftraggeber);
+            dummyAuftrag.setBenutzer(dummyBenutzer);
+            long idAuftrag = this.databaseAdapter.insert(dummyAuftrag);
+            dummyAuftrag.setId(idAuftrag);
+
+            return dummyBenutzer;
         } catch (PersistenceException e) {
             Log.e(TAG, e.getMessage(), e);
-            return -1L;
+            return null;
         } finally {
             this.databaseAdapter.close();
         }
@@ -70,5 +95,20 @@ public class AppServiceImpl {
         this.databaseAdapter.delete(null);
         this.databaseAdapter.delete(null);
         this.databaseAdapter.delete(null);
+    }
+
+    public List<Auftraggeber> getAktiveAuftraggeber(Benutzer benutzer) {
+        try {
+            this.databaseAdapter.open();
+            List<Auftraggeber> auftraggeberList = (ArrayList) this.databaseAdapter.selectInnerJoin(
+                    NAME_TABLE_AUFTRAGGEBER, NAME_TABLE_AUFTRAG, "id=auftraggeber", "benutzer=" + benutzer.getId());
+            Log.d(TAG, "getAktiveAuftraggeber: " + auftraggeberList.toString());
+            return auftraggeberList;
+        } catch (PersistenceException e) {
+            Log.e(TAG, e.getMessage());
+            return null;
+        } finally {
+            this.databaseAdapter.close();
+        }
     }
 }

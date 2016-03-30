@@ -1,5 +1,6 @@
 package de.defaultconstructor.mytimestamp.app.android.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,7 +13,7 @@ import android.widget.EditText;
 
 import java.util.regex.Pattern;
 
-import de.thre.mytimestamp.R;
+import de.defaultconstructor.mytimestamp.R;
 import de.defaultconstructor.mytimestamp.app.android.activities.SettingsActivity;
 import de.defaultconstructor.mytimestamp.app.exception.AppException;
 import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
@@ -22,7 +23,7 @@ import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
  */
 public class AuftraggeberdatenFragment extends SettingsFragment {
 
-    public static final String TAG = "fragment_auftraggeber";
+    public static final String TAG = "AuftraggeberdatenFragment";
 
     private static final String TEXT_MESSAGE_ERROR = "Zu besoffen oder was?";
 
@@ -59,6 +60,26 @@ public class AuftraggeberdatenFragment extends SettingsFragment {
         super();
     }
 
+    protected void initialize() {
+        this.buttonSubmitArbeitgeberdaten = (Button) this.view.findViewById(R.id.buttonSubmitArbeitgeberdaten);
+        this.buttonSubmitArbeitgeberdaten.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("LongLogTag")
+            @Override
+            public void onClick(View v) {
+                mapArbeitgeberdaten();
+                mapKontaktdaten();
+                try {
+                    ((SettingsActivity) getActivity()).onSubmit(AuftraggeberdatenFragment.this.auftraggeber);
+                } catch (AppException e) {
+                    Log.e(TAG, "Beim Speichern der Einstellungen ist ein Fehler aufgetreten.", e);
+                }
+            }
+        });
+        initializeAdressdaten();
+        initializeAuftaggeberdaten();
+        initializeKontaktdaten();
+    }
+
     private TextWatcher getTextWatcherForEditText(final Pattern pattern, final EditText editText) {
         return new TextWatcher() {
             @Override
@@ -84,25 +105,6 @@ public class AuftraggeberdatenFragment extends SettingsFragment {
 
     private boolean hasStringValue(String input) {
         return null != input && !input.isEmpty();
-    }
-
-    protected void initialize() {
-        this.buttonSubmitArbeitgeberdaten = (Button) this.view.findViewById(R.id.buttonSubmitArbeitgeberdaten);
-        this.buttonSubmitArbeitgeberdaten.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mapArbeitgeberdaten();
-                mapKontaktdaten();
-                try {
-                    ((SettingsActivity) getActivity()).onSubmit(AuftraggeberdatenFragment.this.auftraggeber);
-                } catch (AppException e) {
-                    Log.e(TAG, "Beim Speichern der Einstellungen ist ein Fehler aufgetreten.", e);
-                }
-            }
-        });
-        initializeAdressdaten();
-        initializeAuftaggeberdaten();
-        initializeKontaktdaten();
     }
 
     private void initializeAdressdaten() {

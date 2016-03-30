@@ -66,7 +66,7 @@ public class Adresse implements DatabaseEntity {
         buffer.append("adresszusatz='").append(this.adresszusatz).append("', ");
         buffer.append("ortschaft='").append(this.ortschaft).append("', ");
         buffer.append("postleitzahl='").append(this.postleitzahl).append("', ");
-        buffer.append("staat").append(this.staat).append("', ");
+        buffer.append("staat=").append(this.staat).append("', ");
         buffer.append("straszeUndHaus='").append(this.straszeUndHaus).append("'}");
         return buffer.toString();
     }

@@ -2,6 +2,7 @@ package de.defaultconstructor.mytimestamp.app.model;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.util.Log;
 
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
 
@@ -9,6 +10,8 @@ import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
  * Created by Thomas Reno on 12.03.2016.
  */
 public class Auftraggeber extends Person implements DatabaseEntity {
+
+    public static final Auftraggeber DUMMY = new Auftraggeber("Die Firma");
 
     /**
      *
@@ -21,10 +24,9 @@ public class Auftraggeber extends Person implements DatabaseEntity {
         if (-1 < entity.getId()) {
             contentValues.put("id", entity.getId());
         }
-        contentValues.put("id", entity.getId());
         contentValues.put("firma", entity.firma);
-        contentValues.put("adresse", (-1 < entity.adresse.getId() ? entity.adresse.getId() : 0));
-        contentValues.put("kontakt", (-1 < entity.kontakt.getId() ? entity.kontakt.getId() : 0));
+        contentValues.put("adresse", (-1 < entity.getAdresse().getId() ? entity.getAdresse().getId() : 0));
+        contentValues.put("kontakt", (-1 < entity.getKontakt().getId() ? entity.getKontakt().getId() : 0));
         return contentValues;
     }
 
@@ -36,7 +38,8 @@ public class Auftraggeber extends Person implements DatabaseEntity {
     public static Auftraggeber getInstance(Cursor cursor) {
         Auftraggeber auftraggeber = new Auftraggeber(
                 cursor.getString(cursor.getColumnIndex("firma")));
-        auftraggeber.setId(cursor.getLong(cursor.getColumnIndex("id")));
+        Log.d("Auftraggeber", "" + cursor.getColumnCount());
+    //    auftraggeber.setId(cursor.getLong(cursor.getColumnIndex("id")));
         return auftraggeber;
     }
 
@@ -63,17 +66,14 @@ public class Auftraggeber extends Person implements DatabaseEntity {
         StringBuffer buffer = new StringBuffer();
         buffer.append("Auftraggeber {id=").append(this.id).append(", ");
         buffer.append("firma='").append(this.firma).append("', ");
-        buffer.append("adresse=").append(this.adresse.toString()).append("', ");
-        buffer.append("kontakt=").append(this.kontakt.toString()).append("'}");
+        buffer.append("adresse=").append(this.getAdresse().toString()).append("', ");
+        buffer.append("kontakt=").append(this.getKontakt().toString()).append("'}");
         return buffer.toString();
     }
 
     private long id = -1; // -1 als Kennzeichen fuer eine neue Entitaet.
 
     private String firma;
-
-    private Adresse adresse;
-    private Kontakt kontakt;
 
     @Override
     public long getId() {
@@ -93,26 +93,9 @@ public class Auftraggeber extends Person implements DatabaseEntity {
         this.firma = firma;
     }
 
-    public Adresse getAdresse() {
-        return adresse;
-    }
-
-    public void setAdresse(Adresse adresse) {
-        this.adresse = adresse;
-    }
-
-    public Kontakt getKontakt() {
-        return kontakt;
-    }
-
-    public void setKontakt(Kontakt kontakt) {
-        this.kontakt = kontakt;
-    }
-
     public Auftraggeber(String firma, Adresse adresse, Kontakt kontakt) {
+        super(adresse, kontakt);
         this.firma = firma;
-        this.adresse = adresse;
-        this.kontakt = kontakt;
     }
 
     public Auftraggeber(String firma, Adresse adresse) {
