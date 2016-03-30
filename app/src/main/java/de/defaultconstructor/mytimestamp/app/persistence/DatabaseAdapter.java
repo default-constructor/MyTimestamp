@@ -15,6 +15,7 @@ import de.defaultconstructor.mytimestamp.app.App;
 import de.defaultconstructor.mytimestamp.app.enumeration.EntgeltHaeufigkeit;
 import de.defaultconstructor.mytimestamp.app.exception.PersistenceException;
 import de.defaultconstructor.mytimestamp.app.util.DatabaseUtil;
+import de.defaultconstructor.mytimestamp.app.util.StringUtil;
 
 import static de.defaultconstructor.mytimestamp.app.persistence.DatabaseAdapter.DatabaseConstants.*;
 
@@ -123,7 +124,7 @@ public class DatabaseAdapter {
                                                 String whereClause) throws PersistenceException {
         String leftJoin = tableName + "." + onClause.substring(0, onClause.indexOf("="));
         String rightJoin = joinedTable + "." + onClause.substring(onClause.indexOf("=") + 1);
-        String sql = "SELECT " + "auftraggeber.firma" + " FROM " + tableName + " INNER JOIN " +
+        String sql = "SELECT " + StringUtil.getStringedArray(DatabaseUtil.getTableColumns(tableName), ",") + " FROM " + tableName + " INNER JOIN " +
                 joinedTable + " ON " + leftJoin + "=" + rightJoin + " WHERE " + whereClause + ";";
         Cursor cursor = this.database.rawQuery(sql, null);
         if (null == cursor || 0 == cursor.getCount()) {
@@ -185,17 +186,41 @@ public class DatabaseAdapter {
         public static final String NAME_TABLE_KONTAKT = "kontakt";
 
         public static final String[] COLUMNS_TABLE_ADRESSE = new String[] {
-                "id", "adresszusatz", "ortschaft", "postleitzahl", "staat", "straszeUndHaus"};
+                NAME_TABLE_ADRESSE + ".id",
+                NAME_TABLE_ADRESSE + ".adresszusatz",
+                NAME_TABLE_ADRESSE + ".ortschaft",
+                NAME_TABLE_ADRESSE + ".postleitzahl",
+                NAME_TABLE_ADRESSE + ".staat",
+                NAME_TABLE_ADRESSE + ".straszeUndHaus"};
         public static final String[] COLUMNS_TABLE_AUFTRAG = new String[] {
-                "id", "aktiv", "auftragsart", "entgelt", "entgeltHaeufigkeit", NAME_TABLE_BENUTZER,
-                NAME_TABLE_AUFTRAGGEBER};
+                NAME_TABLE_AUFTRAG + ".id",
+                NAME_TABLE_AUFTRAG + ".aktiv",
+                NAME_TABLE_AUFTRAG + ".auftragsart",
+                NAME_TABLE_AUFTRAG + ".entgelt",
+                NAME_TABLE_AUFTRAG + ".entgeltHaeufigkeit",
+                NAME_TABLE_AUFTRAG + "." + NAME_TABLE_BENUTZER,
+                NAME_TABLE_AUFTRAG + "." + NAME_TABLE_AUFTRAGGEBER};
         public static final String[] COLUMNS_TABLE_AUFTRAGGEBER = new String[] {
-                "id", "firma", NAME_TABLE_ADRESSE, NAME_TABLE_KONTAKT};
+                NAME_TABLE_AUFTRAGGEBER + ".id",
+                NAME_TABLE_AUFTRAGGEBER + ".firma",
+                NAME_TABLE_AUFTRAGGEBER + "." + NAME_TABLE_ADRESSE,
+                NAME_TABLE_AUFTRAGGEBER + "." + NAME_TABLE_KONTAKT};
         public static final String[] COLUMNS_TABLE_BENUTZER = new String[] {
-                "id", "aktiv", "berufsstatus", "familienname", "geburtsdatum", "vorname",
-                NAME_TABLE_ADRESSE, NAME_TABLE_KONTAKT};
+                NAME_TABLE_BENUTZER + ".id",
+                NAME_TABLE_BENUTZER + ".aktiv",
+                NAME_TABLE_BENUTZER + ".berufsstatus",
+                NAME_TABLE_BENUTZER + ".familienname",
+                NAME_TABLE_BENUTZER + ".geburtsdatum",
+                NAME_TABLE_BENUTZER + ".vorname",
+                NAME_TABLE_BENUTZER + "." + NAME_TABLE_ADRESSE,
+                NAME_TABLE_BENUTZER + "." + NAME_TABLE_KONTAKT};
         public static final String[] COLUMNS_TABLE_KONTAKT = new String[] {
-                "id", "email", "mobil", "telefax", "telefon", "webseite"};
+                NAME_TABLE_KONTAKT + ".id",
+                NAME_TABLE_KONTAKT + ".email",
+                NAME_TABLE_KONTAKT + ".mobil",
+                NAME_TABLE_KONTAKT + ".telefax",
+                NAME_TABLE_KONTAKT + ".telefon",
+                NAME_TABLE_KONTAKT + ".webseite"};
 
         protected static final String NAME_DATABASE = "myTimestamp";
 
