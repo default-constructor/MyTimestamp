@@ -1,8 +1,5 @@
 package de.defaultconstructor.mytimestamp.app.enumeration;
 
-import java.lang.reflect.Field;
-import java.math.BigDecimal;
-
 /**
  * Created by Thomas Reno on 20.03.2016.
  */

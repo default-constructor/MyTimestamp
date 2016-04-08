@@ -18,8 +18,8 @@ public class PersistenceException extends AppException {
 
     public enum Cause {
 
-        SELECT_NO_RESULT(332, "No result for table {table}."),
-        SELECT_TABLE_NOT_FOUND(331, "Table {table} not found."),
+        SELECT_NO_RESULT(311, "No result for table {table}."),
+        SELECT_TABLE_NOT_FOUND(312, "Table {table} not found."),
         UPDATE_NO_CHANGES(321, "No changes in Table {table}.");
 
         private int code;

@@ -11,7 +11,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.defaultconstructor.mytimestamp.app.App;
+import de.defaultconstructor.mytimestamp.app.MyTimestamp;
 import de.defaultconstructor.mytimestamp.app.enumeration.EntgeltHaeufigkeit;
 import de.defaultconstructor.mytimestamp.app.exception.PersistenceException;
 import de.defaultconstructor.mytimestamp.app.util.DatabaseUtil;
@@ -167,7 +167,6 @@ public class DatabaseAdapter {
     }
 
     private long update(String tableName, DatabaseEntity databaseEntity) throws PersistenceException {
-        String[] columns = DatabaseUtil.getColumnNames(tableName);
         ContentValues values = DatabaseUtil.mapDatabaseEntity(databaseEntity, tableName);
         int rows = this.database.updateWithOnConflict(tableName, values, "id=" + databaseEntity.getId(),
                 null, SQLiteDatabase.CONFLICT_ROLLBACK);
@@ -269,7 +268,7 @@ public class DatabaseAdapter {
         @Override
         public void onCreate(SQLiteDatabase db) {
             this.sqliteDatabase = db;
-            if (App.firstRun) {
+            if (MyTimestamp.firstRun) {
                 createTables();
             }
         }

@@ -3,7 +3,7 @@ package de.defaultconstructor.mytimestamp.app.service;
 import android.content.Context;
 import android.util.Log;
 
-import de.defaultconstructor.mytimestamp.app.App;
+import de.defaultconstructor.mytimestamp.app.MyTimestamp;
 import de.defaultconstructor.mytimestamp.app.exception.PersistenceException;
 import de.defaultconstructor.mytimestamp.app.exception.SettingsException;
 import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
@@ -17,6 +17,8 @@ import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
  */
 public class SettingsServiceImpl extends AppServiceImpl {
 
+    public static final String TAG = "SettingsServiceImpl";
+
     public SettingsServiceImpl(Context context) {
         super(context);
         this.databaseAdapter = new DatabaseAdapter(context);
@@ -26,7 +28,7 @@ public class SettingsServiceImpl extends AppServiceImpl {
         try {
             this.databaseAdapter.open();
             savePerson(auftraggeber);
-            if (!App.currentBenutzer.equals(benutzer)) {
+            if (!MyTimestamp.currentBenutzer.equals(benutzer)) {
                 savePerson(benutzer);
             }
             return true;

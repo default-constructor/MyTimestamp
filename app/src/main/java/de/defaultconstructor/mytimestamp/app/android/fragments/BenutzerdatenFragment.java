@@ -22,6 +22,7 @@ import java.util.GregorianCalendar;
 import java.util.regex.Pattern;
 
 import de.defaultconstructor.mytimestamp.R;
+import de.defaultconstructor.mytimestamp.app.MyTimestamp;
 import de.defaultconstructor.mytimestamp.app.android.activities.SettingsActivity;
 import de.defaultconstructor.mytimestamp.app.android.widgets.components.AccordionView;
 import de.defaultconstructor.mytimestamp.app.exception.AppException;
@@ -143,16 +144,19 @@ public class BenutzerdatenFragment extends SettingsFragment implements Accordion
 
     private void initializeAdressdaten() {
         this.editTextPostleitzahl = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenPostleitzahl);
-        this.editTextPostleitzahl.setText(this.benutzer.getAdresse().getPostleitzahl());
         this.editTextPostleitzahl.addTextChangedListener(getTextWatcherForEditText(PATTERN_POSTCODE_TEXT_NO, this.editTextPostleitzahl));
 
         this.editTextStraszeUndHausnummer = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenStraszeUndHausnummer);
-        this.editTextStraszeUndHausnummer.setText(this.benutzer.getAdresse().getStraszeUndHaus());
         this.editTextStraszeUndHausnummer.addTextChangedListener(getTextWatcherForEditText(PATTERN_STREETHOUSENUMBER_TEXT_NO, this.editTextStraszeUndHausnummer));
 
         this.editTextWohnsitz = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenWohnsitz);
-        this.editTextWohnsitz.setText(this.benutzer.getAdresse().getOrtschaft());
         this.editTextWohnsitz.addTextChangedListener(getTextWatcherForEditText(PATTERN_NAME_TEXT_NO, this.editTextWohnsitz));
+
+        if (!MyTimestamp.firstRun) {
+            this.editTextPostleitzahl.setText(this.benutzer.getAdresse().getPostleitzahl());
+            this.editTextStraszeUndHausnummer.setText(this.benutzer.getAdresse().getStraszeUndHaus());
+            this.editTextWohnsitz.setText(this.benutzer.getAdresse().getOrtschaft());
+        }
     }
 
     private void initializeBenutzerdaten() {
@@ -170,11 +174,9 @@ public class BenutzerdatenFragment extends SettingsFragment implements Accordion
                 ((SettingsActivity) getActivity()).showDialogFragment(dialogFragment, "selection-berufsstatus");
             }
         });
-        this.editTextBerufsstatus.setText(this.benutzer.getBerufsstatus().getBezeichnung());
         this.editTextBerufsstatus.addTextChangedListener(getTextWatcherForEditText(null, this.editTextBerufsstatus));
 
         this.editTextFamilienname = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenFamilienname);
-        this.editTextFamilienname.setText(this.benutzer.getFamilienname());
         this.editTextFamilienname.addTextChangedListener(getTextWatcherForEditText(PATTERN_NAME_TEXT_NO, this.editTextFamilienname));
 
         this.editTextGeburtsdatum = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenGeburtsdatum);
@@ -191,27 +193,35 @@ public class BenutzerdatenFragment extends SettingsFragment implements Accordion
                 ((SettingsActivity) getActivity()).showDialogFragment(dialogFragment, "datepicker-geburtsdatum");
             }
         });
-        this.editTextGeburtsdatum.setText(null != this.benutzer.getGeburtsdatum() ?
-                new SimpleDateFormat("dd.MM.yyyy").format(this.benutzer.getGeburtsdatum()) : "");
         this.editTextGeburtsdatum.addTextChangedListener(getTextWatcherForEditText(null, this.editTextGeburtsdatum));
 
         this.editTextVorname = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenVorname);
-        this.editTextVorname.setText(this.benutzer.getVorname());
         this.editTextVorname.addTextChangedListener(getTextWatcherForEditText(PATTERN_NAME_TEXT_NO, this.editTextVorname));
+
+        if (!MyTimestamp.firstRun) {
+            this.editTextBerufsstatus.setText(this.benutzer.getBerufsstatus().getBezeichnung());
+            this.editTextFamilienname.setText(this.benutzer.getFamilienname());
+            this.editTextGeburtsdatum.setText(null != this.benutzer.getGeburtsdatum() ?
+                    new SimpleDateFormat("dd.MM.yyyy").format(this.benutzer.getGeburtsdatum()) : "");
+            this.editTextVorname.setText(this.benutzer.getVorname());
+        }
     }
 
     private void initializeKontaktdaten() {
         this.editTextEmail = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenEmail);
-        this.editTextEmail.setText(this.benutzer.getKontakt().getEmail());
         this.editTextEmail.addTextChangedListener(getTextWatcherForEditText(PATTERN_EMAIL_TEXT_NO, this.editTextEmail));
 
         this.editTextMobil = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenMobil);
-        this.editTextMobil.setText(this.benutzer.getKontakt().getMobil());
         this.editTextMobil.addTextChangedListener(getTextWatcherForEditText(PATTERN_PHONE_TEXT_NO, this.editTextMobil));
 
         this.editTextTelefon = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenTelefon);
-        this.editTextTelefon.setText(this.benutzer.getKontakt().getTelefon());
         this.editTextTelefon.addTextChangedListener(getTextWatcherForEditText(PATTERN_PHONE_TEXT_NO, this.editTextTelefon));
+
+        if (!MyTimestamp.firstRun) {
+            this.editTextEmail.setText(this.benutzer.getKontakt().getEmail());
+            this.editTextMobil.setText(this.benutzer.getKontakt().getMobil());
+            this.editTextTelefon.setText(this.benutzer.getKontakt().getTelefon());
+        }
     }
 
     private void mapAdressdaten() {

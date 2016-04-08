@@ -110,39 +110,31 @@ public class AuftraggeberdatenFragment extends SettingsFragment {
 
     private void initializeAdressdaten() {
         this.editTextFirmensitz = (TextInputEditText) this.view.findViewById(R.id.editTextArbeitgeberdatenFirmensitz);
-        this.editTextFirmensitz.setText(this.auftraggeber.getAdresse().getOrtschaft());
         this.editTextFirmensitz.addTextChangedListener(getTextWatcherForEditText(null, this.editTextFirmensitz));
 
         this.editTextPostleitzahl = (TextInputEditText) this.view.findViewById(R.id.editTextArbeitgeberdatenPostleitzahl);
-        this.editTextPostleitzahl.setText(this.auftraggeber.getAdresse().getPostleitzahl());
         this.editTextPostleitzahl.addTextChangedListener(getTextWatcherForEditText(null, this.editTextPostleitzahl));
 
         this.editTextStaat = (TextInputEditText) this.view.findViewById(R.id.editTextArbeitgeberdatenStaat);
-        this.editTextStaat.setText(this.auftraggeber.getAdresse().getStaat());
         this.editTextStaat.addTextChangedListener(getTextWatcherForEditText(null, this.editTextStaat));
 
         this.editTextStraszeUndHausnummer = (TextInputEditText) this.view.findViewById(R.id.editTextArbeitgeberdatenStraszeUndHausnummer);
-        this.editTextStraszeUndHausnummer.setText(this.auftraggeber.getAdresse().getStraszeUndHaus());
         this.editTextStraszeUndHausnummer.addTextChangedListener(getTextWatcherForEditText(null, this.editTextStraszeUndHausnummer));
     }
 
     private void initializeAuftaggeberdaten() {
         this.editTextFirma = (TextInputEditText) this.view.findViewById(R.id.editTextArbeitgeberdatenFirma);
-        this.editTextFirma.setText(this.auftraggeber.getFirma());
         this.editTextFirma.addTextChangedListener(getTextWatcherForEditText(null, this.editTextFirma));
     }
 
     private void initializeKontaktdaten() {
         this.editTextEmail = (TextInputEditText) this.view.findViewById(R.id.editTextArbeitgeberdatenEmail);
-        this.editTextEmail.setText(this.auftraggeber.getKontakt().getEmail());
         this.editTextEmail.addTextChangedListener(getTextWatcherForEditText(null, this.editTextEmail));
 
         this.editTextTelefon = (TextInputEditText) this.view.findViewById(R.id.editTextArbeitgeberdatenTelefon);
-        this.editTextTelefon.setText(this.auftraggeber.getKontakt().getTelefon());
         this.editTextTelefon.addTextChangedListener(getTextWatcherForEditText(null, this.editTextTelefon));
 
         this.editTextWebseite = (TextInputEditText) this.view.findViewById(R.id.editTextArbeitgeberdatenWebseite);
-        this.editTextWebseite.setText(this.auftraggeber.getKontakt().getWebseite());
         this.editTextWebseite.addTextChangedListener(getTextWatcherForEditText(null, this.editTextWebseite));
     }
 

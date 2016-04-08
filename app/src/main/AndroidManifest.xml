@@ -6,7 +6,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:name="de.defaultconstructor.mytimestamp.app.App"
+        android:name=".app.MyTimestamp"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity

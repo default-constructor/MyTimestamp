@@ -17,7 +17,7 @@ import de.defaultconstructor.mytimestamp.app.util.DateUtil;
 public class Benutzer extends Person implements DatabaseEntity {
 
     /** Haelt einen {@link Benutzer} als Dummy. */
-    public static final Benutzer DUMMY = new Benutzer(false, Berufsstatus.ANGESTELLT, "Mustermann",
+    public static final Benutzer DUMMY = new Benutzer(true, Berufsstatus.ANGESTELLT, "Mustermann",
             DateUtil.changeDateInYears(-18, new Date()), "Max");
 
     /**
