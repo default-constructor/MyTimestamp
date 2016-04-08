@@ -21,12 +21,12 @@ public class Auftraggeber extends Person implements DatabaseEntity {
     public static ContentValues getContentValues(DatabaseEntity databaseEntity) {
         Auftraggeber entity = (Auftraggeber) databaseEntity;
         ContentValues contentValues = new ContentValues();
-        if (-1 < entity.getId()) {
+        if (0 < entity.getId()) {
             contentValues.put("id", entity.getId());
         }
         contentValues.put("firma", entity.firma);
-        contentValues.put("adresse", (-1 < entity.getAdresse().getId() ? entity.getAdresse().getId() : 0));
-        contentValues.put("kontakt", (-1 < entity.getKontakt().getId() ? entity.getKontakt().getId() : 0));
+        contentValues.put("adresse", (entity.getAdresse().getId()));
+        contentValues.put("kontakt", (entity.getKontakt().getId()));
         return contentValues;
     }
 
@@ -71,7 +71,7 @@ public class Auftraggeber extends Person implements DatabaseEntity {
         return buffer.toString();
     }
 
-    private long id = -1; // -1 als Kennzeichen fuer eine neue Entitaet.
+    private long id;
 
     private String firma;
 

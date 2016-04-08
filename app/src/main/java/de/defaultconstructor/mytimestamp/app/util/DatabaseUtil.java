@@ -31,22 +31,30 @@ public final class DatabaseUtil {
      * @return
      * @throws PersistenceException
      */
-    public static String[] getTableColumns(String tableName) throws PersistenceException {
+    public static String[] getColumnNames(String tableName) throws PersistenceException {
         switch (tableName) {
             case NAME_TABLE_ADRESSE:
-                return COLUMNS_TABLE_ADRESSE;
+                return specifyColumnNames(tableName, COLUMNS_TABLE_ADRESSE);
             case NAME_TABLE_AUFTRAG:
-                return COLUMNS_TABLE_AUFTRAG;
+                return specifyColumnNames(tableName, COLUMNS_TABLE_AUFTRAG);
             case NAME_TABLE_AUFTRAGGEBER:
-                return COLUMNS_TABLE_AUFTRAGGEBER;
+                return specifyColumnNames(tableName, COLUMNS_TABLE_AUFTRAGGEBER);
             case NAME_TABLE_BENUTZER:
-                return COLUMNS_TABLE_BENUTZER;
+                return specifyColumnNames(tableName, COLUMNS_TABLE_BENUTZER);
             case NAME_TABLE_KONTAKT:
-                return COLUMNS_TABLE_KONTAKT;
+                return specifyColumnNames(tableName, COLUMNS_TABLE_KONTAKT);
             default:
-                throw new PersistenceException(
-                        MESSAGE_ERROR_TABLE_NOT_FOUND.replace("{tableName}", tableName));
+                throw new PersistenceException(PersistenceException.Cause.SELECT_TABLE_NOT_FOUND.getCode(),
+                        PersistenceException.Cause.SELECT_TABLE_NOT_FOUND.getMessage().replace("{table}", tableName));
         }
+    }
+
+    private static String[] specifyColumnNames(String tableName, String[] columnNames) {
+        String[] specifiedColumnNames = new String[columnNames.length];
+        for (int i = 0; i < columnNames.length; i++) {
+            specifiedColumnNames[i] = tableName + "." + columnNames[i];
+        }
+        return specifiedColumnNames;
     }
 
     /**
@@ -70,8 +78,8 @@ public final class DatabaseUtil {
             case NAME_TABLE_KONTAKT:
                 return Kontakt.getInstance(cursor);
             default:
-                throw new PersistenceException(
-                        MESSAGE_ERROR_TABLE_NOT_FOUND.replace("{tableName}", tableName));
+                throw new PersistenceException(PersistenceException.Cause.SELECT_TABLE_NOT_FOUND.getCode(),
+                        PersistenceException.Cause.SELECT_TABLE_NOT_FOUND.getMessage().replace("{table}", tableName));
         }
     }
 
@@ -96,8 +104,8 @@ public final class DatabaseUtil {
             case NAME_TABLE_KONTAKT:
                 return Kontakt.getContentValues(databaseEntity);
             default:
-                throw new PersistenceException(
-                        MESSAGE_ERROR_TABLE_NOT_FOUND.replace("{tableName}", tableName));
+                throw new PersistenceException(PersistenceException.Cause.SELECT_TABLE_NOT_FOUND.getCode(),
+                        PersistenceException.Cause.SELECT_TABLE_NOT_FOUND.getMessage().replace("{table}", tableName));
         }
     }
 }

@@ -17,6 +17,9 @@ public class App extends Application {
 
     public static final String TAG = "App";
 
+    /** Haelt den aktuellen Benutzer der App. */
+    public static Benutzer currentBenutzer;
+
     /** Haelt den Status der App, ob es sich um den ersten Aufruf handelt. */
     public static boolean firstRun = true;
 
@@ -24,27 +27,25 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         SharedPreferences sharedPreferences = getSharedPreferences("preferenceName", MODE_PRIVATE);
-        App.firstRun = sharedPreferences.getBoolean("firstRun", true);
+        App.firstRun = sharedPreferences.getBoolean("firstRun", true) && App.firstRun;
 
         Log.d(TAG, "first run: " + App.firstRun);
 
         if (App.firstRun) {
-            if (null == (this.currentBenutzer = this.applicationService.persistDummies())) {
+            if (null == (App.currentBenutzer = this.applicationService.persistDummies())) {
                 Log.e(TAG, "Kein Dummy-Benutzer. Die App wird abgebrochen.");
                 System.exit(1);
             }
         } else {
-            if (null == (this.currentBenutzer = this.applicationService.getCurrentBenutzer())) {
+            if (null == (App.currentBenutzer = this.applicationService.getCurrentBenutzer())) {
                 Log.e(TAG, "Der aktuelle Benutzer konnte nicht geladen werden. Die App wird abgebrochen.");
                 System.exit(1);
             }
         }
-        this.aktiveAuftraggeber = this.applicationService.getAktiveAuftraggeber(this.currentBenutzer);
+        this.aktiveAuftraggeber = this.applicationService.getAktiveAuftraggeber(App.currentBenutzer);
     }
 
     private AppServiceImpl applicationService;
-
-    private Benutzer currentBenutzer;
 
     private List<Auftraggeber> aktiveAuftraggeber;
 

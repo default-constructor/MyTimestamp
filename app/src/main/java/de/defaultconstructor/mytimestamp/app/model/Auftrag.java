@@ -21,7 +21,7 @@ public class Auftrag implements DatabaseEntity {
     public static ContentValues getContentValues(DatabaseEntity databaseEntity) {
         Auftrag entity = (Auftrag) databaseEntity;
         ContentValues contentValues = new ContentValues();
-        if (-1 < entity.getId()) {
+        if (0 < entity.getId()) {
             contentValues.put("id", entity.getId());
         }
         contentValues.put("aktiv", entity.isAktiv());
@@ -76,7 +76,7 @@ public class Auftrag implements DatabaseEntity {
                 '}';
     }
 
-    private long id = -1; // -1 als Kennzeichen fuer eine neue Entitaet.
+    private long id;
 
     private boolean aktiv;
 

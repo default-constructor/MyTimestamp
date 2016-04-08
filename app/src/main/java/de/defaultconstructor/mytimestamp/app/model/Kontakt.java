@@ -18,7 +18,7 @@ public class Kontakt implements DatabaseEntity {
     public static ContentValues getContentValues(DatabaseEntity databaseEntity) {
         Kontakt entity = (Kontakt) databaseEntity;
         ContentValues contentValues = new ContentValues();
-        if (-1 < entity.getId()) {
+        if (0 < entity.getId()) {
             contentValues.put("id", entity.getId());
         }
         contentValues.put("email", entity.email);
@@ -54,8 +54,18 @@ public class Kontakt implements DatabaseEntity {
     }
 
     @Override
+    public long getId() {
+        return id;
+    }
+
+    @Override
     public int hashCode() {
         return (int) (getId() ^ (getId() >>> 32));
+    }
+
+    @Override
+    public void setId(long id) {
+        this.id = id;
     }
 
     @Override
@@ -70,23 +80,13 @@ public class Kontakt implements DatabaseEntity {
         return buffer.toString();
     }
 
-    private long id = -1; // -1 als Kennzeichen fuer eine neue Entitaet.
+    private long id;
 
     private String email;
     private String mobil;
     private String telefax;
     private String telefon;
     private String webseite;
-
-    @Override
-    public long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getEmail() {
         return email;

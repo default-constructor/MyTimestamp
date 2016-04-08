@@ -17,7 +17,7 @@ import de.defaultconstructor.mytimestamp.app.persistence.DatabaseAdapter;
  */
 public class MainActivity extends AppCompatActivity {
 
-    public static final String TAG = "activity_main";
+    public static final String TAG = "MainActivity";
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "on resume - first run: " + App.firstRun);
-        if (/*this.preferences.getBoolean("firstRun", true)*/true) {
+        if (App.firstRun) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivityForResult(intent, RESULT_OK);
             return;

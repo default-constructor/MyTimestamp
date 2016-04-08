@@ -12,17 +12,18 @@ import android.util.Log;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.defaultconstructor.mytimestamp.app.service.SettingsServiceImpl;
 import de.defaultconstructor.mytimestamp.R;
 import de.defaultconstructor.mytimestamp.app.App;
 import de.defaultconstructor.mytimestamp.app.android.fragments.AuftraggeberdatenFragment;
-import de.defaultconstructor.mytimestamp.app.android.fragments.SettingsFragment;
 import de.defaultconstructor.mytimestamp.app.android.fragments.BenutzerdatenFragment;
+import de.defaultconstructor.mytimestamp.app.android.fragments.SettingsFragment;
 import de.defaultconstructor.mytimestamp.app.exception.AppException;
+import de.defaultconstructor.mytimestamp.app.exception.SettingsException;
 import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
 import de.defaultconstructor.mytimestamp.app.model.Benutzer;
 import de.defaultconstructor.mytimestamp.app.model.Person;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseAdapter;
+import de.defaultconstructor.mytimestamp.app.service.SettingsServiceImpl;
 
 /**
  * Created by Thomas Reno on 27.02.2016.
@@ -53,11 +54,12 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
             renderFragment(AuftraggeberdatenFragment.TAG);
         } else if (person instanceof Auftraggeber) {
             this.auftraggeber = (Auftraggeber) person;
-            saveSettings();
-            if (App.firstRun) {
-                this.preferences.edit().putBoolean("firstRun", false).commit();
+            if (this.settingsService.saveSettings(this.auftraggeber, this.benutzer)) {
+                if (App.firstRun) {
+                    App.firstRun = false;
+                }
+                finish();
             }
-            finish();
         }
     }
 
@@ -67,8 +69,6 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
     private Map<String, SettingsFragment> mapFragments = new HashMap<>();
 
     private SettingsServiceImpl settingsService;
-
-    private SharedPreferences preferences;
 
     private String tagCurrentFragment;
 
@@ -92,9 +92,9 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
                     person = this.benutzer = this.settingsService.getCurrentBenutzer();
                     break;
                 default:
-                    throw new AppException("No such fragment found");
+                    throw new SettingsException("No such fragment found");
             }
-        } catch (AppException e) {
+        } catch (SettingsException e) {
             e.printStackTrace();
         }
         this.databaseAdapter.close();
@@ -111,23 +111,6 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
             this.mapFragments.put(tag, SettingsFragment.newInstance(tag));
         }
         renderFragment(this.mapFragments.get(tag));
-    }
-
-    private void saveSettings() throws AppException {
-        this.databaseAdapter.open();
-        long benutzerId;
-        if (App.firstRun) {
-            benutzerId = this.databaseAdapter.insert(this.benutzer);
-        } else {
-            benutzerId = this.databaseAdapter.update(this.benutzer);
-        }
-        if (0 > benutzerId) {
-            throw new AppException("Fehler beim Speichern der Person Benutzer.");
-        }
-        if (0 > this.databaseAdapter.insert(this.auftraggeber)) {
-            throw new AppException("Fehler beim Speichern der Person Auftraggeber.");
-        }
-        this.databaseAdapter.close();
     }
 
     private void renderFragment(Fragment fragment) {

@@ -80,6 +80,7 @@ public class DatabaseAdapter {
      * @throws PersistenceException
      */
     public long insert(DatabaseEntity databaseEntity) throws PersistenceException {
+        Log.d(TAG, "insert " + databaseEntity.getClass().getSimpleName());
         String table = databaseEntity.getClass().getSimpleName().toLowerCase();
         return insert(table, databaseEntity);
     }
@@ -99,9 +100,10 @@ public class DatabaseAdapter {
     public DatabaseEntity select(String tableName, String whereClause) throws PersistenceException {
         whereClause = null != whereClause ? whereClause : "id > 0";
         SQLiteCursor cursor = (SQLiteCursor) this.database.query(true, tableName,
-                DatabaseUtil.getTableColumns(tableName), whereClause, null, null, null, null, null);
+                DatabaseUtil.getColumnNames(tableName), whereClause, null, null, null, null, null);
         if (null == cursor || 0 == cursor.getCount()) {
-            throw new PersistenceException(MESSAGE_INFO_NO_RESULT.replace("{tableName}", tableName));
+            throw new PersistenceException(PersistenceException.Cause.SELECT_NO_RESULT.getCode(),
+                    PersistenceException.Cause.SELECT_NO_RESULT.getMessage().replace("{table}", tableName));
         }
         cursor.moveToFirst();
         DatabaseEntity entity = DatabaseUtil.mapResult(cursor, tableName);
@@ -124,12 +126,13 @@ public class DatabaseAdapter {
                                                 String whereClause) throws PersistenceException {
         String leftJoin = tableName + "." + onClause.substring(0, onClause.indexOf("="));
         String rightJoin = joinedTable + "." + onClause.substring(onClause.indexOf("=") + 1);
-        String sql = "SELECT " + StringUtil.getStringedArray(DatabaseUtil.getTableColumns(tableName), ",") + " FROM " + tableName + " INNER JOIN " +
-                joinedTable + " ON " + leftJoin + "=" + rightJoin + " WHERE " + whereClause + ";";
+        String sql = "SELECT " + StringUtil.getStringedArray(DatabaseUtil.getColumnNames(tableName), ",") +
+                " FROM " + tableName + " INNER JOIN " + joinedTable + " ON " + leftJoin + "=" + rightJoin +
+                " WHERE " + whereClause + ";";
         Cursor cursor = this.database.rawQuery(sql, null);
         if (null == cursor || 0 == cursor.getCount()) {
-            throw new PersistenceException(MESSAGE_INFO_NO_RESULT.replace("{tableName}", tableName +
-                    " INNER JOIN " + joinedTable));
+            throw new PersistenceException(PersistenceException.Cause.SELECT_NO_RESULT.getCode(),
+                    PersistenceException.Cause.SELECT_NO_RESULT.getMessage().replace("{table}", tableName));
         }
         List<DatabaseEntity> databaseEntityList = new ArrayList<>();
         if (cursor.moveToFirst()) {
@@ -164,11 +167,13 @@ public class DatabaseAdapter {
     }
 
     private long update(String tableName, DatabaseEntity databaseEntity) throws PersistenceException {
-        String[] columns = DatabaseUtil.getTableColumns(tableName);
+        String[] columns = DatabaseUtil.getColumnNames(tableName);
         ContentValues values = DatabaseUtil.mapDatabaseEntity(databaseEntity, tableName);
-        if (1 != this.database.updateWithOnConflict(tableName, values, "id=" + databaseEntity.getId(), null, SQLiteDatabase.CONFLICT_ROLLBACK)) {
-            throw new PersistenceException(MESSAGE_ERROR_DATABASE_TRANSACTION_FAILED
-                    .replace("{reason}", "DatabaseEntity: " + databaseEntity.toString() + " could not be updated."));
+        int rows = this.database.updateWithOnConflict(tableName, values, "id=" + databaseEntity.getId(),
+                null, SQLiteDatabase.CONFLICT_ROLLBACK);
+        if (0 == rows) {
+            throw new PersistenceException(PersistenceException.Cause.UPDATE_NO_CHANGES.getCode(),
+                    PersistenceException.Cause.UPDATE_NO_CHANGES.getMessage().replace("{table}", tableName));
         }
         return databaseEntity.getId();
     }
@@ -186,41 +191,15 @@ public class DatabaseAdapter {
         public static final String NAME_TABLE_KONTAKT = "kontakt";
 
         public static final String[] COLUMNS_TABLE_ADRESSE = new String[] {
-                NAME_TABLE_ADRESSE + ".id",
-                NAME_TABLE_ADRESSE + ".adresszusatz",
-                NAME_TABLE_ADRESSE + ".ortschaft",
-                NAME_TABLE_ADRESSE + ".postleitzahl",
-                NAME_TABLE_ADRESSE + ".staat",
-                NAME_TABLE_ADRESSE + ".straszeUndHaus"};
+                "id", "adresszusatz", "ortschaft", "postleitzahl", "staat", "straszeUndHaus"};
         public static final String[] COLUMNS_TABLE_AUFTRAG = new String[] {
-                NAME_TABLE_AUFTRAG + ".id",
-                NAME_TABLE_AUFTRAG + ".aktiv",
-                NAME_TABLE_AUFTRAG + ".auftragsart",
-                NAME_TABLE_AUFTRAG + ".entgelt",
-                NAME_TABLE_AUFTRAG + ".entgeltHaeufigkeit",
-                NAME_TABLE_AUFTRAG + "." + NAME_TABLE_BENUTZER,
-                NAME_TABLE_AUFTRAG + "." + NAME_TABLE_AUFTRAGGEBER};
+                "id", "aktiv", "auftragsart", "entgelt", "entgeltHaeufigkeit", NAME_TABLE_BENUTZER, NAME_TABLE_AUFTRAGGEBER};
         public static final String[] COLUMNS_TABLE_AUFTRAGGEBER = new String[] {
-                NAME_TABLE_AUFTRAGGEBER + ".id",
-                NAME_TABLE_AUFTRAGGEBER + ".firma",
-                NAME_TABLE_AUFTRAGGEBER + "." + NAME_TABLE_ADRESSE,
-                NAME_TABLE_AUFTRAGGEBER + "." + NAME_TABLE_KONTAKT};
+                "id", "firma", NAME_TABLE_ADRESSE, NAME_TABLE_KONTAKT};
         public static final String[] COLUMNS_TABLE_BENUTZER = new String[] {
-                NAME_TABLE_BENUTZER + ".id",
-                NAME_TABLE_BENUTZER + ".aktiv",
-                NAME_TABLE_BENUTZER + ".berufsstatus",
-                NAME_TABLE_BENUTZER + ".familienname",
-                NAME_TABLE_BENUTZER + ".geburtsdatum",
-                NAME_TABLE_BENUTZER + ".vorname",
-                NAME_TABLE_BENUTZER + "." + NAME_TABLE_ADRESSE,
-                NAME_TABLE_BENUTZER + "." + NAME_TABLE_KONTAKT};
+                "id", "aktiv", "berufsstatus", "familienname", "geburtsdatum", "vorname", NAME_TABLE_ADRESSE, NAME_TABLE_KONTAKT};
         public static final String[] COLUMNS_TABLE_KONTAKT = new String[] {
-                NAME_TABLE_KONTAKT + ".id",
-                NAME_TABLE_KONTAKT + ".email",
-                NAME_TABLE_KONTAKT + ".mobil",
-                NAME_TABLE_KONTAKT + ".telefax",
-                NAME_TABLE_KONTAKT + ".telefon",
-                NAME_TABLE_KONTAKT + ".webseite"};
+                "id", "email", "mobil", "telefax", "telefon", "webseite"};
 
         protected static final String NAME_DATABASE = "myTimestamp";
 

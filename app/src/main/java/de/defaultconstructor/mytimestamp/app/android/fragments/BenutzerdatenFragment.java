@@ -2,6 +2,7 @@ package de.defaultconstructor.mytimestamp.app.android.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -75,16 +76,16 @@ public class BenutzerdatenFragment extends SettingsFragment implements Accordion
 
     private Button buttonSubmit;
 
-    private EditText editTextBerufsstatus;
-    private EditText editTextEmail;
-    private EditText editTextFamilienname;
-    private EditText editTextGeburtsdatum;
-    private EditText editTextMobil;
-    private EditText editTextPostleitzahl;
-    private EditText editTextStraszeUndHausnummer;
-    private EditText editTextTelefon;
-    private EditText editTextVorname;
-    private EditText editTextWohnsitz;
+    private TextInputEditText editTextBerufsstatus;
+    private TextInputEditText editTextEmail;
+    private TextInputEditText editTextFamilienname;
+    private TextInputEditText editTextGeburtsdatum;
+    private TextInputEditText editTextMobil;
+    private TextInputEditText editTextPostleitzahl;
+    private TextInputEditText editTextStraszeUndHausnummer;
+    private TextInputEditText editTextTelefon;
+    private TextInputEditText editTextVorname;
+    private TextInputEditText editTextWohnsitz;
 
     private Benutzer benutzer;
     private View view;
@@ -141,21 +142,21 @@ public class BenutzerdatenFragment extends SettingsFragment implements Accordion
     }
 
     private void initializeAdressdaten() {
-        this.editTextPostleitzahl = (EditText) this.view.findViewById(R.id.editTextBenutzerdatenPostleitzahl);
+        this.editTextPostleitzahl = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenPostleitzahl);
         this.editTextPostleitzahl.setText(this.benutzer.getAdresse().getPostleitzahl());
         this.editTextPostleitzahl.addTextChangedListener(getTextWatcherForEditText(PATTERN_POSTCODE_TEXT_NO, this.editTextPostleitzahl));
 
-        this.editTextStraszeUndHausnummer = (EditText) this.view.findViewById(R.id.editTextBenutzerdatenStraszeUndHausnummer);
+        this.editTextStraszeUndHausnummer = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenStraszeUndHausnummer);
         this.editTextStraszeUndHausnummer.setText(this.benutzer.getAdresse().getStraszeUndHaus());
         this.editTextStraszeUndHausnummer.addTextChangedListener(getTextWatcherForEditText(PATTERN_STREETHOUSENUMBER_TEXT_NO, this.editTextStraszeUndHausnummer));
 
-        this.editTextWohnsitz = (EditText) this.view.findViewById(R.id.editTextBenutzerdatenWohnsitz);
+        this.editTextWohnsitz = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenWohnsitz);
         this.editTextWohnsitz.setText(this.benutzer.getAdresse().getOrtschaft());
         this.editTextWohnsitz.addTextChangedListener(getTextWatcherForEditText(PATTERN_NAME_TEXT_NO, this.editTextWohnsitz));
     }
 
     private void initializeBenutzerdaten() {
-        this.editTextBerufsstatus = (EditText) this.view.findViewById(R.id.editTextBenutzerdatenBerufsstatus);
+        this.editTextBerufsstatus = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenBerufsstatus);
         this.editTextBerufsstatus.setFocusable(false);
         this.editTextBerufsstatus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,11 +173,11 @@ public class BenutzerdatenFragment extends SettingsFragment implements Accordion
         this.editTextBerufsstatus.setText(this.benutzer.getBerufsstatus().getBezeichnung());
         this.editTextBerufsstatus.addTextChangedListener(getTextWatcherForEditText(null, this.editTextBerufsstatus));
 
-        this.editTextFamilienname = (EditText) this.view.findViewById(R.id.editTextBenutzerdatenFamilienname);
+        this.editTextFamilienname = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenFamilienname);
         this.editTextFamilienname.setText(this.benutzer.getFamilienname());
         this.editTextFamilienname.addTextChangedListener(getTextWatcherForEditText(PATTERN_NAME_TEXT_NO, this.editTextFamilienname));
 
-        this.editTextGeburtsdatum = (EditText) this.view.findViewById(R.id.editTextBenutzerdatenGeburtsdatum);
+        this.editTextGeburtsdatum = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenGeburtsdatum);
         this.editTextGeburtsdatum.setFocusable(false);
         this.editTextGeburtsdatum.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,21 +195,21 @@ public class BenutzerdatenFragment extends SettingsFragment implements Accordion
                 new SimpleDateFormat("dd.MM.yyyy").format(this.benutzer.getGeburtsdatum()) : "");
         this.editTextGeburtsdatum.addTextChangedListener(getTextWatcherForEditText(null, this.editTextGeburtsdatum));
 
-        this.editTextVorname = (EditText) this.view.findViewById(R.id.editTextBenutzerdatenVorname);
+        this.editTextVorname = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenVorname);
         this.editTextVorname.setText(this.benutzer.getVorname());
         this.editTextVorname.addTextChangedListener(getTextWatcherForEditText(PATTERN_NAME_TEXT_NO, this.editTextVorname));
     }
 
     private void initializeKontaktdaten() {
-        this.editTextEmail = (EditText) this.view.findViewById(R.id.editTextBenutzerdatenEmail);
+        this.editTextEmail = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenEmail);
         this.editTextEmail.setText(this.benutzer.getKontakt().getEmail());
         this.editTextEmail.addTextChangedListener(getTextWatcherForEditText(PATTERN_EMAIL_TEXT_NO, this.editTextEmail));
 
-        this.editTextMobil = (EditText) this.view.findViewById(R.id.editTextBenutzerdatenMobil);
+        this.editTextMobil = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenMobil);
         this.editTextMobil.setText(this.benutzer.getKontakt().getMobil());
         this.editTextMobil.addTextChangedListener(getTextWatcherForEditText(PATTERN_PHONE_TEXT_NO, this.editTextMobil));
 
-        this.editTextTelefon = (EditText) this.view.findViewById(R.id.editTextBenutzerdatenTelefon);
+        this.editTextTelefon = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenTelefon);
         this.editTextTelefon.setText(this.benutzer.getKontakt().getTelefon());
         this.editTextTelefon.addTextChangedListener(getTextWatcherForEditText(PATTERN_PHONE_TEXT_NO, this.editTextTelefon));
     }

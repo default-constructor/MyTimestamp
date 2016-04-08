@@ -21,18 +21,11 @@ public class Entgelt implements DatabaseEntity {
     public static ContentValues getContentValues(DatabaseEntity databaseEntity) {
         Entgelt entity = (Entgelt) databaseEntity;
         ContentValues contentValues = new ContentValues();
-        if (-1 < entity.getId()) {
+        if (0 < entity.getId()) {
             contentValues.put("id", entity.getId());
         }
         return contentValues;
     }
-
-    private long id = -1; // -1 als Kennzeichen fuer eine neue Entitaet.
-
-    private BigDecimal betrag;
-    private EntgeltHaeufigkeit entgeltHaeufigkeit;
-    private Einheit.Zeit zeit;
-    private Einheit.Waehrungeinheit waehrungeinheit;
 
     @Override
     public long getId() {
@@ -43,4 +36,11 @@ public class Entgelt implements DatabaseEntity {
     public void setId(long id) {
 
     }
+
+    private long id;
+
+    private BigDecimal betrag;
+    private Einheit.Waehrung waehrungeinheit;
+    private Einheit.Zeit zeit;
+    private EntgeltHaeufigkeit entgeltHaeufigkeit;
 }

@@ -19,7 +19,7 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <EditText
+        <android.support.design.widget.TextInputEditText
             android:id="@+id/editTextArbeitgeberdatenFirma"
             style="?android:editTextPreferenceStyle"
             android:layout_width="match_parent"
@@ -32,7 +32,7 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <EditText
+        <android.support.design.widget.TextInputEditText
             android:id="@+id/editTextArbeitgeberdatenStraszeUndHausnummer"
             style="?android:editTextPreferenceStyle"
             android:layout_width="match_parent"
@@ -45,7 +45,7 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <EditText
+        <android.support.design.widget.TextInputEditText
             android:id="@+id/editTextArbeitgeberdatenPostleitzahl"
             style="?android:editTextPreferenceStyle"
             android:layout_width="match_parent"
@@ -58,7 +58,7 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <EditText
+        <android.support.design.widget.TextInputEditText
             android:id="@+id/editTextArbeitgeberdatenFirmensitz"
             style="?android:editTextPreferenceStyle"
             android:layout_width="match_parent"
@@ -71,7 +71,7 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <EditText
+        <android.support.design.widget.TextInputEditText
             android:id="@+id/editTextArbeitgeberdatenStaat"
             style="?android:editTextPreferenceStyle"
             android:layout_width="match_parent"
@@ -97,7 +97,7 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <EditText
+            <android.support.design.widget.TextInputEditText
                 android:id="@+id/editTextArbeitgeberdatenTelefon"
                 style="?android:editTextPreferenceStyle"
                 android:layout_width="match_parent"
@@ -110,7 +110,7 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <EditText
+            <android.support.design.widget.TextInputEditText
                 android:id="@+id/editTextArbeitgeberdatenEmail"
                 style="?android:editTextPreferenceStyle"
                 android:layout_width="match_parent"
@@ -123,7 +123,7 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <EditText
+            <android.support.design.widget.TextInputEditText
                 android:id="@+id/editTextArbeitgeberdatenWebseite"
                 style="?android:editTextPreferenceStyle"
                 android:layout_width="match_parent"

@@ -18,7 +18,7 @@ public class Adresse implements DatabaseEntity {
     public static ContentValues getContentValues(DatabaseEntity databaseEntity) {
         Adresse entity = (Adresse) databaseEntity;
         ContentValues contentValues = new ContentValues();
-        if (-1 < entity.getId()) {
+        if (0 < entity.getId()) {
             contentValues.put("id", entity.getId());
         }
         contentValues.put("adresszusatz", entity.adresszusatz);
@@ -71,7 +71,7 @@ public class Adresse implements DatabaseEntity {
         return buffer.toString();
     }
 
-    private long id = -1; // -1 als Kennzeichen fuer eine neue Entitaet.
+    private long id;
 
     private String adresszusatz;
     private String ortschaft;

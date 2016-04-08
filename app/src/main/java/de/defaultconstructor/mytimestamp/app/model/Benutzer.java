@@ -28,7 +28,7 @@ public class Benutzer extends Person implements DatabaseEntity {
     public static ContentValues getContentValues(DatabaseEntity databaseEntity) {
         Benutzer entity = (Benutzer) databaseEntity;
         ContentValues contentValues = new ContentValues();
-        if (-1 < entity.getId()) {
+        if (0 < entity.getId()) {
             contentValues.put("id", entity.getId());
         }
         contentValues.put("aktiv", entity.aktiv);
@@ -36,8 +36,8 @@ public class Benutzer extends Person implements DatabaseEntity {
         contentValues.put("familienname", entity.familienname);
         contentValues.put("geburtsdatum", new SimpleDateFormat("dd.MM.yyyy").format(entity.geburtsdatum));
         contentValues.put("vorname", entity.vorname);
-        contentValues.put("adresse", (-1 < entity.getAdresse().getId() ? entity.getAdresse().getId() : 0));
-        contentValues.put("kontakt", (-1 < entity.getKontakt().getId() ? entity.getKontakt().getId() : 0));
+        contentValues.put("adresse", (entity.getAdresse().getId()));
+        contentValues.put("kontakt", (entity.getKontakt().getId()));
         return contentValues;
     }
 
@@ -90,7 +90,7 @@ public class Benutzer extends Person implements DatabaseEntity {
         return buffer.toString();
     }
 
-    private long id = -1; // -1 als Kennzeichen fuer eine neue Entitaet.
+    private long id;
 
     private boolean aktiv;
     private Berufsstatus berufsstatus;

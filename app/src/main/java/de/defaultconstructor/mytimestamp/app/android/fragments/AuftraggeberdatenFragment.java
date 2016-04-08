@@ -2,6 +2,7 @@ package de.defaultconstructor.mytimestamp.app.android.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -44,14 +45,14 @@ public class AuftraggeberdatenFragment extends SettingsFragment {
 
     private Button buttonSubmitArbeitgeberdaten;
 
-    private EditText editTextEmail;
-    private EditText editTextFirma;
-    private EditText editTextFirmensitz;
-    private EditText editTextPostleitzahl;
-    private EditText editTextStaat;
-    private EditText editTextStraszeUndHausnummer;
-    private EditText editTextTelefon;
-    private EditText editTextWebseite;
+    private TextInputEditText editTextEmail;
+    private TextInputEditText editTextFirma;
+    private TextInputEditText editTextFirmensitz;
+    private TextInputEditText editTextPostleitzahl;
+    private TextInputEditText editTextStaat;
+    private TextInputEditText editTextStraszeUndHausnummer;
+    private TextInputEditText editTextTelefon;
+    private TextInputEditText editTextWebseite;
 
     private Auftraggeber auftraggeber;
     private View view;
@@ -108,39 +109,39 @@ public class AuftraggeberdatenFragment extends SettingsFragment {
     }
 
     private void initializeAdressdaten() {
-        this.editTextFirmensitz = (EditText) this.view.findViewById(R.id.editTextArbeitgeberdatenFirmensitz);
+        this.editTextFirmensitz = (TextInputEditText) this.view.findViewById(R.id.editTextArbeitgeberdatenFirmensitz);
         this.editTextFirmensitz.setText(this.auftraggeber.getAdresse().getOrtschaft());
         this.editTextFirmensitz.addTextChangedListener(getTextWatcherForEditText(null, this.editTextFirmensitz));
 
-        this.editTextPostleitzahl = (EditText) this.view.findViewById(R.id.editTextArbeitgeberdatenPostleitzahl);
+        this.editTextPostleitzahl = (TextInputEditText) this.view.findViewById(R.id.editTextArbeitgeberdatenPostleitzahl);
         this.editTextPostleitzahl.setText(this.auftraggeber.getAdresse().getPostleitzahl());
         this.editTextPostleitzahl.addTextChangedListener(getTextWatcherForEditText(null, this.editTextPostleitzahl));
 
-        this.editTextStaat = (EditText) this.view.findViewById(R.id.editTextArbeitgeberdatenStaat);
+        this.editTextStaat = (TextInputEditText) this.view.findViewById(R.id.editTextArbeitgeberdatenStaat);
         this.editTextStaat.setText(this.auftraggeber.getAdresse().getStaat());
         this.editTextStaat.addTextChangedListener(getTextWatcherForEditText(null, this.editTextStaat));
 
-        this.editTextStraszeUndHausnummer = (EditText) this.view.findViewById(R.id.editTextArbeitgeberdatenStraszeUndHausnummer);
+        this.editTextStraszeUndHausnummer = (TextInputEditText) this.view.findViewById(R.id.editTextArbeitgeberdatenStraszeUndHausnummer);
         this.editTextStraszeUndHausnummer.setText(this.auftraggeber.getAdresse().getStraszeUndHaus());
         this.editTextStraszeUndHausnummer.addTextChangedListener(getTextWatcherForEditText(null, this.editTextStraszeUndHausnummer));
     }
 
     private void initializeAuftaggeberdaten() {
-        this.editTextFirma = (EditText) this.view.findViewById(R.id.editTextArbeitgeberdatenFirma);
+        this.editTextFirma = (TextInputEditText) this.view.findViewById(R.id.editTextArbeitgeberdatenFirma);
         this.editTextFirma.setText(this.auftraggeber.getFirma());
         this.editTextFirma.addTextChangedListener(getTextWatcherForEditText(null, this.editTextFirma));
     }
 
     private void initializeKontaktdaten() {
-        this.editTextEmail = (EditText) this.view.findViewById(R.id.editTextArbeitgeberdatenEmail);
+        this.editTextEmail = (TextInputEditText) this.view.findViewById(R.id.editTextArbeitgeberdatenEmail);
         this.editTextEmail.setText(this.auftraggeber.getKontakt().getEmail());
         this.editTextEmail.addTextChangedListener(getTextWatcherForEditText(null, this.editTextEmail));
 
-        this.editTextTelefon = (EditText) this.view.findViewById(R.id.editTextArbeitgeberdatenTelefon);
+        this.editTextTelefon = (TextInputEditText) this.view.findViewById(R.id.editTextArbeitgeberdatenTelefon);
         this.editTextTelefon.setText(this.auftraggeber.getKontakt().getTelefon());
         this.editTextTelefon.addTextChangedListener(getTextWatcherForEditText(null, this.editTextTelefon));
 
-        this.editTextWebseite = (EditText) this.view.findViewById(R.id.editTextArbeitgeberdatenWebseite);
+        this.editTextWebseite = (TextInputEditText) this.view.findViewById(R.id.editTextArbeitgeberdatenWebseite);
         this.editTextWebseite.setText(this.auftraggeber.getKontakt().getWebseite());
         this.editTextWebseite.addTextChangedListener(getTextWatcherForEditText(null, this.editTextWebseite));
     }
@@ -178,10 +179,6 @@ public class AuftraggeberdatenFragment extends SettingsFragment {
     }
 
     private void setEnableButtonSubmit() {
-        this.buttonSubmitArbeitgeberdaten.setEnabled(hasStringValue(String.valueOf(this.editTextFirma.getText()))
-                && hasStringValue(String.valueOf(this.editTextFirmensitz.getText()))
-                && hasStringValue(String.valueOf(this.editTextPostleitzahl.getText()))
-                && hasStringValue(String.valueOf(this.editTextStaat.getText()))
-                && hasStringValue(String.valueOf(this.editTextStraszeUndHausnummer.getText())));
+        this.buttonSubmitArbeitgeberdaten.setEnabled(hasStringValue(String.valueOf(this.editTextFirma.getText())));
     }
 }

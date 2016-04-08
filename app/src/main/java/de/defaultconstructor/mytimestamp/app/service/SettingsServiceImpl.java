@@ -3,11 +3,14 @@ package de.defaultconstructor.mytimestamp.app.service;
 import android.content.Context;
 import android.util.Log;
 
+import de.defaultconstructor.mytimestamp.app.App;
 import de.defaultconstructor.mytimestamp.app.exception.PersistenceException;
+import de.defaultconstructor.mytimestamp.app.exception.SettingsException;
 import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
 import de.defaultconstructor.mytimestamp.app.model.Benutzer;
 import de.defaultconstructor.mytimestamp.app.model.Person;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseAdapter;
+import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
 
 /**
  * Created by Thomas Reno on 20.03.2016.
@@ -19,45 +22,32 @@ public class SettingsServiceImpl extends AppServiceImpl {
         this.databaseAdapter = new DatabaseAdapter(context);
     }
 
-    public boolean persistSettings(Benutzer benutzer, Auftraggeber auftraggeber) {
-        boolean success = false;
-        long id = 0;
-        this.databaseAdapter.open();
-        try {
-            persistPerson(benutzer);
-            long idAdresse = this.databaseAdapter.insert(auftraggeber.getAdresse());
-            auftraggeber.getAdresse().setId(idAdresse);
-            long idKontakt = this.databaseAdapter.insert(auftraggeber.getKontakt());
-            auftraggeber.getKontakt().setId(idKontakt);
-            id = this.databaseAdapter.insert(auftraggeber);
-        } catch (PersistenceException e) {
-            Log.e(TAG, e.getMessage(), e);
-        } finally {
-            this.databaseAdapter.close();
-        }
-        return success;
-    }
-
-    public long persistAuftraggeber(Auftraggeber auftraggeber) {
-        long id = 0;
+    public boolean saveSettings(Auftraggeber benutzer, Benutzer auftraggeber) throws SettingsException {
         try {
             this.databaseAdapter.open();
-            long idAdresse = this.databaseAdapter.insert(auftraggeber.getAdresse());
-            auftraggeber.getAdresse().setId(idAdresse);
-            long idKontakt = this.databaseAdapter.insert(auftraggeber.getKontakt());
-            auftraggeber.getKontakt().setId(idKontakt);
-            id = this.databaseAdapter.insert(auftraggeber);
-            auftraggeber.setId(id);
+            savePerson(auftraggeber);
+            if (!App.currentBenutzer.equals(benutzer)) {
+                savePerson(benutzer);
+            }
+            return true;
         } catch (PersistenceException e) {
-            Log.e(TAG, e.getMessage(), e);
+            if (e.getCode() == PersistenceException.Cause.UPDATE_NO_CHANGES.getCode()) {
+                return true;
+            }
+            return false;
         } finally {
             this.databaseAdapter.close();
         }
-        return id;
     }
 
-    private boolean persistPerson(Person person) {
-        boolean success = false;
-        return success;
+    private void savePerson(Person person) throws PersistenceException, SettingsException {
+        long idAdresse = this.databaseAdapter.update(person.getAdresse());
+        person.getAdresse().setId(idAdresse);
+        long idKontakt = this.databaseAdapter.update(person.getKontakt());
+        person.getKontakt().setId(idKontakt);
+        if (0 == this.databaseAdapter.update((DatabaseEntity) person)) {
+            throw new SettingsException(((DatabaseEntity) person).getClass().getSimpleName() +
+                    " konnte nicht gespeichert werden.");
+        }
     }
 }
