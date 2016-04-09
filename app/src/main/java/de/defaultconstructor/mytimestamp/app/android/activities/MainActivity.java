@@ -22,8 +22,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (MyTimestamp.firstRun) {
+        if (/*MyTimestamp.firstRun*/false) {
             Intent intent = new Intent(this, SettingsActivity.class);
+            startActivityForResult(intent, RESULT_OK);
+            return;
+        }
+        if (true) {
+            Intent intent = new Intent(this, NewMissionActivity.class);
             startActivityForResult(intent, RESULT_OK);
             return;
         }

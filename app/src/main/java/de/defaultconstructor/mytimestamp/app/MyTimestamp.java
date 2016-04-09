@@ -33,18 +33,7 @@ public class MyTimestamp extends Application {
                 Log.e(TAG, "Dummy konnte nicht gespeichert werden. MyTimestamp wird abgebrochen.");
                 System.exit(1);
             }
-        }/*
-        if (MyTimestamp.firstRun) {
-            if (null == (MyTimestamp.currentBenutzer = this.applicationService.persistDummies())) {
-                Log.e(TAG, "Dummy konnte nicht gespeichert werden. MyTimestamp wird abgebrochen.");
-                System.exit(1);
-            }
-        } else {
-            if (null == (MyTimestamp.currentBenutzer = this.applicationService.getCurrentBenutzer())) {
-                Log.e(TAG, "Der aktuelle Benutzer konnte nicht geladen werden. MyTimestamp wird abgebrochen.");
-                System.exit(1);
-            }
-        }*/
+        }
         this.aktiveAuftraggeber = this.applicationService.getAktiveAuftraggeber(MyTimestamp.currentBenutzer);
     }
 

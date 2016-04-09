@@ -61,14 +61,14 @@ public class Adresse implements DatabaseEntity {
 
     @Override
     public String toString() {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append("Adresse {id=").append(this.id).append(", ");
-        buffer.append("adresszusatz='").append(this.adresszusatz).append("', ");
-        buffer.append("ortschaft='").append(this.ortschaft).append("', ");
-        buffer.append("postleitzahl='").append(this.postleitzahl).append("', ");
-        buffer.append("staat=").append(this.staat).append("', ");
-        buffer.append("straszeUndHaus='").append(this.straszeUndHaus).append("'}");
-        return buffer.toString();
+        StringBuilder builder = new StringBuilder();
+        builder.append("Adresse {id=").append(this.id).append(", ");
+        builder.append("adresszusatz='").append(this.adresszusatz).append("', ");
+        builder.append("ortschaft='").append(this.ortschaft).append("', ");
+        builder.append("postleitzahl='").append(this.postleitzahl).append("', ");
+        builder.append("staat=").append(this.staat).append("', ");
+        builder.append("straszeUndHaus='").append(this.straszeUndHaus).append("'}");
+        return builder.toString();
     }
 
     private long id;
@@ -79,18 +79,16 @@ public class Adresse implements DatabaseEntity {
     private String staat;
     private String straszeUndHaus;
 
-    @Override
     public long getId() {
-        return id;
+        return this.id;
     }
 
-    @Override
     public void setId(long id) {
         this.id = id;
     }
 
     public String getAdresszusatz() {
-        return adresszusatz;
+        return this.adresszusatz;
     }
 
     public void setAdresszusatz(String adresszusatz) {
@@ -98,7 +96,7 @@ public class Adresse implements DatabaseEntity {
     }
 
     public String getOrtschaft() {
-        return ortschaft;
+        return this.ortschaft;
     }
 
     public void setOrtschaft(String ortschaft) {
@@ -106,7 +104,7 @@ public class Adresse implements DatabaseEntity {
     }
 
     public String getPostleitzahl() {
-        return postleitzahl;
+        return this.postleitzahl;
     }
 
     public void setPostleitzahl(String postleitzahl) {
@@ -114,7 +112,7 @@ public class Adresse implements DatabaseEntity {
     }
 
     public String getStaat() {
-        return staat;
+        return this.staat;
     }
 
     public void setStaat(String staat) {
@@ -122,7 +120,7 @@ public class Adresse implements DatabaseEntity {
     }
 
     public String getStraszeUndHaus() {
-        return straszeUndHaus;
+        return this.straszeUndHaus;
     }
 
     public void setStraszeUndHaus(String straszeUndHaus) {

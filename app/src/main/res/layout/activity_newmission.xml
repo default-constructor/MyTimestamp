@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scrollViewSettingsActivity"
+    android:id="@+id/scrollViewNewMissionActivity"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="de.defaultconstructor.mytimestamp.app.android.activities.SettingsActivity">
+    tools:context="de.defaultconstructor.mytimestamp.app.android.activities.NewMissionActivity">
     <LinearLayout
-        android:id="@+id/activitySettingsWrapper"
+        android:id="@+id/activityNewMissionWrapper"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

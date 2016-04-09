@@ -63,12 +63,12 @@ public class Auftraggeber extends Person implements DatabaseEntity {
 
     @Override
     public String toString() {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append("Auftraggeber {id=").append(this.id).append(", ");
-        buffer.append("firma='").append(this.firma).append("', ");
-        buffer.append("adresse=").append(this.getAdresse().toString()).append("', ");
-        buffer.append("kontakt=").append(this.getKontakt().toString()).append("'}");
-        return buffer.toString();
+        StringBuilder builder = new StringBuilder();
+        builder.append("Auftraggeber {id=").append(this.id).append(", ");
+        builder.append("firma='").append(this.firma).append("', ");
+        builder.append("adresse=").append(this.getAdresse().toString()).append("', ");
+        builder.append("kontakt=").append(this.getKontakt().toString()).append("'}");
+        return builder.toString();
     }
 
     private long id;

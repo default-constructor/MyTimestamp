@@ -22,5 +22,10 @@
             android:label="Einstellungen"
             android:parentActivityName="de.defaultconstructor.mytimestamp.app.android.activities.MainActivity"
             android:windowSoftInputMode="stateHidden"/>
+        <activity
+            android:name="de.defaultconstructor.mytimestamp.app.android.activities.NewMissionActivity"
+            android:label="Neuer Auftrag"
+            android:parentActivityName="de.defaultconstructor.mytimestamp.app.android.activities.MainActivity"
+            android:windowSoftInputMode="stateHidden"/>
     </application>
 </manifest>

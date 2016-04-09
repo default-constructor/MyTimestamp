@@ -18,20 +18,6 @@ public final class DateUtil {
     }
 
     /**
-     *
-     * @param string
-     * @return
-     */
-    public static Date getDateFromString(String string) {
-        try {
-            return new SimpleDateFormat("dd.MM.yyyy").parse(string);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
      * Veraendert das Monat des mitgelieferten Datum, um die mitgelieferte Anzahl der Monate.
      * Eine negative Zahl verringert, eine positive Zahl erhoeht das Monat.
      *
@@ -65,5 +51,24 @@ public final class DateUtil {
         calendar.setTime(date);
         calendar.add(Calendar.YEAR, years);
         return calendar.getTime();
+    }
+
+    /**
+     *
+     * @param string
+     * @return
+     */
+    public static Date getDateFromString(String string) {
+        try {
+            return new SimpleDateFormat("dd.MM.yyyy").parse(string);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String getStringFromDate(Date date) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        return formatter.format(date);
     }
 }

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,13 +24,14 @@ import de.defaultconstructor.mytimestamp.R;
 import de.defaultconstructor.mytimestamp.app.MyTimestamp;
 import de.defaultconstructor.mytimestamp.app.android.activities.SettingsActivity;
 import de.defaultconstructor.mytimestamp.app.android.widgets.components.AccordionView;
+import de.defaultconstructor.mytimestamp.app.enumeration.Berufsstatus;
 import de.defaultconstructor.mytimestamp.app.exception.AppException;
 import de.defaultconstructor.mytimestamp.app.model.Benutzer;
 
 /**
  * Created by Thomas Reno on 28.02.2016.
  */
-public class BenutzerdatenFragment extends SettingsFragment implements AccordionView.Listener,
+public class BenutzerdatenFragment extends MyTimestampFragment implements AccordionView.Listener,
         SelectionDialogFragment.Callback, DatePickerDialogFragment.Callback {
 
     public static final String TAG = "BenutzerdatenFragment";
@@ -165,7 +165,6 @@ public class BenutzerdatenFragment extends SettingsFragment implements Accordion
         this.editTextBerufsstatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("BenutzerdatenFragment", "on click berufsstatus");
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 SelectionDialogFragment dialogFragment = SelectionDialogFragment.newInstance("Berufsstatus auswählen",
@@ -240,7 +239,7 @@ public class BenutzerdatenFragment extends SettingsFragment implements Accordion
     private void mapBenutzerdaten() {
         String value;
         if (hasStringValue(value = String.valueOf(this.editTextBerufsstatus.getText()))) {
-      //      this.benutzer.setBerufsstatus(value);
+            this.benutzer.setBerufsstatus(Berufsstatus.getByBezeichnung(value));
         }
         if (hasStringValue(value = String.valueOf(this.editTextFamilienname.getText()))) {
             this.benutzer.setFamilienname(value);

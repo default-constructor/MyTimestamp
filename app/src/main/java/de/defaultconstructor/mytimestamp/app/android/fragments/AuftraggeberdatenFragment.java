@@ -15,6 +15,7 @@ import android.widget.EditText;
 import java.util.regex.Pattern;
 
 import de.defaultconstructor.mytimestamp.R;
+import de.defaultconstructor.mytimestamp.app.android.activities.NewMissionActivity;
 import de.defaultconstructor.mytimestamp.app.android.activities.SettingsActivity;
 import de.defaultconstructor.mytimestamp.app.exception.AppException;
 import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
@@ -22,21 +23,25 @@ import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
 /**
  * Created by Thomas Reno on 28.02.2016.
  */
-public class AuftraggeberdatenFragment extends SettingsFragment {
+public class AuftraggeberdatenFragment extends MyTimestampFragment {
 
     public static final String TAG = "AuftraggeberdatenFragment";
 
     private static final String TEXT_MESSAGE_ERROR = "Zu besoffen oder was?";
 
+    @SuppressLint("LongLogTag")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.auftraggeber = (Auftraggeber) ((SettingsActivity) getActivity()).getPersonendaten(TAG);
+        Log.d(TAG, "on create");
+        this.auftraggeber = new Auftraggeber("");
     }
 
+    @SuppressLint("LongLogTag")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+        Log.d(TAG, "on create view");
         this.view = inflater.inflate(R.layout.fragment_auftraggeberdaten, container, false);
         initialize();
         setEnableButtonSubmit();
@@ -70,7 +75,7 @@ public class AuftraggeberdatenFragment extends SettingsFragment {
                 mapArbeitgeberdaten();
                 mapKontaktdaten();
                 try {
-                    ((SettingsActivity) getActivity()).onSubmit(AuftraggeberdatenFragment.this.auftraggeber);
+                    ((NewMissionActivity) getActivity()).onSubmit(AuftraggeberdatenFragment.this.auftraggeber);
                 } catch (AppException e) {
                     Log.e(TAG, "Beim Speichern der Einstellungen ist ein Fehler aufgetreten.", e);
                 }

@@ -12,7 +12,7 @@ import de.defaultconstructor.mytimestamp.app.model.Person;
 /**
  * Created by Thomas Reno on 13.03.2016.
  */
-public class SettingsFragment extends Fragment {
+public class MyTimestampFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -25,14 +25,17 @@ public class SettingsFragment extends Fragment {
 
     private String fragmentTag;
 
-    public static SettingsFragment newInstance(String tagFragment) {
+    public static MyTimestampFragment newInstance(String tagFragment) {
         if (null == tagFragment) {
             return null;
         }
-        SettingsFragment fragment;
+        MyTimestampFragment fragment;
         switch (tagFragment) {
             case AuftraggeberdatenFragment.TAG:
                 fragment = new AuftraggeberdatenFragment();
+                break;
+            case NeuerAuftragFragment.TAG:
+                fragment = new NeuerAuftragFragment();
                 break;
             default:
                 fragment = new BenutzerdatenFragment();

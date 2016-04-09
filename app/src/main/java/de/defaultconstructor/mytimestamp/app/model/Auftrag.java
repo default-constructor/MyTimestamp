@@ -3,6 +3,8 @@ package de.defaultconstructor.mytimestamp.app.model;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import java.util.List;
+
 import de.defaultconstructor.mytimestamp.app.enumeration.Status;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
 
@@ -10,8 +12,6 @@ import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
  * Created by Thomas Reno on 19.03.2016.
  */
 public class Auftrag implements DatabaseEntity {
-
-    public static final Auftrag DUMMY = new Auftrag(true, null, null);
 
     /**
      *
@@ -37,8 +37,8 @@ public class Auftrag implements DatabaseEntity {
      */
     public static Auftrag getInstance(Cursor cursor) {
         Auftrag auftrag = new Auftrag(
-                Status.getByStatusCode(cursor.getInt(cursor.getColumnIndex("aktiv"))).isEnabled(), null, null);
-        auftrag.setId(cursor.getLong(cursor.getColumnIndex("id")));
+                Status.getByStatusCode(cursor.getInt(cursor.getColumnIndex("aktiv"))).isEnabled(),
+                null, null, null);
         return auftrag;
     }
 
@@ -67,7 +67,12 @@ public class Auftrag implements DatabaseEntity {
     }
 
     @Override
-    public String toString() { // TODO StringBuffer
+    public String toString() { // TODO StringBuilder
+        StringBuilder builder = new StringBuilder();
+        builder.append("Auftrag {id=").append(this.id).append(", ");
+        builder.append("aktiv=").append(this.aktiv).append(", ");
+        builder.append("auftraggeber=").append(getAuftraggeber().toString()).append(", ");
+        builder.append("benutzer=").append(getBenutzer().toString()).append(", ");
         return "Auftrag{" +
                 "id=" + id +
                 ", aktiv=" + aktiv +
@@ -82,6 +87,7 @@ public class Auftrag implements DatabaseEntity {
 
     private Auftraggeber auftraggeber;
     private Benutzer benutzer;
+    private Entgelt entgelt;
 
     @Override
     public long getId() {
@@ -117,9 +123,18 @@ public class Auftrag implements DatabaseEntity {
         this.benutzer = benutzer;
     }
 
-    public Auftrag(boolean aktiv, Auftraggeber auftraggeber, Benutzer benutzer) {
+    public Entgelt getEntgelt() {
+        return entgelt;
+    }
+
+    public void setEntgelt(Entgelt entgelt) {
+        this.entgelt = entgelt;
+    }
+
+    public Auftrag(boolean aktiv, Auftraggeber auftraggeber, Benutzer benutzer, Entgelt entgelt) {
         this.aktiv = aktiv;
         this.auftraggeber = auftraggeber;
         this.benutzer = benutzer;
+        this.entgelt = entgelt;
     }
 }

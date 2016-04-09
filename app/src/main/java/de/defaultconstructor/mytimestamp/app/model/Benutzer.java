@@ -79,15 +79,15 @@ public class Benutzer extends Person implements DatabaseEntity {
 
     @Override
     public String toString() {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append("Benutzer {id=").append(this.id).append(", ");
-        buffer.append("aktiv=").append(this.aktiv).append(", ");
-        buffer.append("familienname='").append(this.familienname).append("', ");
-        buffer.append("geburtsdatum='").append(this.geburtsdatum).append("', ");
-        buffer.append("vorname='").append(this.vorname).append("', ");
-        buffer.append("adresse=").append(getAdresse().toString()).append("', ");
-        buffer.append("kontakt=").append(getKontakt().toString()).append("'}");
-        return buffer.toString();
+        StringBuilder builder = new StringBuilder();
+        builder.append("Benutzer {id=").append(this.id).append(", ");
+        builder.append("aktiv=").append(this.aktiv).append(", ");
+        builder.append("familienname='").append(this.familienname).append("', ");
+        builder.append("geburtsdatum='").append(this.geburtsdatum).append("', ");
+        builder.append("vorname='").append(this.vorname).append("', ");
+        builder.append("adresse=").append(getAdresse().toString()).append("', ");
+        builder.append("kontakt=").append(getKontakt().toString()).append("'}");
+        return builder.toString();
     }
 
     private long id;
@@ -98,12 +98,10 @@ public class Benutzer extends Person implements DatabaseEntity {
     private Date geburtsdatum;
     private String vorname;
 
-    @Override
     public long getId() {
         return this.id;
     }
 
-    @Override
     public void setId(long id) {
         this.id = id;
     }

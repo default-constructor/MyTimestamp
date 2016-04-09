@@ -36,8 +36,16 @@ public enum Einheit {
             return null;
         }
 
-        public String code;
-        public String symbol;
+        private String code;
+        private String symbol;
+
+        public String getCode() {
+            return code;
+        }
+
+        public String getSymbol() {
+            return symbol;
+        }
 
         Waehrung(String code, String symbol) {
             this.code = code;

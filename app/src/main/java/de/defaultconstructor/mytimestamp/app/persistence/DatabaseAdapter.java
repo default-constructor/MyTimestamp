@@ -187,18 +187,24 @@ public class DatabaseAdapter {
         public static final String NAME_TABLE_AUFTRAG = "auftrag";
         public static final String NAME_TABLE_AUFTRAGGEBER = "auftraggeber";
         public static final String NAME_TABLE_BENUTZER = "benutzer";
+        public static final String NAME_TABLE_EINSATZ = "einsatz";
         public static final String NAME_TABLE_KONTAKT = "kontakt";
+        public static final String NAME_TABLE_PROJEKT = "projekt";
 
         public static final String[] COLUMNS_TABLE_ADRESSE = new String[] {
-                "id", "adresszusatz", "ortschaft", "postleitzahl", "staat", "straszeUndHaus"};
+                "id", "adresszusatz", "ortschaft", "postleitzahl", "staat", "straszeUndHaus" };
         public static final String[] COLUMNS_TABLE_AUFTRAG = new String[] {
-                "id", "aktiv", "auftragsart", "entgelt", "entgeltHaeufigkeit", NAME_TABLE_BENUTZER, NAME_TABLE_AUFTRAGGEBER};
+                "id", "auftragsart", "entgelt", "entgeltHaeufigkeit", NAME_TABLE_BENUTZER, NAME_TABLE_AUFTRAGGEBER };
         public static final String[] COLUMNS_TABLE_AUFTRAGGEBER = new String[] {
-                "id", "firma", NAME_TABLE_ADRESSE, NAME_TABLE_KONTAKT};
+                "id", "firma", NAME_TABLE_ADRESSE, NAME_TABLE_KONTAKT };
         public static final String[] COLUMNS_TABLE_BENUTZER = new String[] {
-                "id", "aktiv", "berufsstatus", "familienname", "geburtsdatum", "vorname", NAME_TABLE_ADRESSE, NAME_TABLE_KONTAKT};
+                "id", "aktiv", "berufsstatus", "familienname", "geburtsdatum", "vorname", NAME_TABLE_ADRESSE, NAME_TABLE_KONTAKT };
+        public static final String[] COLUMNS_TABLE_EINSATZ = new String[] {
+                "id", "beginn", "beschreibung", "ende", "fahrtzeit", "pause", NAME_TABLE_PROJEKT };
         public static final String[] COLUMNS_TABLE_KONTAKT = new String[] {
-                "id", "email", "mobil", "telefax", "telefon", "webseite"};
+                "id", "email", "mobil", "telefax", "telefon", "webseite" };
+        public static final String[] COLUMNS_TABLE_PROJEKT = new String[] {
+                "id", "beschreibung", "name", "nummer", NAME_TABLE_ADRESSE, NAME_TABLE_AUFTRAG, NAME_TABLE_KONTAKT };
 
         protected static final String NAME_DATABASE = "myTimestamp";
 
@@ -213,16 +219,15 @@ public class DatabaseAdapter {
         static final String SQL_CREATE_TABLE_AUFTRAG =
                 "CREATE TABLE " + NAME_TABLE_AUFTRAG + " (" +
                         COLUMNS_TABLE_AUFTRAG[0] + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        COLUMNS_TABLE_AUFTRAG[1] + " INTEGER DEFAULT 0, " +
-                        COLUMNS_TABLE_AUFTRAG[2] + " TEXT, " + // TODO auftragsart TEXT NOT NULL
-                        COLUMNS_TABLE_AUFTRAG[3] + " REAL, " +
-                        COLUMNS_TABLE_AUFTRAG[4] + " INTEGER DEFAULT " + EntgeltHaeufigkeit.EINMALIG.getHaeufigkeit() + ", " +
+                        COLUMNS_TABLE_AUFTRAG[1] + " TEXT, " + // TODO auftragsart TEXT NOT NULL
+                        COLUMNS_TABLE_AUFTRAG[2] + " REAL, " +
+                        COLUMNS_TABLE_AUFTRAG[3] + " INTEGER DEFAULT " + EntgeltHaeufigkeit.EINMALIG.getHaeufigkeit() + ", " +
+                        COLUMNS_TABLE_AUFTRAG[4] + " INTEGER NOT NULL, " +
                         COLUMNS_TABLE_AUFTRAG[5] + " INTEGER NOT NULL, " +
-                        COLUMNS_TABLE_AUFTRAG[6] + " INTEGER NOT NULL, " +
+                        "FOREIGN KEY (" + COLUMNS_TABLE_AUFTRAG[4] + ") " +
+                        "REFERENCES " + NAME_TABLE_BENUTZER + " (id), " +
                         "FOREIGN KEY (" + COLUMNS_TABLE_AUFTRAG[5] + ") " +
-                        "REFERENCES " + COLUMNS_TABLE_AUFTRAG[5] + " (id), " +
-                        "FOREIGN KEY (" + COLUMNS_TABLE_AUFTRAG[6] + ") " +
-                        "REFERENCES " + COLUMNS_TABLE_AUFTRAG[6] + "(id));";
+                        "REFERENCES " + NAME_TABLE_AUFTRAGGEBER + " (id));";
         static final String SQL_CREATE_TABLE_AUFTRAGGEBER =
                 "CREATE TABLE " + NAME_TABLE_AUFTRAGGEBER + " (" +
                         COLUMNS_TABLE_AUFTRAGGEBER[0] + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -230,9 +235,9 @@ public class DatabaseAdapter {
                         COLUMNS_TABLE_AUFTRAGGEBER[2] + " INTEGER, " +
                         COLUMNS_TABLE_AUFTRAGGEBER[3] + " INTEGER, " +
                         "FOREIGN KEY (" + COLUMNS_TABLE_AUFTRAGGEBER[2] + ") " +
-                        "REFERENCES " + COLUMNS_TABLE_AUFTRAGGEBER[2] + " (id), " +
+                        "REFERENCES " + NAME_TABLE_ADRESSE + " (id), " +
                         "FOREIGN KEY (" + COLUMNS_TABLE_AUFTRAGGEBER[3] + ") " +
-                        "REFERENCES " + COLUMNS_TABLE_AUFTRAGGEBER[3] + " (id));";
+                        "REFERENCES " + NAME_TABLE_KONTAKT + " (id));";
         static final String SQL_CREATE_TABLE_BENUTZER =
                 "CREATE TABLE " + NAME_TABLE_BENUTZER + " (" +
                         COLUMNS_TABLE_BENUTZER[0] + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -244,9 +249,20 @@ public class DatabaseAdapter {
                         COLUMNS_TABLE_BENUTZER[6] + " INTEGER, " +
                         COLUMNS_TABLE_BENUTZER[7] + " INTEGER, " +
                         "FOREIGN KEY (" + COLUMNS_TABLE_BENUTZER[6] + ") " +
-                        "REFERENCES " + COLUMNS_TABLE_BENUTZER[6] + " (id), " +
+                        "REFERENCES " + NAME_TABLE_ADRESSE + " (id), " +
                         "FOREIGN KEY (" + COLUMNS_TABLE_BENUTZER[7] + ") " +
-                        "REFERENCES " + COLUMNS_TABLE_BENUTZER[7] + " (id));";
+                        "REFERENCES " + NAME_TABLE_KONTAKT + " (id));";
+        static final String SQL_CREATE_TABLE_EINSATZ =
+                "CREATE TABLE " + NAME_TABLE_EINSATZ + " (" +
+                        COLUMNS_TABLE_EINSATZ[0] + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        COLUMNS_TABLE_EINSATZ[1] + " DATE, " +
+                        COLUMNS_TABLE_EINSATZ[2] + " TEXT, " +
+                        COLUMNS_TABLE_EINSATZ[3] + " DATE, " +
+                        COLUMNS_TABLE_EINSATZ[4] + " REAL, " +
+                        COLUMNS_TABLE_EINSATZ[5] + " REAL, " +
+                        COLUMNS_TABLE_EINSATZ[6] + " INTEGER, " +
+                        "FOREIGN KEY (" + COLUMNS_TABLE_EINSATZ[6] + ") " +
+                        "REFERENCES " + NAME_TABLE_PROJEKT + " (id));";
         static final String SQL_CREATE_TABLE_KONTAKT =
                 "CREATE TABLE " + NAME_TABLE_KONTAKT + " (" +
                         COLUMNS_TABLE_KONTAKT[0] + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -255,6 +271,21 @@ public class DatabaseAdapter {
                         COLUMNS_TABLE_KONTAKT[3] + " TEXT, " +
                         COLUMNS_TABLE_KONTAKT[4] + " TEXT, " +
                         COLUMNS_TABLE_KONTAKT[5] + " TEXT);";
+        static final String SQL_CREATE_TABLE_PROJEKT =
+                "CREATE TABLE " + NAME_TABLE_PROJEKT + " (" +
+                        COLUMNS_TABLE_PROJEKT[0] + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        COLUMNS_TABLE_PROJEKT[1] + " TEXT, " +
+                        COLUMNS_TABLE_PROJEKT[2] + " TEXT, " +
+                        COLUMNS_TABLE_PROJEKT[3] + " TEXT, " +
+                        COLUMNS_TABLE_PROJEKT[4] + " INTEGER, " +
+                        COLUMNS_TABLE_PROJEKT[5] + " INTEGER, " +
+                        COLUMNS_TABLE_PROJEKT[6] + " INTEGER, " +
+                        "FOREIGN KEY (" + COLUMNS_TABLE_PROJEKT[4] + ") " +
+                        "REFERENCES " + NAME_TABLE_ADRESSE + " (id), " +
+                        "FOREIGN KEY (" + COLUMNS_TABLE_PROJEKT[5] + ") " +
+                        "REFERENCES " + NAME_TABLE_AUFTRAG + " (id), " +
+                        "FOREIGN KEY (" + COLUMNS_TABLE_PROJEKT[6] + ") " +
+                        "REFERENCES " + NAME_TABLE_KONTAKT + " (id));";
 
         static final int VERSION_DATABASE = 1;
     }
@@ -291,6 +322,8 @@ public class DatabaseAdapter {
             this.sqliteDatabase.execSQL(SQL_CREATE_TABLE_AUFTRAGGEBER);
             this.sqliteDatabase.execSQL(SQL_CREATE_TABLE_BENUTZER);
             this.sqliteDatabase.execSQL(SQL_CREATE_TABLE_AUFTRAG);
+            this.sqliteDatabase.execSQL(SQL_CREATE_TABLE_PROJEKT);
+            this.sqliteDatabase.execSQL(SQL_CREATE_TABLE_EINSATZ);
         }
     }
 }

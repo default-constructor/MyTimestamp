@@ -70,14 +70,14 @@ public class Kontakt implements DatabaseEntity {
 
     @Override
     public String toString() {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append("Kontakt {id=").append(this.id).append(", ");
-        buffer.append("email='").append(this.email).append("', ");
-        buffer.append("mobil='").append(this.mobil).append("', ");
-        buffer.append("telefax='").append(this.telefax).append("', ");
-        buffer.append("telefon='").append(this.telefon).append("' ");
-        buffer.append("webseite='").append(this.webseite).append("'}");
-        return buffer.toString();
+        StringBuilder builder = new StringBuilder();
+        builder.append("Kontakt {id=").append(this.id).append(", ");
+        builder.append("email='").append(this.email).append("', ");
+        builder.append("mobil='").append(this.mobil).append("', ");
+        builder.append("telefax='").append(this.telefax).append("', ");
+        builder.append("telefon='").append(this.telefon).append("' ");
+        builder.append("webseite='").append(this.webseite).append("'}");
+        return builder.toString();
     }
 
     private long id;
