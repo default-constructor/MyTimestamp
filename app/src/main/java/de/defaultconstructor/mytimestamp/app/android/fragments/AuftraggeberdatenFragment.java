@@ -34,7 +34,7 @@ public class AuftraggeberdatenFragment extends MyTimestampFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "on create");
-        this.auftraggeber = new Auftraggeber("");
+        this.auftraggeber = new Auftraggeber();
     }
 
     @SuppressLint("LongLogTag")
@@ -62,11 +62,14 @@ public class AuftraggeberdatenFragment extends MyTimestampFragment {
     private Auftraggeber auftraggeber;
     private View view;
 
+    @SuppressLint("LongLogTag")
     public AuftraggeberdatenFragment() {
         super();
+        Log.d(TAG, "new AuftraggeberdatenFragment");
     }
 
     protected void initialize() {
+        getActivity().setTitle("Neuer Auftraggeber");
         this.buttonSubmitArbeitgeberdaten = (Button) this.view.findViewById(R.id.buttonSubmitArbeitgeberdaten);
         this.buttonSubmitArbeitgeberdaten.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("LongLogTag")

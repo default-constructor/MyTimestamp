@@ -25,8 +25,8 @@ public class Auftrag implements DatabaseEntity {
             contentValues.put("id", entity.getId());
         }
         contentValues.put("aktiv", entity.isAktiv());
-        contentValues.put("auftraggeber", entity.getAuftraggeber().getId());
-        contentValues.put("benutzer", entity.getBenutzer().getId());
+        contentValues.put("auftraggeber", entity.auftraggeber.getId());
+        contentValues.put("entgelt", entity.entgelt.getId());
         return contentValues;
     }
 
@@ -36,9 +36,9 @@ public class Auftrag implements DatabaseEntity {
      * @return
      */
     public static Auftrag getInstance(Cursor cursor) {
-        Auftrag auftrag = new Auftrag(
-                Status.getByStatusCode(cursor.getInt(cursor.getColumnIndex("aktiv"))).isEnabled(),
-                null, null, null);
+        Auftrag auftrag = new Auftrag();
+        auftrag.setId(cursor.getLong(cursor.getColumnIndex("id")));
+        auftrag.setAktiv(Status.getByStatusCode(cursor.getInt(cursor.getColumnIndex("aktiv"))).isEnabled());
         return auftrag;
     }
 
@@ -53,8 +53,7 @@ public class Auftrag implements DatabaseEntity {
         if (isAktiv() != auftrag.isAktiv()) return false;
         if (getAuftraggeber() != null ? !getAuftraggeber().equals(auftrag.getAuftraggeber()) : auftrag.getAuftraggeber() != null)
             return false;
-        return !(getBenutzer() != null ? !getBenutzer().equals(auftrag.getBenutzer()) : auftrag.getBenutzer() != null);
-
+        return !(getEntgelt() != null ? !getEntgelt().equals(auftrag.getEntgelt()) : auftrag.getEntgelt() != null);
     }
 
     @Override
@@ -62,7 +61,7 @@ public class Auftrag implements DatabaseEntity {
         int result = (int) (getId() ^ (getId() >>> 32));
         result = 31 * result + (isAktiv() ? 1 : 0);
         result = 31 * result + (getAuftraggeber() != null ? getAuftraggeber().hashCode() : 0);
-        result = 31 * result + (getBenutzer() != null ? getBenutzer().hashCode() : 0);
+        result = 31 * result + (getEntgelt() != null ? getEntgelt().hashCode() : 0);
         return result;
     }
 
@@ -71,14 +70,9 @@ public class Auftrag implements DatabaseEntity {
         StringBuilder builder = new StringBuilder();
         builder.append("Auftrag {id=").append(this.id).append(", ");
         builder.append("aktiv=").append(this.aktiv).append(", ");
-        builder.append("auftraggeber=").append(getAuftraggeber().toString()).append(", ");
-        builder.append("benutzer=").append(getBenutzer().toString()).append(", ");
-        return "Auftrag{" +
-                "id=" + id +
-                ", aktiv=" + aktiv +
-                ", auftraggeber=" + auftraggeber +
-                ", benutzer=" + benutzer +
-                '}';
+        builder.append("auftraggeber=").append(this.auftraggeber.toString()).append(", ");
+        builder.append("entgelt=").append(this.entgelt.toString()).append("}");
+        return builder.toString();
     }
 
     private long id;
@@ -86,7 +80,6 @@ public class Auftrag implements DatabaseEntity {
     private boolean aktiv;
 
     private Auftraggeber auftraggeber;
-    private Benutzer benutzer;
     private Entgelt entgelt;
 
     @Override
@@ -115,14 +108,6 @@ public class Auftrag implements DatabaseEntity {
         this.auftraggeber = auftraggeber;
     }
 
-    public Benutzer getBenutzer() {
-        return this.benutzer;
-    }
-
-    public void setBenutzer(Benutzer benutzer) {
-        this.benutzer = benutzer;
-    }
-
     public Entgelt getEntgelt() {
         return entgelt;
     }
@@ -131,10 +116,8 @@ public class Auftrag implements DatabaseEntity {
         this.entgelt = entgelt;
     }
 
-    public Auftrag(boolean aktiv, Auftraggeber auftraggeber, Benutzer benutzer, Entgelt entgelt) {
-        this.aktiv = aktiv;
-        this.auftraggeber = auftraggeber;
-        this.benutzer = benutzer;
-        this.entgelt = entgelt;
+    public Auftrag() {
+        this.auftraggeber = new Auftraggeber();
+        this.entgelt = new Entgelt();
     }
 }

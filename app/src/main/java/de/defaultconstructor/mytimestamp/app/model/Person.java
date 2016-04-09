@@ -5,27 +5,5 @@ package de.defaultconstructor.mytimestamp.app.model;
  */
 public class Person {
 
-    private Adresse adresse;
-    private Kontakt kontakt;
-
-    public Adresse getAdresse() {
-        return this.adresse;
-    }
-
-    public void setAdresse(Adresse adresse) {
-        this.adresse = adresse;
-    }
-
-    public Kontakt getKontakt() {
-        return this.kontakt;
-    }
-
-    public void setKontakt(Kontakt kontakt) {
-        this.kontakt = kontakt;
-    }
-
-    public Person(Adresse adresse, Kontakt kontakt) {
-        this.adresse = adresse;
-        this.kontakt = kontakt;
-    }
+    //
 }

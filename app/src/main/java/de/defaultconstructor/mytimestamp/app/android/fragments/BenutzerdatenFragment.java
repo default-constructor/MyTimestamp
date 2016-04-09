@@ -96,6 +96,7 @@ public class BenutzerdatenFragment extends MyTimestampFragment implements Accord
     }
 
     private void initialize() {
+        getActivity().setTitle("Neuer Benutzer");
         this.buttonSubmit = (Button) this.view.findViewById(R.id.buttonSubmitBenutzerdaten);
         this.buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -270,7 +271,7 @@ public class BenutzerdatenFragment extends MyTimestampFragment implements Accord
         }
     }
 
-    private void setEnableButtonSubmit() {
+    protected void setEnableButtonSubmit() {
         this.buttonSubmit.setEnabled(hasStringValue(String.valueOf(this.editTextBerufsstatus.getText()))
                 && hasStringValue(String.valueOf(this.editTextFamilienname.getText()))
                 && hasStringValue(String.valueOf(this.editTextGeburtsdatum.getText()))

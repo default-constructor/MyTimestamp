@@ -79,25 +79,28 @@ public class DatabaseAdapter {
      *
      * @throws PersistenceException
      */
-    public long insert(DatabaseEntity databaseEntity) throws PersistenceException {
+    public DatabaseEntity insert(DatabaseEntity databaseEntity) throws PersistenceException {
         Log.d(TAG, "insert " + databaseEntity.getClass().getSimpleName());
         String table = databaseEntity.getClass().getSimpleName().toLowerCase();
-        return insert(table, databaseEntity);
+        if (0 < insert(table, databaseEntity)) {
+            return databaseEntity;
+        }
+        return null;
     }
 
     /**
-     * Selects a entity from the desired table in accordance with the given contitions.
+     * Selects entities from the desired table in accordance with the given contitions.
      *
      * @param tableName
      *              String
      * @param whereClause
      *              String
      *
-     * @return the selected entity
+     * @return a list of selected entities
      *
      * @throws {@link PersistenceException}
      */
-    public DatabaseEntity select(String tableName, String whereClause) throws PersistenceException {
+    public List<DatabaseEntity> select(String tableName, String whereClause) throws PersistenceException {
         whereClause = null != whereClause ? whereClause : "id > 0";
         SQLiteCursor cursor = (SQLiteCursor) this.database.query(true, tableName,
                 DatabaseUtil.getColumnNames(tableName), whereClause, null, null, null, null, null);
@@ -105,12 +108,14 @@ public class DatabaseAdapter {
             throw new PersistenceException(PersistenceException.Cause.SELECT_NO_RESULT.getCode(),
                     PersistenceException.Cause.SELECT_NO_RESULT.getMessage().replace("{table}", tableName));
         }
-        cursor.moveToFirst();
-        DatabaseEntity entity = DatabaseUtil.mapResult(cursor, tableName);
-        if (!cursor.isClosed()) {
-            cursor.close();
+        List<DatabaseEntity> databaseEntityList = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                databaseEntityList.add(DatabaseUtil.mapResult(cursor, tableName));
+                cursor.moveToNext();
+            }
         }
-        return entity;
+        return databaseEntityList;
     }
 
     /**
@@ -194,9 +199,9 @@ public class DatabaseAdapter {
         public static final String[] COLUMNS_TABLE_ADRESSE = new String[] {
                 "id", "adresszusatz", "ortschaft", "postleitzahl", "staat", "straszeUndHaus" };
         public static final String[] COLUMNS_TABLE_AUFTRAG = new String[] {
-                "id", "auftragsart", "entgelt", "entgeltHaeufigkeit", NAME_TABLE_BENUTZER, NAME_TABLE_AUFTRAGGEBER };
+                "id", "auftragsart", "entgelt", "entgeltHaeufigkeit", NAME_TABLE_AUFTRAGGEBER };
         public static final String[] COLUMNS_TABLE_AUFTRAGGEBER = new String[] {
-                "id", "firma", NAME_TABLE_ADRESSE, NAME_TABLE_KONTAKT };
+                "id", "firma", NAME_TABLE_ADRESSE, NAME_TABLE_BENUTZER, NAME_TABLE_KONTAKT };
         public static final String[] COLUMNS_TABLE_BENUTZER = new String[] {
                 "id", "aktiv", "berufsstatus", "familienname", "geburtsdatum", "vorname", NAME_TABLE_ADRESSE, NAME_TABLE_KONTAKT };
         public static final String[] COLUMNS_TABLE_EINSATZ = new String[] {
@@ -223,10 +228,7 @@ public class DatabaseAdapter {
                         COLUMNS_TABLE_AUFTRAG[2] + " REAL, " +
                         COLUMNS_TABLE_AUFTRAG[3] + " INTEGER DEFAULT " + EntgeltHaeufigkeit.EINMALIG.getHaeufigkeit() + ", " +
                         COLUMNS_TABLE_AUFTRAG[4] + " INTEGER NOT NULL, " +
-                        COLUMNS_TABLE_AUFTRAG[5] + " INTEGER NOT NULL, " +
                         "FOREIGN KEY (" + COLUMNS_TABLE_AUFTRAG[4] + ") " +
-                        "REFERENCES " + NAME_TABLE_BENUTZER + " (id), " +
-                        "FOREIGN KEY (" + COLUMNS_TABLE_AUFTRAG[5] + ") " +
                         "REFERENCES " + NAME_TABLE_AUFTRAGGEBER + " (id));";
         static final String SQL_CREATE_TABLE_AUFTRAGGEBER =
                 "CREATE TABLE " + NAME_TABLE_AUFTRAGGEBER + " (" +
@@ -234,9 +236,12 @@ public class DatabaseAdapter {
                         COLUMNS_TABLE_AUFTRAGGEBER[1] + " TEXT NOT NULL, " +
                         COLUMNS_TABLE_AUFTRAGGEBER[2] + " INTEGER, " +
                         COLUMNS_TABLE_AUFTRAGGEBER[3] + " INTEGER, " +
+                        COLUMNS_TABLE_AUFTRAGGEBER[4] + " INTEGER, " +
                         "FOREIGN KEY (" + COLUMNS_TABLE_AUFTRAGGEBER[2] + ") " +
                         "REFERENCES " + NAME_TABLE_ADRESSE + " (id), " +
                         "FOREIGN KEY (" + COLUMNS_TABLE_AUFTRAGGEBER[3] + ") " +
+                        "REFERENCES " + NAME_TABLE_BENUTZER + " (id), " +
+                        "FOREIGN KEY (" + COLUMNS_TABLE_AUFTRAGGEBER[4] + ") " +
                         "REFERENCES " + NAME_TABLE_KONTAKT + " (id));";
         static final String SQL_CREATE_TABLE_BENUTZER =
                 "CREATE TABLE " + NAME_TABLE_BENUTZER + " (" +
@@ -319,8 +324,8 @@ public class DatabaseAdapter {
         private void createTables() {
             this.sqliteDatabase.execSQL(SQL_CREATE_TABLE_ADRESSE);
             this.sqliteDatabase.execSQL(SQL_CREATE_TABLE_KONTAKT);
-            this.sqliteDatabase.execSQL(SQL_CREATE_TABLE_AUFTRAGGEBER);
             this.sqliteDatabase.execSQL(SQL_CREATE_TABLE_BENUTZER);
+            this.sqliteDatabase.execSQL(SQL_CREATE_TABLE_AUFTRAGGEBER);
             this.sqliteDatabase.execSQL(SQL_CREATE_TABLE_AUFTRAG);
             this.sqliteDatabase.execSQL(SQL_CREATE_TABLE_PROJEKT);
             this.sqliteDatabase.execSQL(SQL_CREATE_TABLE_EINSATZ);

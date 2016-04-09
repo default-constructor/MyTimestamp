@@ -22,8 +22,8 @@ public class Entgelt implements DatabaseEntity {
     public static ContentValues getContentValues(DatabaseEntity databaseEntity) {
         Entgelt entity = (Entgelt) databaseEntity;
         ContentValues contentValues = new ContentValues();
-        if (0 < entity.getId()) {
-            contentValues.put("id", entity.getId());
+        if (0 < entity.id) {
+            contentValues.put("id", entity.id);
         }
         contentValues.put("betrag", String.valueOf(entity.betrag));
         contentValues.put("haeufigkeit", entity.haeufigkeit.getKuerzel());
@@ -32,10 +32,11 @@ public class Entgelt implements DatabaseEntity {
     }
 
     public static Entgelt getInstance(Cursor cursor) {
-        Entgelt entgelt = new Entgelt(
-                new BigDecimal(cursor.getString(cursor.getColumnIndex("betrag"))),
-                EntgeltHaeufigkeit.getByKuerzel(cursor.getString(cursor.getColumnIndex("haeufigkeit"))),
-                Einheit.Waehrung.getByCode(cursor.getString(cursor.getColumnIndex("waehrung"))));
+        Entgelt entgelt = new Entgelt();
+        entgelt.setId(cursor.getLong(cursor.getColumnIndex("id")));
+        entgelt.setBetrag(new BigDecimal(cursor.getString(cursor.getColumnIndex("betrag"))));
+        entgelt.setHaeufigkeit(EntgeltHaeufigkeit.getByKuerzel(cursor.getString(cursor.getColumnIndex("haeufigkeit"))));
+        entgelt.setWaehrung(Einheit.Waehrung.getByCode(cursor.getString(cursor.getColumnIndex("waehrung"))));
         return entgelt;
     }
 
@@ -102,9 +103,7 @@ public class Entgelt implements DatabaseEntity {
         this.waehrung = waehrung;
     }
 
-    public Entgelt(BigDecimal betrag, EntgeltHaeufigkeit haeufigkeit, Einheit.Waehrung waehrung) {
-        this.betrag = betrag;
-        this.haeufigkeit = haeufigkeit;
-        this.waehrung = waehrung;
+    public Entgelt() {
+        //
     }
 }

@@ -17,8 +17,7 @@ import de.defaultconstructor.mytimestamp.app.util.DateUtil;
 public class Benutzer extends Person implements DatabaseEntity {
 
     /** Haelt einen {@link Benutzer} als Dummy. */
-    public static final Benutzer DUMMY = new Benutzer(true, Berufsstatus.ANGESTELLT, "Mustermann",
-            DateUtil.changeDateInYears(-18, new Date()), "Max");
+    public static final Benutzer DUMMY = new Benutzer();
 
     /**
      *
@@ -28,16 +27,16 @@ public class Benutzer extends Person implements DatabaseEntity {
     public static ContentValues getContentValues(DatabaseEntity databaseEntity) {
         Benutzer entity = (Benutzer) databaseEntity;
         ContentValues contentValues = new ContentValues();
-        if (0 < entity.getId()) {
-            contentValues.put("id", entity.getId());
+        if (0 < entity.id) {
+            contentValues.put("id", entity.id);
         }
         contentValues.put("aktiv", entity.aktiv);
         contentValues.put("berufsstatus", entity.berufsstatus.name());
         contentValues.put("familienname", entity.familienname);
         contentValues.put("geburtsdatum", new SimpleDateFormat("dd.MM.yyyy").format(entity.geburtsdatum));
         contentValues.put("vorname", entity.vorname);
-        contentValues.put("adresse", (entity.getAdresse().getId()));
-        contentValues.put("kontakt", (entity.getKontakt().getId()));
+        contentValues.put("adresse", (entity.adresse.getId()));
+        contentValues.put("kontakt", (entity.kontakt.getId()));
         return contentValues;
     }
 
@@ -47,13 +46,13 @@ public class Benutzer extends Person implements DatabaseEntity {
      * @return
      */
     public static Benutzer getInstance(Cursor cursor) {
-        Benutzer benutzer = new Benutzer(
-                Status.getByStatusCode(cursor.getInt(cursor.getColumnIndex("aktiv"))).isEnabled(),
-                Berufsstatus.valueOf(cursor.getString(cursor.getColumnIndex("berufsstatus"))),
-                cursor.getString(cursor.getColumnIndex("familienname")),
-                DateUtil.getDateFromString(cursor.getString(cursor.getColumnIndex("geburtsdatum"))),
-                cursor.getString(cursor.getColumnIndex("vorname")));
+        Benutzer benutzer = new Benutzer();
         benutzer.setId(cursor.getLong(cursor.getColumnIndex("id")));
+        benutzer.setAktiv(Status.getByStatusCode(cursor.getInt(cursor.getColumnIndex("aktiv"))).isEnabled());
+        benutzer.setBerufsstatus(Berufsstatus.valueOf(cursor.getString(cursor.getColumnIndex("berufsstatus"))));
+        benutzer.setFamilienname(cursor.getString(cursor.getColumnIndex("familienname")));
+        benutzer.setGeburtsdatum(DateUtil.getDateFromString(cursor.getString(cursor.getColumnIndex("geburtsdatum"))));
+        benutzer.setVorname(cursor.getString(cursor.getColumnIndex("vorname")));
         return benutzer;
     }
 
@@ -85,8 +84,8 @@ public class Benutzer extends Person implements DatabaseEntity {
         builder.append("familienname='").append(this.familienname).append("', ");
         builder.append("geburtsdatum='").append(this.geburtsdatum).append("', ");
         builder.append("vorname='").append(this.vorname).append("', ");
-        builder.append("adresse=").append(getAdresse().toString()).append("', ");
-        builder.append("kontakt=").append(getKontakt().toString()).append("'}");
+        builder.append("adresse=").append(this.adresse.toString()).append(", ");
+        builder.append("kontakt=").append(this.kontakt.toString()).append("}");
         return builder.toString();
     }
 
@@ -97,6 +96,9 @@ public class Benutzer extends Person implements DatabaseEntity {
     private String familienname;
     private Date geburtsdatum;
     private String vorname;
+
+    private Adresse adresse;
+    private Kontakt kontakt;
 
     public long getId() {
         return this.id;
@@ -146,28 +148,24 @@ public class Benutzer extends Person implements DatabaseEntity {
         this.vorname = vorname;
     }
 
-    public Benutzer(boolean aktiv, Berufsstatus berufsstatus, String familienname, Date geburtsdatum,
-                    String vorname, Adresse adresse, Kontakt kontakt) {
-        super(adresse, kontakt);
-        this.aktiv = aktiv;
-        this.berufsstatus = berufsstatus;
-        this.familienname = familienname;
-        this.geburtsdatum = geburtsdatum;
-        this.vorname = vorname;
+    public Adresse getAdresse() {
+        return adresse;
     }
 
-    public Benutzer(boolean aktiv, Berufsstatus berufsstatus, String familienname, Date geburtsdatum,
-                    String vorname, Adresse adresse) {
-        this(aktiv, berufsstatus, familienname, geburtsdatum, vorname, adresse, new Kontakt());
+    public void setAdresse(Adresse adresse) {
+        this.adresse = adresse;
     }
 
-    public Benutzer(boolean aktiv, Berufsstatus berufsstatus, String familienname, Date geburtsdatum,
-                    String vorname, Kontakt kontakt) {
-        this(aktiv, berufsstatus, familienname, geburtsdatum, vorname, new Adresse(), kontakt);
+    public Kontakt getKontakt() {
+        return kontakt;
     }
 
-    public Benutzer(boolean aktiv, Berufsstatus berufsstatus, String familienname, Date geburtsdatum,
-                    String vorname) {
-        this(aktiv, berufsstatus, familienname, geburtsdatum, vorname, new Adresse(), new Kontakt());
+    public void setKontakt(Kontakt kontakt) {
+        this.kontakt = kontakt;
+    }
+
+    public Benutzer() {
+        this.adresse = new Adresse();
+        this.kontakt = new Kontakt();
     }
 }

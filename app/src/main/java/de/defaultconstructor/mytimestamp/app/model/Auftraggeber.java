@@ -11,8 +11,6 @@ import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
  */
 public class Auftraggeber extends Person implements DatabaseEntity {
 
-    public static final Auftraggeber DUMMY = new Auftraggeber("Die Firma");
-
     /**
      *
      * @param databaseEntity
@@ -25,8 +23,9 @@ public class Auftraggeber extends Person implements DatabaseEntity {
             contentValues.put("id", entity.getId());
         }
         contentValues.put("firma", entity.firma);
-        contentValues.put("adresse", (entity.getAdresse().getId()));
-        contentValues.put("kontakt", (entity.getKontakt().getId()));
+        contentValues.put("adresse", entity.adresse.getId());
+        contentValues.put("benutzer", entity.benutzer.getId());
+        contentValues.put("kontakt", entity.kontakt.getId());
         return contentValues;
     }
 
@@ -36,10 +35,10 @@ public class Auftraggeber extends Person implements DatabaseEntity {
      * @return
      */
     public static Auftraggeber getInstance(Cursor cursor) {
-        Auftraggeber auftraggeber = new Auftraggeber(
-                cursor.getString(cursor.getColumnIndex("firma")));
+        Auftraggeber auftraggeber = new Auftraggeber();
+        auftraggeber.setId(cursor.getLong(cursor.getColumnIndex("id")));
+        auftraggeber.setFirma(cursor.getString(cursor.getColumnIndex("firma")));
         Log.d("Auftraggeber", "" + cursor.getColumnCount());
-    //    auftraggeber.setId(cursor.getLong(cursor.getColumnIndex("id")));
         return auftraggeber;
     }
 
@@ -66,14 +65,19 @@ public class Auftraggeber extends Person implements DatabaseEntity {
         StringBuilder builder = new StringBuilder();
         builder.append("Auftraggeber {id=").append(this.id).append(", ");
         builder.append("firma='").append(this.firma).append("', ");
-        builder.append("adresse=").append(this.getAdresse().toString()).append("', ");
-        builder.append("kontakt=").append(this.getKontakt().toString()).append("'}");
+        builder.append("adresse=").append(this.adresse.toString()).append(", ");
+        builder.append("benutzer=").append(this.benutzer.toString()).append(", ");
+        builder.append("kontakt=").append(this.kontakt.toString()).append("}");
         return builder.toString();
     }
 
     private long id;
 
     private String firma;
+
+    private Adresse adresse;
+    private Benutzer benutzer;
+    private Kontakt kontakt;
 
     @Override
     public long getId() {
@@ -93,20 +97,33 @@ public class Auftraggeber extends Person implements DatabaseEntity {
         this.firma = firma;
     }
 
-    public Auftraggeber(String firma, Adresse adresse, Kontakt kontakt) {
-        super(adresse, kontakt);
-        this.firma = firma;
+    public Adresse getAdresse() {
+        return this.adresse;
     }
 
-    public Auftraggeber(String firma, Adresse adresse) {
-        this(firma, adresse, new Kontakt());
+    public void setAdresse(Adresse adresse) {
+        this.adresse = adresse;
     }
 
-    public Auftraggeber(String firma, Kontakt kontakt) {
-        this(firma, new Adresse(), kontakt);
+    public Benutzer getBenutzer() {
+        return benutzer;
     }
 
-    public Auftraggeber(String firma) {
-        this(firma, new Adresse(), new Kontakt());
+    public void setBenutzer(Benutzer benutzer) {
+        this.benutzer = benutzer;
+    }
+
+    public Kontakt getKontakt() {
+        return this.kontakt;
+    }
+
+    public void setKontakt(Kontakt kontakt) {
+        this.kontakt = kontakt;
+    }
+
+    public Auftraggeber() {
+        this.adresse = new Adresse();
+        this.benutzer = new Benutzer();
+        this.kontakt = new Kontakt();
     }
 }

@@ -1,7 +1,5 @@
 package de.defaultconstructor.mytimestamp.app.android.activities;
 
-import android.app.DialogFragment;
-import android.app.FragmentManager;
 import android.os.Bundle;
 
 import de.defaultconstructor.mytimestamp.R;
@@ -13,7 +11,8 @@ import de.defaultconstructor.mytimestamp.app.exception.AppException;
 import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
 import de.defaultconstructor.mytimestamp.app.model.Benutzer;
 import de.defaultconstructor.mytimestamp.app.model.Person;
-import de.defaultconstructor.mytimestamp.app.service.SettingsServiceImpl;
+import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
+import de.defaultconstructor.mytimestamp.app.service.SettingsService;
 
 /**
  * Created by Thomas Reno on 27.02.2016.
@@ -33,13 +32,10 @@ public class SettingsActivity extends MyTimestampActivity implements MyTimestamp
     }
 
     @Override
-    public void onSubmit(Person person) throws AppException {
-        if (person instanceof Benutzer) {
-            this.benutzer = (Benutzer) person;
-            renderFragment(AuftraggeberdatenFragment.TAG, R.id.activitySettingsWrapper);
-        } else if (person instanceof Auftraggeber) {
-            this.auftraggeber = (Auftraggeber) person;
-            if (this.settingsService.saveSettings(this.auftraggeber, this.benutzer)) {
+    public void onSubmit(DatabaseEntity databaseEntity) throws AppException {
+        if (databaseEntity instanceof Benutzer) {
+            this.benutzer = (Benutzer) databaseEntity;
+            if (null != (MyTimestamp.currentBenutzer = this.settingsService.saveBenutzer(this.benutzer))) {
                 if (MyTimestamp.firstRun) {
                     MyTimestamp.firstRun = false;
                 }
@@ -51,30 +47,30 @@ public class SettingsActivity extends MyTimestampActivity implements MyTimestamp
     private Benutzer benutzer;
     private Auftraggeber auftraggeber;
 
-    private SettingsServiceImpl settingsService;
+    private SettingsService settingsService;
 
     public SettingsActivity() {
         super();
-        this.settingsService = new SettingsServiceImpl(this);
+        this.settingsService = new SettingsService(this);
     }
 
     public Person getPersonendaten(String tagFragment) {
         Person person;
         switch (tagFragment) {
             case AuftraggeberdatenFragment.TAG:
-                person = this.auftraggeber = new Auftraggeber("");
+                person = this.auftraggeber = new Auftraggeber();
                 break;
             case BenutzerdatenFragment.TAG:
-                person = this.benutzer = MyTimestamp.currentBenutzer;
+                this.benutzer = MyTimestamp.currentBenutzer;
+                if (null == this.benutzer) {
+                    person = new Benutzer();
+                } else {
+                    person = this.benutzer;
+                }
                 break;
             default:
                 person = null;
         }
         return person;
-    }
-
-    public void showDialogFragment(DialogFragment dialogFragment, String id) {
-        FragmentManager manager = getFragmentManager();
-        dialogFragment.show(manager, "dialog-" + id);
     }
 }

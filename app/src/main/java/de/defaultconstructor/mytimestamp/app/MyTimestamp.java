@@ -8,7 +8,7 @@ import java.util.List;
 
 import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
 import de.defaultconstructor.mytimestamp.app.model.Benutzer;
-import de.defaultconstructor.mytimestamp.app.service.AppServiceImpl;
+import de.defaultconstructor.mytimestamp.app.service.MyTimestampService;
 
 /**
  * Created by Thomas Reno on 20.03.2016.
@@ -28,21 +28,22 @@ public class MyTimestamp extends Application {
         super.onCreate();
         SharedPreferences sharedPreferences = getSharedPreferences("preferenceName", MODE_PRIVATE);
         MyTimestamp.firstRun = sharedPreferences.getBoolean("firstRun", true) && MyTimestamp.firstRun;
-        if (null == (MyTimestamp.currentBenutzer = this.applicationService.getCurrentBenutzer())) {
+        if (null != (MyTimestamp.currentBenutzer = this.applicationService.getCurrentBenutzer())) {/*
             if (null == (MyTimestamp.currentBenutzer = this.applicationService.persistDummies())) {
                 Log.e(TAG, "Dummy konnte nicht gespeichert werden. MyTimestamp wird abgebrochen.");
                 System.exit(1);
-            }
+            }*/
+            MyTimestamp.firstRun = false;
         }
-        this.aktiveAuftraggeber = this.applicationService.getAktiveAuftraggeber(MyTimestamp.currentBenutzer);
+    //    this.aktiveAuftraggeber = this.applicationService.getAktiveAuftraggeber(MyTimestamp.currentBenutzer);
     }
 
-    private AppServiceImpl applicationService;
+    private MyTimestampService applicationService;
 
     private List<Auftraggeber> aktiveAuftraggeber;
 
     public MyTimestamp() {
-        this.applicationService = new AppServiceImpl(this);
+        this.applicationService = new MyTimestampService(this);
     }
 
     public Auftraggeber getAuftraggeber() {

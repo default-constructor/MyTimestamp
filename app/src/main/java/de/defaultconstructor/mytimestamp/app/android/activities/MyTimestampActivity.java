@@ -1,5 +1,6 @@
 package de.defaultconstructor.mytimestamp.app.android.activities;
 
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -23,6 +24,15 @@ public class MyTimestampActivity extends AppCompatActivity {
 
     protected String tagCurrentFragment;
 
+    public MyTimestampFragment getCurrentFragment() {
+        return mapFragments.get(tagCurrentFragment);
+    }
+
+    public void showDialogFragment(DialogFragment dialogFragment, String id) {
+        FragmentManager manager = getFragmentManager();
+        dialogFragment.show(manager, "dialog-" + id);
+    }
+
     protected void renderFragment(String tag, int containerViewId) {
         if (!this.mapFragments.containsKey(tag)) {
             this.mapFragments.put(tag, MyTimestampFragment.newInstance(tag));
@@ -31,9 +41,7 @@ public class MyTimestampActivity extends AppCompatActivity {
     }
 
     private void renderFragment(Fragment fragment, int containerViewId) {
-        Log.d(TAG, "render fragment");
         if (null == fragment) {
-            Log.d(TAG, "render fragment - fragment is null");
             return;
         }
         FragmentManager fragmentManager = getFragmentManager();

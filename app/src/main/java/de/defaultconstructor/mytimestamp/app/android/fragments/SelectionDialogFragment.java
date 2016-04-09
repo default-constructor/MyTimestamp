@@ -17,6 +17,15 @@ public class SelectionDialogFragment extends DialogFragment {
 
     public static final String TAG = "fragment_dialog_selection";
 
+    public static SelectionDialogFragment newInstance(String title, String[] listItems) {
+        Bundle args = new Bundle();
+        args.putString("title", title);
+        args.putStringArray("list-items", listItems);
+        SelectionDialogFragment fragment = new SelectionDialogFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
@@ -47,15 +56,6 @@ public class SelectionDialogFragment extends DialogFragment {
     private AlertDialog.Builder builder;
 
     private String[] selectItems;
-
-    public static SelectionDialogFragment newInstance(String title, String[] listItems) {
-        Bundle args = new Bundle();
-        args.putString("title", title);
-        args.putStringArray("list-items", listItems);
-        SelectionDialogFragment fragment = new SelectionDialogFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     public interface Callback {
         void onSelected(String result);
