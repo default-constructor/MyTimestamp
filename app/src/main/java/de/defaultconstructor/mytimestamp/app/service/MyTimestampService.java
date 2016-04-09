@@ -7,12 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.defaultconstructor.mytimestamp.app.exception.PersistenceException;
-import de.defaultconstructor.mytimestamp.app.exception.ServiceException;
 import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
 import de.defaultconstructor.mytimestamp.app.model.Benutzer;
-import de.defaultconstructor.mytimestamp.app.model.Person;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseAdapter;
-import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
 
 import static de.defaultconstructor.mytimestamp.app.persistence.DatabaseAdapter.DatabaseConstants.*;
 
@@ -46,12 +43,6 @@ public class MyTimestampService {
         } finally {
             this.databaseAdapter.close();
         }
-    }
-
-    protected void clearTableBenutzer() {
-        this.databaseAdapter.delete(null);
-        this.databaseAdapter.delete(null);
-        this.databaseAdapter.delete(null);
     }
 
     public List<Auftraggeber> getAktiveAuftraggeber(Benutzer benutzer) {

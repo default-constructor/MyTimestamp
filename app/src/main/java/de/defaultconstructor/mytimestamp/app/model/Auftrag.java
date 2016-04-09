@@ -3,9 +3,6 @@ package de.defaultconstructor.mytimestamp.app.model;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import java.util.List;
-
-import de.defaultconstructor.mytimestamp.app.enumeration.Status;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
 
 /**
@@ -24,7 +21,6 @@ public class Auftrag implements DatabaseEntity {
         if (0 < entity.getId()) {
             contentValues.put("id", entity.getId());
         }
-        contentValues.put("aktiv", entity.isAktiv());
         contentValues.put("auftraggeber", entity.auftraggeber.getId());
         contentValues.put("entgelt", entity.entgelt.getId());
         return contentValues;
@@ -38,7 +34,6 @@ public class Auftrag implements DatabaseEntity {
     public static Auftrag getInstance(Cursor cursor) {
         Auftrag auftrag = new Auftrag();
         auftrag.setId(cursor.getLong(cursor.getColumnIndex("id")));
-        auftrag.setAktiv(Status.getByStatusCode(cursor.getInt(cursor.getColumnIndex("aktiv"))).isEnabled());
         return auftrag;
     }
 
@@ -50,7 +45,6 @@ public class Auftrag implements DatabaseEntity {
         Auftrag auftrag = (Auftrag) o;
 
         if (getId() != auftrag.getId()) return false;
-        if (isAktiv() != auftrag.isAktiv()) return false;
         if (getAuftraggeber() != null ? !getAuftraggeber().equals(auftrag.getAuftraggeber()) : auftrag.getAuftraggeber() != null)
             return false;
         return !(getEntgelt() != null ? !getEntgelt().equals(auftrag.getEntgelt()) : auftrag.getEntgelt() != null);
@@ -59,7 +53,6 @@ public class Auftrag implements DatabaseEntity {
     @Override
     public int hashCode() {
         int result = (int) (getId() ^ (getId() >>> 32));
-        result = 31 * result + (isAktiv() ? 1 : 0);
         result = 31 * result + (getAuftraggeber() != null ? getAuftraggeber().hashCode() : 0);
         result = 31 * result + (getEntgelt() != null ? getEntgelt().hashCode() : 0);
         return result;
@@ -69,15 +62,12 @@ public class Auftrag implements DatabaseEntity {
     public String toString() { // TODO StringBuilder
         StringBuilder builder = new StringBuilder();
         builder.append("Auftrag {id=").append(this.id).append(", ");
-        builder.append("aktiv=").append(this.aktiv).append(", ");
         builder.append("auftraggeber=").append(this.auftraggeber.toString()).append(", ");
         builder.append("entgelt=").append(this.entgelt.toString()).append("}");
         return builder.toString();
     }
 
     private long id;
-
-    private boolean aktiv;
 
     private Auftraggeber auftraggeber;
     private Entgelt entgelt;
@@ -90,14 +80,6 @@ public class Auftrag implements DatabaseEntity {
     @Override
     public void setId(long id) {
         this.id = id;
-    }
-
-    public boolean isAktiv() {
-        return this.aktiv;
-    }
-
-    public void setAktiv(boolean aktiv) {
-        this.aktiv = aktiv;
     }
 
     public Auftraggeber getAuftraggeber() {

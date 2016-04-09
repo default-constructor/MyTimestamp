@@ -82,7 +82,9 @@ public class DatabaseAdapter {
     public DatabaseEntity insert(DatabaseEntity databaseEntity) throws PersistenceException {
         Log.d(TAG, "insert " + databaseEntity.getClass().getSimpleName());
         String table = databaseEntity.getClass().getSimpleName().toLowerCase();
-        if (0 < insert(table, databaseEntity)) {
+        long id = insert(table, databaseEntity);
+        if (0 < id) {
+            databaseEntity.setId(id);
             return databaseEntity;
         }
         return null;

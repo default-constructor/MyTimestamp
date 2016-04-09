@@ -16,9 +16,6 @@ import de.defaultconstructor.mytimestamp.app.util.DateUtil;
  */
 public class Benutzer extends Person implements DatabaseEntity {
 
-    /** Haelt einen {@link Benutzer} als Dummy. */
-    public static final Benutzer DUMMY = new Benutzer();
-
     /**
      *
      * @param databaseEntity

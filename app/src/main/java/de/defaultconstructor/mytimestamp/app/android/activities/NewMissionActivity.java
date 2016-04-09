@@ -1,6 +1,5 @@
 package de.defaultconstructor.mytimestamp.app.android.activities;
 
-import android.app.FragmentManager;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -12,43 +11,49 @@ import de.defaultconstructor.mytimestamp.app.android.fragments.Auftraggeberdaten
 import de.defaultconstructor.mytimestamp.app.android.fragments.MyTimestampFragment;
 import de.defaultconstructor.mytimestamp.app.android.fragments.NeuerAuftragFragment;
 import de.defaultconstructor.mytimestamp.app.exception.AppException;
+import de.defaultconstructor.mytimestamp.app.exception.ServiceException;
 import de.defaultconstructor.mytimestamp.app.model.Auftrag;
 import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
-import de.defaultconstructor.mytimestamp.app.model.Person;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
 import de.defaultconstructor.mytimestamp.app.service.NewMissionService;
 
 /**
  * Created by Thomas Reno on 09.04.2016.
  */
-public class NewMissionActivity extends MyTimestampActivity implements MyTimestampFragment.FragmentListener {
+public class NewMissionActivity extends MyTimestampActivity implements AuftraggeberdatenFragment.Callback, NeuerAuftragFragment.Callback {
 
     public static final String TAG = "NewMissionActivity";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "on create");
         setContentView(R.layout.activity_newmission);
         renderFragment(NeuerAuftragFragment.TAG, R.id.activityNewMissionWrapper);
     }
 
     @Override
-    public void onSubmit(DatabaseEntity databaseEntity) throws AppException {
-        Log.d(TAG, "on submit");
-        if (databaseEntity instanceof Auftrag) {
-            this.auftrag = (Auftrag) databaseEntity;
+    public void onSubmit(Auftrag auftrag) {
+        this.auftrag = auftrag;
+        try {
             if (null != this.newMissionService.saveAuftrag(this.auftrag)) {
                 finish();
             }
-        } else if (databaseEntity instanceof Auftraggeber) {
-            this.auftrag.setAuftraggeber((Auftraggeber) databaseEntity);
-            this.auftrag.getAuftraggeber().setBenutzer(MyTimestamp.currentBenutzer);
-            Auftraggeber auftraggeber = this.newMissionService.saveAuftraggeber(this.auftrag.getAuftraggeber());
-            if (null != auftraggeber) {
+        } catch (ServiceException e) {
+            Log.e(TAG, "Save failure: " + e);
+        }
+    }
+
+    @Override
+    public void onSubmit(Auftraggeber auftraggeber) {
+        this.auftrag.setAuftraggeber(auftraggeber);
+        this.auftrag.getAuftraggeber().setBenutzer(MyTimestamp.currentBenutzer);
+        try {
+            if (null != this.newMissionService.saveAuftraggeber(this.auftrag.getAuftraggeber())) {
                 this.auftrag.setAuftraggeber(auftraggeber);
                 renderFragment(NeuerAuftragFragment.TAG, R.id.activityNewMissionWrapper);
             }
+        } catch (ServiceException e) {
+            Log.e(TAG, "Save failure: " + e);
         }
     }
 
@@ -66,7 +71,6 @@ public class NewMissionActivity extends MyTimestampActivity implements MyTimesta
 
     public NewMissionActivity() {
         super();
-        Log.d(TAG, "new NewMissionActivity");
         this.newMissionService = new NewMissionService(this);
     }
 

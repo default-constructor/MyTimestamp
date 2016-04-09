@@ -2,7 +2,6 @@ package de.defaultconstructor.mytimestamp.app.model;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.util.Log;
 
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
 
@@ -38,7 +37,6 @@ public class Auftraggeber extends Person implements DatabaseEntity {
         Auftraggeber auftraggeber = new Auftraggeber();
         auftraggeber.setId(cursor.getLong(cursor.getColumnIndex("id")));
         auftraggeber.setFirma(cursor.getString(cursor.getColumnIndex("firma")));
-        Log.d("Auftraggeber", "" + cursor.getColumnCount());
         return auftraggeber;
     }
 
@@ -81,7 +79,7 @@ public class Auftraggeber extends Person implements DatabaseEntity {
 
     @Override
     public long getId() {
-        return id;
+        return this.id;
     }
 
     @Override
@@ -90,7 +88,7 @@ public class Auftraggeber extends Person implements DatabaseEntity {
     }
 
     public String getFirma() {
-        return firma;
+        return this.firma;
     }
 
     public void setFirma(String firma) {
@@ -106,7 +104,7 @@ public class Auftraggeber extends Person implements DatabaseEntity {
     }
 
     public Benutzer getBenutzer() {
-        return benutzer;
+        return this.benutzer;
     }
 
     public void setBenutzer(Benutzer benutzer) {
