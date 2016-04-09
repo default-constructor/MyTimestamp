@@ -124,7 +124,7 @@ public class NeuerAuftragFragment extends MyTimestampFragment implements Selecti
                     dialogFragment.setTargetFragment(NeuerAuftragFragment.this, 1);
                     ((NewMissionActivity) getActivity()).showDialogFragment(dialogFragment, "selection-auftraggeber");
                 } else {
-                    ((NewMissionActivity) getActivity()).renderFragment(AuftraggeberdatenFragment.TAG, R.id.activityNewMissionWrapper);
+                    ((NewMissionActivity) getActivity()).renderFragment(AuftraggeberdatenFragment.TAG, R.id.activityNewMissionWrapper, true);
                 }
             }
         });
@@ -133,7 +133,7 @@ public class NeuerAuftragFragment extends MyTimestampFragment implements Selecti
         this.buttonNeuerAuftraggeber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((NewMissionActivity) getActivity()).renderFragment(AuftraggeberdatenFragment.TAG, R.id.activityNewMissionWrapper);
+                ((NewMissionActivity) getActivity()).renderFragment(AuftraggeberdatenFragment.TAG, R.id.activityNewMissionWrapper, true);
             }
         });
         this.editTextArbeitsentgelt = (TextInputEditText) this.view.findViewById(R.id.editTextNeuerAuftragArbeitsentgelt);

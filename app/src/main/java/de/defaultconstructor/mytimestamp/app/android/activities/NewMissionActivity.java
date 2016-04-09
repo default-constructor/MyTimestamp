@@ -25,7 +25,7 @@ public class NewMissionActivity extends MyTimestampActivity implements Auftragge
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newmission);
-        renderFragment(NeuerAuftragFragment.TAG, R.id.activityNewMissionWrapper);
+        renderFragment(NeuerAuftragFragment.TAG, R.id.activityNewMissionWrapper, true);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class NewMissionActivity extends MyTimestampActivity implements Auftragge
             if (null != this.newMissionService.saveAuftraggeber(this.auftrag.getAuftraggeber())) {
                 this.auftrag.setAuftraggeber(auftraggeber);
                 this.auftraggeberList.add(auftraggeber);
-                renderFragment(NeuerAuftragFragment.TAG, R.id.activityNewMissionWrapper);
+                renderFragment(NeuerAuftragFragment.TAG, R.id.activityNewMissionWrapper, false);
                 return;
             }
             Log.d(TAG, "on submit Auftraggeber is null");

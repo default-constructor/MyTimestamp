@@ -32,7 +32,11 @@ public class MyTimestampActivity extends AppCompatActivity {
     }
 
     public void renderFragment(String tag, int containerViewId) {
-        if (!this.mapFragments.containsKey(tag)) {
+        renderFragment(tag, containerViewId, false);
+    }
+
+    public void renderFragment(String tag, int containerViewId, boolean newInstance) {
+        if (!this.mapFragments.containsKey(tag) || newInstance) {
             this.mapFragments.put(tag, MyTimestampFragment.newInstance(tag));
         }
         renderFragment(this.mapFragments.get(tag), containerViewId);

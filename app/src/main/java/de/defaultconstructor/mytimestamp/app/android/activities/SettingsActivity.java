@@ -27,7 +27,7 @@ public class SettingsActivity extends MyTimestampActivity implements Benutzerdat
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
         setContentView(R.layout.activity_settings);
-        renderFragment(BenutzerdatenFragment.TAG, R.id.activitySettingsWrapper);
+        renderFragment(BenutzerdatenFragment.TAG, R.id.activitySettingsWrapper, true);
     }
 
     @Override

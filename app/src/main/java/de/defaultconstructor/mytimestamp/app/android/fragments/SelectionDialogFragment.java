@@ -15,7 +15,7 @@ import de.defaultconstructor.mytimestamp.R;
  */
 public class SelectionDialogFragment extends DialogFragment {
 
-    public static final String TAG = "fragment_dialog_selection";
+    public static final String TAG = "SelectionDialogFragment";
 
     public static SelectionDialogFragment newInstance(String title, String[] listItems) {
         Bundle args = new Bundle();
@@ -39,7 +39,7 @@ public class SelectionDialogFragment extends DialogFragment {
                 try {
                     callback = (Callback) getTargetFragment();
                 } catch (ClassCastException e) {
-                    Log.e(this.getClass().getSimpleName(), "Callback of this class must be implemented by target fragment!", e);
+                    Log.e(TAG, "Callback of this class must be implemented by target fragment!", e);
                     throw e;
                 }
                 if (null != callback) {
