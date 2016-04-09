@@ -5,12 +5,10 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import de.defaultconstructor.mytimestamp.R;
 import de.defaultconstructor.mytimestamp.app.android.fragments.MyTimestampFragment;
 
 /**

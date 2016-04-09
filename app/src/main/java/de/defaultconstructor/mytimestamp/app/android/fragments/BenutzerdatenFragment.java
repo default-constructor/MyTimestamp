@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -25,8 +24,8 @@ import de.defaultconstructor.mytimestamp.app.MyTimestamp;
 import de.defaultconstructor.mytimestamp.app.android.activities.SettingsActivity;
 import de.defaultconstructor.mytimestamp.app.android.widgets.components.AccordionView;
 import de.defaultconstructor.mytimestamp.app.enumeration.Berufsstatus;
-import de.defaultconstructor.mytimestamp.app.exception.AppException;
 import de.defaultconstructor.mytimestamp.app.model.Benutzer;
+import de.defaultconstructor.mytimestamp.app.util.DateUtil;
 
 /**
  * Created by Thomas Reno on 28.02.2016.
@@ -62,7 +61,7 @@ public class BenutzerdatenFragment extends MyTimestampFragment implements Accord
     }
 
     @Override
-    public void onSelected(String result) {
+    public void onSelected(String tag, String result) {
         this.editTextBerufsstatus.setText(result);
     }
 
@@ -104,11 +103,7 @@ public class BenutzerdatenFragment extends MyTimestampFragment implements Accord
                 mapAdressdaten();
                 mapBenutzerdaten();
                 mapKontaktdaten();
-                try {
-                    ((SettingsActivity) getActivity()).onSubmit(BenutzerdatenFragment.this.benutzer);
-                } catch (AppException e) {
-                    e.printStackTrace();
-                }
+                ((SettingsActivity) getActivity()).onSubmit(BenutzerdatenFragment.this.benutzer);
             }
         });
         initializeBenutzerdaten();
@@ -246,12 +241,7 @@ public class BenutzerdatenFragment extends MyTimestampFragment implements Accord
             this.benutzer.setFamilienname(value);
         }
         if (hasStringValue(value = String.valueOf(this.editTextGeburtsdatum.getText()))) {
-            try {
-                this.benutzer.setGeburtsdatum(new SimpleDateFormat("dd.MM.yyyy").parse(value));
-            } catch (ParseException e) {
-                e.printStackTrace();
-                // TODO Error-Handling Flush Data Benutzer
-            }
+            this.benutzer.setGeburtsdatum(DateUtil.getDateFromString(value));
         }
         if (hasStringValue(value = String.valueOf(this.editTextVorname.getText()))) {
             this.benutzer.setVorname(value);
@@ -276,5 +266,10 @@ public class BenutzerdatenFragment extends MyTimestampFragment implements Accord
                 && hasStringValue(String.valueOf(this.editTextFamilienname.getText()))
                 && hasStringValue(String.valueOf(this.editTextGeburtsdatum.getText()))
                 && hasStringValue(String.valueOf(this.editTextVorname.getText())));
+    }
+
+    public interface Callback {
+
+        void onSubmit(Benutzer benutzer);
     }
 }

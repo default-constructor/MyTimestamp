@@ -6,7 +6,7 @@ import android.database.Cursor;
 import java.math.BigDecimal;
 
 import de.defaultconstructor.mytimestamp.app.enumeration.Einheit;
-import de.defaultconstructor.mytimestamp.app.enumeration.EntgeltHaeufigkeit;
+import de.defaultconstructor.mytimestamp.app.enumeration.Berechnungsfaktor;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
 
 /**
@@ -35,7 +35,7 @@ public class Entgelt implements DatabaseEntity {
         Entgelt entgelt = new Entgelt();
         entgelt.setId(cursor.getLong(cursor.getColumnIndex("id")));
         entgelt.setBetrag(new BigDecimal(cursor.getString(cursor.getColumnIndex("betrag"))));
-        entgelt.setHaeufigkeit(EntgeltHaeufigkeit.getByKuerzel(cursor.getString(cursor.getColumnIndex("haeufigkeit"))));
+        entgelt.setHaeufigkeit(Berechnungsfaktor.getByKuerzel(cursor.getString(cursor.getColumnIndex("haeufigkeit"))));
         entgelt.setWaehrung(Einheit.Waehrung.getByCode(cursor.getString(cursor.getColumnIndex("waehrung"))));
         return entgelt;
     }
@@ -68,7 +68,7 @@ public class Entgelt implements DatabaseEntity {
     private long id;
 
     private BigDecimal betrag;
-    private EntgeltHaeufigkeit haeufigkeit;
+    private Berechnungsfaktor haeufigkeit;
     private Einheit.Waehrung waehrung;
 
     public long getId() {
@@ -87,11 +87,11 @@ public class Entgelt implements DatabaseEntity {
         this.betrag = betrag;
     }
 
-    public EntgeltHaeufigkeit getHaeufigkeit() {
+    public Berechnungsfaktor getHaeufigkeit() {
         return this.haeufigkeit;
     }
 
-    public void setHaeufigkeit(EntgeltHaeufigkeit haeufigkeit) {
+    public void setHaeufigkeit(Berechnungsfaktor haeufigkeit) {
         this.haeufigkeit = haeufigkeit;
     }
 

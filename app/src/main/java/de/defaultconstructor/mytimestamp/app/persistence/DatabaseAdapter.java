@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.defaultconstructor.mytimestamp.app.MyTimestamp;
-import de.defaultconstructor.mytimestamp.app.enumeration.EntgeltHaeufigkeit;
+import de.defaultconstructor.mytimestamp.app.enumeration.Berechnungsfaktor;
 import de.defaultconstructor.mytimestamp.app.exception.PersistenceException;
 import de.defaultconstructor.mytimestamp.app.util.DatabaseUtil;
 import de.defaultconstructor.mytimestamp.app.util.StringUtil;
@@ -75,12 +75,11 @@ public class DatabaseAdapter {
      * @param databaseEntity
      *              {@link DatabaseEntity}
      *
-     * @return the id of the inserted entity
+     * @return the inserted entity
      *
      * @throws PersistenceException
      */
     public DatabaseEntity insert(DatabaseEntity databaseEntity) throws PersistenceException {
-        Log.d(TAG, "insert " + databaseEntity.getClass().getSimpleName());
         String table = databaseEntity.getClass().getSimpleName().toLowerCase();
         long id = insert(table, databaseEntity);
         if (0 < id) {
@@ -201,7 +200,7 @@ public class DatabaseAdapter {
         public static final String[] COLUMNS_TABLE_ADRESSE = new String[] {
                 "id", "adresszusatz", "ortschaft", "postleitzahl", "staat", "straszeUndHaus" };
         public static final String[] COLUMNS_TABLE_AUFTRAG = new String[] {
-                "id", "auftragsart", "entgelt", "entgeltHaeufigkeit", NAME_TABLE_AUFTRAGGEBER };
+                "id", "arbeitsentgelt", "berechnungsfaktor", "notiz", NAME_TABLE_AUFTRAGGEBER };
         public static final String[] COLUMNS_TABLE_AUFTRAGGEBER = new String[] {
                 "id", "firma", NAME_TABLE_ADRESSE, NAME_TABLE_BENUTZER, NAME_TABLE_KONTAKT };
         public static final String[] COLUMNS_TABLE_BENUTZER = new String[] {
@@ -226,9 +225,9 @@ public class DatabaseAdapter {
         static final String SQL_CREATE_TABLE_AUFTRAG =
                 "CREATE TABLE " + NAME_TABLE_AUFTRAG + " (" +
                         COLUMNS_TABLE_AUFTRAG[0] + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        COLUMNS_TABLE_AUFTRAG[1] + " TEXT, " + // TODO auftragsart TEXT NOT NULL
-                        COLUMNS_TABLE_AUFTRAG[2] + " REAL, " +
-                        COLUMNS_TABLE_AUFTRAG[3] + " INTEGER DEFAULT " + EntgeltHaeufigkeit.EINMALIG.getHaeufigkeit() + ", " +
+                        COLUMNS_TABLE_AUFTRAG[1] + " REAL, " +
+                        COLUMNS_TABLE_AUFTRAG[2] + " TEXT, " +
+                        COLUMNS_TABLE_AUFTRAG[3] + " TEXT, " +
                         COLUMNS_TABLE_AUFTRAG[4] + " INTEGER NOT NULL, " +
                         "FOREIGN KEY (" + COLUMNS_TABLE_AUFTRAG[4] + ") " +
                         "REFERENCES " + NAME_TABLE_AUFTRAGGEBER + " (id));";

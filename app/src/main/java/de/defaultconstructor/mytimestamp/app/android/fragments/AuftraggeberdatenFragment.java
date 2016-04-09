@@ -1,11 +1,9 @@
 package de.defaultconstructor.mytimestamp.app.android.fragments;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +40,7 @@ public class AuftraggeberdatenFragment extends MyTimestampFragment {
         return this.view;
     }
 
-    private Button buttonSubmitArbeitgeberdaten;
+    private Button buttonSubmit;
 
     private TextInputEditText editTextEmail;
     private TextInputEditText editTextFirma;
@@ -62,8 +60,8 @@ public class AuftraggeberdatenFragment extends MyTimestampFragment {
 
     protected void initialize() {
         getActivity().setTitle("Neuer Auftraggeber");
-        this.buttonSubmitArbeitgeberdaten = (Button) this.view.findViewById(R.id.buttonSubmitArbeitgeberdaten);
-        this.buttonSubmitArbeitgeberdaten.setOnClickListener(new View.OnClickListener() {
+        this.buttonSubmit = (Button) this.view.findViewById(R.id.buttonSubmitArbeitgeberdaten);
+        this.buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mapArbeitgeberdaten();
@@ -166,7 +164,7 @@ public class AuftraggeberdatenFragment extends MyTimestampFragment {
     }
 
     private void setEnableButtonSubmit() {
-        this.buttonSubmitArbeitgeberdaten.setEnabled(hasStringValue(String.valueOf(this.editTextFirma.getText())));
+        this.buttonSubmit.setEnabled(hasStringValue(String.valueOf(this.editTextFirma.getText())));
     }
 
     public interface Callback {

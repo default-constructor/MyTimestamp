@@ -1,13 +1,6 @@
 package de.defaultconstructor.mytimestamp.app.android.fragments;
 
 import android.app.Fragment;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import de.defaultconstructor.mytimestamp.app.exception.AppException;
-import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
 
 /**
  * Created by Thomas Reno on 13.03.2016.
@@ -34,11 +27,6 @@ public class MyTimestampFragment extends Fragment {
         return fragment;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
     private String fragmentTag;
 
     public String getFragmentTag() {
@@ -47,9 +35,5 @@ public class MyTimestampFragment extends Fragment {
 
     public void setFragmentTag(String fragmentTag) {
         this.fragmentTag = fragmentTag;
-    }
-
-    public interface FragmentListener {
-        void onSubmit(DatabaseEntity databaseEntity) throws AppException;
     }
 }

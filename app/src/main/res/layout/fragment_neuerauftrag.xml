@@ -31,6 +31,50 @@
             android:layout_weight="1"
             android:text="Neu"/>
     </LinearLayout>
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="10">
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/editTextNeuerAuftragArbeitsentgelt"
+            style="?android:editTextPreferenceStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:hint="Arbeitsentgelt"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingTop="8dp"/>
+    </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="10">
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/editTextNeuerAuftragBerechnungsfaktor"
+            style="?android:editTextPreferenceStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Berechnungsfaktor"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingTop="8dp"/>
+    </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="10">
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/editTextNeuerAuftragNotiz"
+            style="?android:editTextPreferenceStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Notiz"
+            android:inputType="textMultiLine"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingTop="8dp"/>
+    </android.support.design.widget.TextInputLayout>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"

@@ -1,23 +1,22 @@
 package de.defaultconstructor.mytimestamp.app.android.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import de.defaultconstructor.mytimestamp.R;
 import de.defaultconstructor.mytimestamp.app.MyTimestamp;
 import de.defaultconstructor.mytimestamp.app.android.fragments.AuftraggeberdatenFragment;
 import de.defaultconstructor.mytimestamp.app.android.fragments.BenutzerdatenFragment;
-import de.defaultconstructor.mytimestamp.app.android.fragments.MyTimestampFragment;
-import de.defaultconstructor.mytimestamp.app.exception.AppException;
+import de.defaultconstructor.mytimestamp.app.exception.ServiceException;
 import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
 import de.defaultconstructor.mytimestamp.app.model.Benutzer;
 import de.defaultconstructor.mytimestamp.app.model.Person;
-import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
 import de.defaultconstructor.mytimestamp.app.service.SettingsService;
 
 /**
  * Created by Thomas Reno on 27.02.2016.
  */
-public class SettingsActivity extends MyTimestampActivity implements MyTimestampFragment.FragmentListener {
+public class SettingsActivity extends MyTimestampActivity implements BenutzerdatenFragment.Callback {
 
     private static final String TAG = "SettingsActivity";
 
@@ -32,15 +31,17 @@ public class SettingsActivity extends MyTimestampActivity implements MyTimestamp
     }
 
     @Override
-    public void onSubmit(DatabaseEntity databaseEntity) throws AppException {
-        if (databaseEntity instanceof Benutzer) {
-            this.benutzer = (Benutzer) databaseEntity;
+    public void onSubmit(Benutzer benutzer) {
+        this.benutzer = benutzer;
+        try {
             if (null != (MyTimestamp.currentBenutzer = this.settingsService.saveBenutzer(this.benutzer))) {
                 if (MyTimestamp.firstRun) {
                     MyTimestamp.firstRun = false;
                 }
                 finish();
             }
+        } catch (ServiceException e) {
+            Log.e(TAG, "Save failure: " + e);
         }
     }
 

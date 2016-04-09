@@ -7,4 +7,14 @@
         <item>keinen</item>
         <item>selbständig</item>
     </string-array>
+    <string-array name="listBerechnungsfaktor">
+        <item>stündlich</item>
+        <item>täglich</item>
+        <item>wöchentlich</item>
+        <item>monatlich</item>
+        <item>vierteljährlich</item>
+        <item>halbjährlich</item>
+        <item>jährlich</item>
+        <item>einmalig</item>
+    </string-array>
 </resources>

@@ -10,7 +10,7 @@ import de.defaultconstructor.mytimestamp.app.MyTimestamp;
 /**
  * Created by Thomas Reno on 27.02.2016.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends MyTimestampActivity {
 
     public static final String TAG = "MainActivity";
 

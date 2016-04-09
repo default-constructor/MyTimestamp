@@ -43,7 +43,7 @@ public class SelectionDialogFragment extends DialogFragment {
                     throw e;
                 }
                 if (null != callback) {
-                    callback.onSelected(SelectionDialogFragment.this.selectItems[which]);
+                    callback.onSelected(getTag(), SelectionDialogFragment.this.selectItems[which]);
                 }
             }
         });
@@ -58,6 +58,6 @@ public class SelectionDialogFragment extends DialogFragment {
     private String[] selectItems;
 
     public interface Callback {
-        void onSelected(String result);
+        void onSelected(String tag, String result);
     }
 }

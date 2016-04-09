@@ -8,13 +8,10 @@ import java.util.List;
 import de.defaultconstructor.mytimestamp.R;
 import de.defaultconstructor.mytimestamp.app.MyTimestamp;
 import de.defaultconstructor.mytimestamp.app.android.fragments.AuftraggeberdatenFragment;
-import de.defaultconstructor.mytimestamp.app.android.fragments.MyTimestampFragment;
 import de.defaultconstructor.mytimestamp.app.android.fragments.NeuerAuftragFragment;
-import de.defaultconstructor.mytimestamp.app.exception.AppException;
 import de.defaultconstructor.mytimestamp.app.exception.ServiceException;
 import de.defaultconstructor.mytimestamp.app.model.Auftrag;
 import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
-import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
 import de.defaultconstructor.mytimestamp.app.service.NewMissionService;
 
 /**
@@ -50,8 +47,11 @@ public class NewMissionActivity extends MyTimestampActivity implements Auftragge
         try {
             if (null != this.newMissionService.saveAuftraggeber(this.auftrag.getAuftraggeber())) {
                 this.auftrag.setAuftraggeber(auftraggeber);
+                this.auftraggeberList.add(auftraggeber);
                 renderFragment(NeuerAuftragFragment.TAG, R.id.activityNewMissionWrapper);
+                return;
             }
+            Log.d(TAG, "on submit Auftraggeber is null");
         } catch (ServiceException e) {
             Log.e(TAG, "Save failure: " + e);
         }
@@ -60,6 +60,8 @@ public class NewMissionActivity extends MyTimestampActivity implements Auftragge
     private NewMissionService newMissionService;
 
     private Auftrag auftrag = new Auftrag();
+
+    private List<Auftraggeber> auftraggeberList;
 
     public NewMissionService getNewMissionService() {
         return this.newMissionService;
@@ -75,15 +77,28 @@ public class NewMissionActivity extends MyTimestampActivity implements Auftragge
     }
 
     public String[] getArrayAuftraggeberFirma() {
-        List<Auftraggeber> listAuftraggeber = this.newMissionService.loadAuftraggeberList();
-        if (listAuftraggeber.isEmpty()) {
+        this.auftraggeberList = this.newMissionService.loadAuftraggeberList();
+        if (this.auftraggeberList.isEmpty()) {
             renderFragment(AuftraggeberdatenFragment.TAG, R.id.activityNewMissionWrapper);
             return null;
         }
-        String[] arrayAuftraggeberFirma = new String[listAuftraggeber.size()];
-        for (int i = 0; i < listAuftraggeber.size(); i++) {
-            arrayAuftraggeberFirma[i] = listAuftraggeber.get(i).getFirma();
+        String[] arrayAuftraggeberFirma = new String[this.auftraggeberList.size()];
+        for (int i = 0; i < this.auftraggeberList.size(); i++) {
+            arrayAuftraggeberFirma[i] = this.auftraggeberList.get(i).getFirma();
         }
         return arrayAuftraggeberFirma;
+    }
+
+    public Auftraggeber getAuftraggeber(String firma) {
+        Log.d(TAG, "get Auftraggeber " + firma);
+        for (Auftraggeber auftraggeber : this.auftraggeberList) {
+            Log.d(TAG, "check Auftraggeber " + auftraggeber.toString());
+            if (auftraggeber.getFirma().equals(firma)) {
+                Log.d(TAG, "is Auftraggeber " + auftraggeber.toString());
+                return auftraggeber;
+            }
+        }
+        Log.d(TAG, "Auftraggeber not found.");
+        return null;
     }
 }

@@ -3,9 +3,6 @@ package de.defaultconstructor.mytimestamp.app;
 import android.app.Application;
 import android.content.SharedPreferences;
 
-import java.util.List;
-
-import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
 import de.defaultconstructor.mytimestamp.app.model.Benutzer;
 import de.defaultconstructor.mytimestamp.app.service.MyTimestampService;
 
@@ -27,25 +24,14 @@ public class MyTimestamp extends Application {
         super.onCreate();
         SharedPreferences sharedPreferences = getSharedPreferences("preferenceName", MODE_PRIVATE);
         MyTimestamp.firstRun = sharedPreferences.getBoolean("firstRun", true) && MyTimestamp.firstRun;
-        if (null != (MyTimestamp.currentBenutzer = this.applicationService.getCurrentBenutzer())) {/*
-            if (null == (MyTimestamp.currentBenutzer = this.applicationService.persistDummies())) {
-                Log.e(TAG, "Dummy konnte nicht gespeichert werden. MyTimestamp wird abgebrochen.");
-                System.exit(1);
-            }*/
+        if (null != (MyTimestamp.currentBenutzer = this.myTimestampService.getCurrentBenutzer())) {
             MyTimestamp.firstRun = false;
         }
-    //    this.aktiveAuftraggeber = this.applicationService.getAktiveAuftraggeber(MyTimestamp.currentBenutzer);
     }
 
-    private MyTimestampService applicationService;
-
-    private List<Auftraggeber> aktiveAuftraggeber;
+    private MyTimestampService myTimestampService;
 
     public MyTimestamp() {
-        this.applicationService = new MyTimestampService(this);
-    }
-
-    public Auftraggeber getAuftraggeber() {
-        return this.aktiveAuftraggeber.get(0);
+        this.myTimestampService = new MyTimestampService(this);
     }
 }
