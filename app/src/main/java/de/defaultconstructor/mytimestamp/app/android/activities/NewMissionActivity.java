@@ -29,6 +29,12 @@ public class NewMissionActivity extends MyTimestampActivity implements Auftragge
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        this.auftraggeberList = this.newMissionService.loadAuftraggeberList();
+    }
+
+    @Override
     public void onSubmit(Auftrag auftrag) {
         this.auftrag = auftrag;
         try {
@@ -77,11 +83,6 @@ public class NewMissionActivity extends MyTimestampActivity implements Auftragge
     }
 
     public String[] getArrayAuftraggeberFirma() {
-        this.auftraggeberList = this.newMissionService.loadAuftraggeberList();
-        if (this.auftraggeberList.isEmpty()) {
-            renderFragment(AuftraggeberdatenFragment.TAG, R.id.activityNewMissionWrapper);
-            return null;
-        }
         String[] arrayAuftraggeberFirma = new String[this.auftraggeberList.size()];
         for (int i = 0; i < this.auftraggeberList.size(); i++) {
             arrayAuftraggeberFirma[i] = this.auftraggeberList.get(i).getFirma();

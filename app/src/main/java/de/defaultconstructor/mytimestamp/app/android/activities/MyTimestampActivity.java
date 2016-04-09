@@ -31,7 +31,7 @@ public class MyTimestampActivity extends AppCompatActivity {
         dialogFragment.show(manager, "dialog-" + id);
     }
 
-    protected void renderFragment(String tag, int containerViewId) {
+    public void renderFragment(String tag, int containerViewId) {
         if (!this.mapFragments.containsKey(tag)) {
             this.mapFragments.put(tag, MyTimestampFragment.newInstance(tag));
         }

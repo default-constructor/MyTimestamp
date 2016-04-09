@@ -61,6 +61,7 @@ public class NeuerAuftragFragment extends MyTimestampFragment implements Selecti
     }
 
     private Button buttonSubmit;
+    private Button buttonNeuerAuftraggeber;
 
     private TextInputEditText editTextAuftraggeber;
     private TextInputEditText editTextArbeitsentgelt;
@@ -118,14 +119,23 @@ public class NeuerAuftragFragment extends MyTimestampFragment implements Selecti
             @Override
             public void onClick(View v) {
                 String[] itemList = ((NewMissionActivity) getActivity()).getArrayAuftraggeberFirma();
-                if (null != itemList) {
+                if (null != itemList && 0 < itemList.length) {
                     SelectionDialogFragment dialogFragment = SelectionDialogFragment.newInstance("Auftraggeber auswählen", itemList);
                     dialogFragment.setTargetFragment(NeuerAuftragFragment.this, 1);
                     ((NewMissionActivity) getActivity()).showDialogFragment(dialogFragment, "selection-auftraggeber");
+                } else {
+                    ((NewMissionActivity) getActivity()).renderFragment(AuftraggeberdatenFragment.TAG, R.id.activityNewMissionWrapper);
                 }
             }
         });
         this.editTextAuftraggeber.addTextChangedListener(getTextWatcherForEditText(null, this.editTextAuftraggeber));
+        this.buttonNeuerAuftraggeber = (Button) this.view.findViewById(R.id.buttonNeuerAuftragNeuerAuftraggeber);
+        this.buttonNeuerAuftraggeber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((NewMissionActivity) getActivity()).renderFragment(AuftraggeberdatenFragment.TAG, R.id.activityNewMissionWrapper);
+            }
+        });
         this.editTextArbeitsentgelt = (TextInputEditText) this.view.findViewById(R.id.editTextNeuerAuftragArbeitsentgelt);
         this.editTextBerechnungsfaktor = (TextInputEditText) this.view.findViewById(R.id.editTextNeuerAuftragBerechnungsfaktor);
         this.editTextBerechnungsfaktor.setFocusable(false);

@@ -1,8 +1,6 @@
 package de.defaultconstructor.mytimestamp.app.android.activities;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import de.defaultconstructor.mytimestamp.R;
 import de.defaultconstructor.mytimestamp.app.MyTimestamp;
@@ -13,11 +11,6 @@ import de.defaultconstructor.mytimestamp.app.MyTimestamp;
 public class MainActivity extends MyTimestampActivity {
 
     public static final String TAG = "MainActivity";
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     protected void onResume() {
