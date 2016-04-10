@@ -1,7 +1,11 @@
 package de.defaultconstructor.mytimestamp.app.android.activities;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
 
 import java.util.List;
 
@@ -9,6 +13,7 @@ import de.defaultconstructor.mytimestamp.R;
 import de.defaultconstructor.mytimestamp.app.MyTimestamp;
 import de.defaultconstructor.mytimestamp.app.android.fragments.AuftraggeberdatenFragment;
 import de.defaultconstructor.mytimestamp.app.android.fragments.NeuerAuftragFragment;
+import de.defaultconstructor.mytimestamp.app.exception.AndroidException;
 import de.defaultconstructor.mytimestamp.app.exception.ServiceException;
 import de.defaultconstructor.mytimestamp.app.model.Auftrag;
 import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
@@ -22,16 +27,26 @@ public class NewMissionActivity extends MyTimestampActivity implements Auftragge
     public static final String TAG = "NewMissionActivity";
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_newmission);
-        renderFragment(NeuerAuftragFragment.TAG, R.id.activityNewMissionWrapper, true);
+    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
+        super.onCreate(savedInstanceState, persistentState);
+    }
+
+    @Override
+    public View onCreateView(String name, Context context, AttributeSet attrs) {
+        View view = super.onCreateView(name, context, attrs);
+        return view;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        setContentView(R.layout.activity_newmission);
         this.auftraggeberList = this.newMissionService.loadAuftraggeberList();
+        try {
+            renderFragment(NeuerAuftragFragment.TAG, R.id.activityNewMissionWrapper, true);
+        } catch (AndroidException e) {
+            Log.e(TAG, e.getMessage());
+        }
     }
 
     @Override
@@ -55,11 +70,11 @@ public class NewMissionActivity extends MyTimestampActivity implements Auftragge
                 this.auftrag.setAuftraggeber(auftraggeber);
                 this.auftraggeberList.add(auftraggeber);
                 renderFragment(NeuerAuftragFragment.TAG, R.id.activityNewMissionWrapper, false);
-                return;
             }
-            Log.d(TAG, "on submit Auftraggeber is null");
         } catch (ServiceException e) {
-            Log.e(TAG, "Save failure: " + e);
+            Log.e(TAG, e.getMessage());
+        } catch (AndroidException e) {
+            Log.e(TAG, e.getMessage());
         }
     }
 
@@ -91,15 +106,11 @@ public class NewMissionActivity extends MyTimestampActivity implements Auftragge
     }
 
     public Auftraggeber getAuftraggeber(String firma) {
-        Log.d(TAG, "get Auftraggeber " + firma);
         for (Auftraggeber auftraggeber : this.auftraggeberList) {
-            Log.d(TAG, "check Auftraggeber " + auftraggeber.toString());
             if (auftraggeber.getFirma().equals(firma)) {
-                Log.d(TAG, "is Auftraggeber " + auftraggeber.toString());
                 return auftraggeber;
             }
         }
-        Log.d(TAG, "Auftraggeber not found.");
         return null;
     }
 }

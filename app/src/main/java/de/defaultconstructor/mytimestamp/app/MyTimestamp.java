@@ -2,6 +2,7 @@ package de.defaultconstructor.mytimestamp.app;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import de.defaultconstructor.mytimestamp.app.model.Benutzer;
 import de.defaultconstructor.mytimestamp.app.service.MyTimestampService;
@@ -25,8 +26,11 @@ public class MyTimestamp extends Application {
         SharedPreferences sharedPreferences = getSharedPreferences("preferenceName", MODE_PRIVATE);
         MyTimestamp.firstRun = sharedPreferences.getBoolean("firstRun", true) && MyTimestamp.firstRun;
         if (null != (MyTimestamp.currentBenutzer = this.myTimestampService.getCurrentBenutzer())) {
+            Log.d(TAG, "current benutzer " + MyTimestamp.currentBenutzer.toString());
             MyTimestamp.firstRun = false;
+            return;
         }
+        Log.d(TAG, "current benutzer is null");
     }
 
     private MyTimestampService myTimestampService;

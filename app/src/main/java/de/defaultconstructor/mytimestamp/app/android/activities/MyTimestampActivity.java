@@ -4,12 +4,16 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import de.defaultconstructor.mytimestamp.app.android.fragments.MyTimestampFragment;
+import de.defaultconstructor.mytimestamp.app.exception.AndroidException;
 
 /**
  * Created by Thomas Reno on 09.04.2016.
@@ -31,12 +35,12 @@ public class MyTimestampActivity extends AppCompatActivity {
         dialogFragment.show(manager, "dialog-" + id);
     }
 
-    public void renderFragment(String tag, int containerViewId) {
+    public void renderFragment(String tag, int containerViewId) throws AndroidException {
         renderFragment(tag, containerViewId, false);
     }
 
-    public void renderFragment(String tag, int containerViewId, boolean newInstance) {
-        if (!this.mapFragments.containsKey(tag) || newInstance) {
+    public void renderFragment(String tag, int containerViewId, boolean forceNewInstance) throws AndroidException {
+        if (!this.mapFragments.containsKey(tag) || forceNewInstance) {
             this.mapFragments.put(tag, MyTimestampFragment.newInstance(tag));
         }
         renderFragment(this.mapFragments.get(tag), containerViewId);

@@ -59,16 +59,23 @@ public final class DateUtil {
      * @return
      */
     public static Date getDateFromString(String string) {
+        if (null == string) {
+            return null;
+        }
         try {
             return new SimpleDateFormat("dd.MM.yyyy").parse(string);
         } catch (ParseException e) {
-            e.printStackTrace();
             return null;
         }
     }
 
     public static String getStringFromDate(Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        return formatter.format(date);
+    }
+
+    public static String getStringFromDateISO8601(Date date) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         return formatter.format(date);
     }
 }

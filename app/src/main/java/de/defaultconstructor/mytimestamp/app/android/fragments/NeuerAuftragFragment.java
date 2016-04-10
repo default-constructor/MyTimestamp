@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 import de.defaultconstructor.mytimestamp.R;
 import de.defaultconstructor.mytimestamp.app.android.activities.NewMissionActivity;
 import de.defaultconstructor.mytimestamp.app.enumeration.Berechnungsfaktor;
+import de.defaultconstructor.mytimestamp.app.exception.AndroidException;
 import de.defaultconstructor.mytimestamp.app.model.Auftrag;
 
 /**
@@ -124,7 +125,11 @@ public class NeuerAuftragFragment extends MyTimestampFragment implements Selecti
                     dialogFragment.setTargetFragment(NeuerAuftragFragment.this, 1);
                     ((NewMissionActivity) getActivity()).showDialogFragment(dialogFragment, "selection-auftraggeber");
                 } else {
-                    ((NewMissionActivity) getActivity()).renderFragment(AuftraggeberdatenFragment.TAG, R.id.activityNewMissionWrapper, true);
+                    try {
+                        ((NewMissionActivity) getActivity()).renderFragment(AuftraggeberdatenFragment.TAG, R.id.activityNewMissionWrapper, true);
+                    } catch (AndroidException e) {
+                        Log.e(TAG, e.getMessage());
+                    }
                 }
             }
         });
@@ -133,7 +138,11 @@ public class NeuerAuftragFragment extends MyTimestampFragment implements Selecti
         this.buttonNeuerAuftraggeber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((NewMissionActivity) getActivity()).renderFragment(AuftraggeberdatenFragment.TAG, R.id.activityNewMissionWrapper, true);
+                try {
+                    ((NewMissionActivity) getActivity()).renderFragment(AuftraggeberdatenFragment.TAG, R.id.activityNewMissionWrapper, true);
+                } catch (AndroidException e) {
+                    Log.e(TAG, e.getMessage());
+                }
             }
         });
         this.editTextArbeitsentgelt = (TextInputEditText) this.view.findViewById(R.id.editTextNeuerAuftragArbeitsentgelt);

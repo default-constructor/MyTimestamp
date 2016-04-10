@@ -50,14 +50,19 @@ public class BenutzerdatenFragment extends MyTimestampFragment implements Accord
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         this.view = inflater.inflate(R.layout.fragment_benutzerdaten, container, false);
-        initialize();
-        setEnableButtonSubmit();
         return this.view;
     }
 
     @Override
     public void onDatePicked(Object result) {
         this.editTextGeburtsdatum.setText(new SimpleDateFormat("dd.MM.yyyy").format((Date) result));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initialize();
+        setEnableButtonSubmit();
     }
 
     @Override

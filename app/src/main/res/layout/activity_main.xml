@@ -5,8 +5,11 @@
     android:layout_height="match_parent"
     android:background="#fff"
     tools:context="de.defaultconstructor.mytimestamp.app.android.activities.MainActivity">
-    <TextView
+    <LinearLayout
+        android:id="@+id/activityMainWrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Main Activity"/>
+        android:orientation="vertical">
+
+    </LinearLayout>
 </RelativeLayout>

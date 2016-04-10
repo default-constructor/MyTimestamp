@@ -2,12 +2,14 @@ package de.defaultconstructor.mytimestamp.app.android.fragments;
 
 import android.app.Fragment;
 
+import de.defaultconstructor.mytimestamp.app.exception.AndroidException;
+
 /**
  * Created by Thomas Reno on 13.03.2016.
  */
 public class MyTimestampFragment extends Fragment {
 
-    public static MyTimestampFragment newInstance(String tagFragment) {
+    public static MyTimestampFragment newInstance(String tagFragment) throws AndroidException {
         if (null == tagFragment) {
             return null;
         }
@@ -16,12 +18,17 @@ public class MyTimestampFragment extends Fragment {
             case AuftraggeberdatenFragment.TAG:
                 fragment = new AuftraggeberdatenFragment();
                 break;
+            case BenutzerdatenFragment.TAG:
+                fragment = new BenutzerdatenFragment();
+                break;
+            case MainFragment.TAG:
+                fragment = new MainFragment();
+                break;
             case NeuerAuftragFragment.TAG:
                 fragment = new NeuerAuftragFragment();
                 break;
             default:
-                fragment = new BenutzerdatenFragment();
-                tagFragment = BenutzerdatenFragment.TAG;
+                throw new AndroidException("No Fragment " + tagFragment + " found.");
         }
         fragment.setFragmentTag(tagFragment);
         return fragment;

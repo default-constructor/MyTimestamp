@@ -200,7 +200,7 @@ public class DatabaseAdapter {
         public static final String[] COLUMNS_TABLE_ADRESSE = new String[] {
                 "id", "adresszusatz", "ortschaft", "postleitzahl", "staat", "straszeUndHaus" };
         public static final String[] COLUMNS_TABLE_AUFTRAG = new String[] {
-                "id", "arbeitsentgelt", "berechnungsfaktor", "notiz", NAME_TABLE_AUFTRAGGEBER };
+                "id", "arbeitsentgelt", "beginn", "berechnungsfaktor", "ende", "notiz", NAME_TABLE_AUFTRAGGEBER };
         public static final String[] COLUMNS_TABLE_AUFTRAGGEBER = new String[] {
                 "id", "firma", NAME_TABLE_ADRESSE, NAME_TABLE_BENUTZER, NAME_TABLE_KONTAKT };
         public static final String[] COLUMNS_TABLE_BENUTZER = new String[] {
@@ -226,10 +226,12 @@ public class DatabaseAdapter {
                 "CREATE TABLE " + NAME_TABLE_AUFTRAG + " (" +
                         COLUMNS_TABLE_AUFTRAG[0] + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         COLUMNS_TABLE_AUFTRAG[1] + " REAL, " +
-                        COLUMNS_TABLE_AUFTRAG[2] + " TEXT, " +
+                        COLUMNS_TABLE_AUFTRAG[2] + " DATE, " +
                         COLUMNS_TABLE_AUFTRAG[3] + " TEXT, " +
-                        COLUMNS_TABLE_AUFTRAG[4] + " INTEGER NOT NULL, " +
-                        "FOREIGN KEY (" + COLUMNS_TABLE_AUFTRAG[4] + ") " +
+                        COLUMNS_TABLE_AUFTRAG[4] + " DATE, " +
+                        COLUMNS_TABLE_AUFTRAG[5] + " TEXT, " +
+                        COLUMNS_TABLE_AUFTRAG[6] + " INTEGER NOT NULL, " +
+                        "FOREIGN KEY (" + COLUMNS_TABLE_AUFTRAG[6] + ") " +
                         "REFERENCES " + NAME_TABLE_AUFTRAGGEBER + " (id));";
         static final String SQL_CREATE_TABLE_AUFTRAGGEBER =
                 "CREATE TABLE " + NAME_TABLE_AUFTRAGGEBER + " (" +

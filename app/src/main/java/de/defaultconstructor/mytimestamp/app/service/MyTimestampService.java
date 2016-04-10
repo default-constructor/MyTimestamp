@@ -6,10 +6,13 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.defaultconstructor.mytimestamp.app.enumeration.Berufsstatus;
 import de.defaultconstructor.mytimestamp.app.exception.PersistenceException;
 import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
 import de.defaultconstructor.mytimestamp.app.model.Benutzer;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseAdapter;
+import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
+import de.defaultconstructor.mytimestamp.app.util.DateUtil;
 
 import static de.defaultconstructor.mytimestamp.app.persistence.DatabaseAdapter.DatabaseConstants.*;
 
@@ -33,7 +36,11 @@ public class MyTimestampService {
      */
     public Benutzer getCurrentBenutzer() {
         try {
-            this.databaseAdapter.open();
+            this.databaseAdapter.open();/*
+            Benutzer dummy = getDummyBenutzer(); // FIXME wieder ausbauen
+            dummy.getAdresse().setId(this.databaseAdapter.insert(dummy.getAdresse()).getId());
+            dummy.getKontakt().setId(this.databaseAdapter.insert(dummy.getKontakt()).getId());
+            this.databaseAdapter.insert(dummy);*/
             return (Benutzer) this.databaseAdapter.select(NAME_TABLE_BENUTZER, "aktiv=1").get(0);
         } catch (PersistenceException e) {
             if (e.getCode() == PersistenceException.Cause.SELECT_NO_RESULT.getCode()) {
@@ -57,5 +64,15 @@ public class MyTimestampService {
         } finally {
             this.databaseAdapter.close();
         }
+    }
+
+    private Benutzer getDummyBenutzer() { // FIXME wieder ausbauen
+        Benutzer benutzer = new Benutzer();
+        benutzer.setAktiv(true);
+        benutzer.setBerufsstatus(Berufsstatus.ANGESTELLT);
+        benutzer.setGeburtsdatum(DateUtil.getDateFromString("03.03.1981"));
+        benutzer.setFamilienname("Reno");
+        benutzer.setVorname("Thomas");
+        return benutzer;
     }
 }

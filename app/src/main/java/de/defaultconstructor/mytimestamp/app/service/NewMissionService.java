@@ -28,8 +28,8 @@ public class NewMissionService extends MyTimestampService {
 
     public List<Auftraggeber> loadAuftraggeberList() {
         List<Auftraggeber> listAuftraggeber = new ArrayList<>();
-        this.databaseAdapter.open();
         try {
+            this.databaseAdapter.open();
             List<DatabaseEntity> listDatabaseEntity = this.databaseAdapter.select(Auftraggeber.class.getSimpleName().toLowerCase(),
                     Benutzer.class.getSimpleName().toLowerCase() + "=" + MyTimestamp.currentBenutzer.getId());
             for (DatabaseEntity databaseEntity : listDatabaseEntity) {
@@ -44,8 +44,8 @@ public class NewMissionService extends MyTimestampService {
     }
 
     public Auftraggeber saveAuftraggeber(Auftraggeber auftraggeber) throws ServiceException {
-        this.databaseAdapter.open();
         try {
+            this.databaseAdapter.open();
             auftraggeber.getAdresse().setId(this.databaseAdapter.insert(auftraggeber.getAdresse()).getId());
             auftraggeber.getKontakt().setId(this.databaseAdapter.insert(auftraggeber.getKontakt()).getId());
             if (null == this.databaseAdapter.insert(auftraggeber)) {
@@ -62,8 +62,8 @@ public class NewMissionService extends MyTimestampService {
     }
 
     public Auftrag saveAuftrag(Auftrag auftrag) throws ServiceException {
-        this.databaseAdapter.open();
         try {
+            this.databaseAdapter.open();
             if (null == this.databaseAdapter.insert(auftrag)) {
                 throw new ServiceException(Auftrag.class.getSimpleName() +
                         " konnte nicht gespeichert werden.");

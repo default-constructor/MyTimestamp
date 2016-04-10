@@ -30,7 +30,7 @@ public class Benutzer extends Person implements DatabaseEntity {
         contentValues.put("aktiv", entity.aktiv);
         contentValues.put("berufsstatus", entity.berufsstatus.name());
         contentValues.put("familienname", entity.familienname);
-        contentValues.put("geburtsdatum", new SimpleDateFormat("dd.MM.yyyy").format(entity.geburtsdatum));
+        contentValues.put("geburtsdatum", DateUtil.getStringFromDate(entity.geburtsdatum));
         contentValues.put("vorname", entity.vorname);
         contentValues.put("adresse", (entity.adresse.getId()));
         contentValues.put("kontakt", (entity.kontakt.getId()));
