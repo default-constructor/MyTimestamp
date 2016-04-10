@@ -80,8 +80,8 @@ public class DatabaseAdapter {
      * @throws PersistenceException
      */
     public DatabaseEntity insert(DatabaseEntity databaseEntity) throws PersistenceException {
-        String table = databaseEntity.getClass().getSimpleName().toLowerCase();
-        long id = insert(table, databaseEntity);
+        String tableName = databaseEntity.getClass().getSimpleName().toLowerCase();
+        long id = insert(tableName, databaseEntity);
         if (0 < id) {
             databaseEntity.setId(id);
             return databaseEntity;
@@ -101,22 +101,11 @@ public class DatabaseAdapter {
      *
      * @throws {@link PersistenceException}
      */
-    public List<DatabaseEntity> select(String tableName, String whereClause) throws PersistenceException {
+    public Cursor select(String tableName, String whereClause) throws PersistenceException {
         whereClause = null != whereClause ? whereClause : "id > 0";
         SQLiteCursor cursor = (SQLiteCursor) this.database.query(true, tableName,
                 DatabaseUtil.getColumnNames(tableName), whereClause, null, null, null, null, null);
-        if (null == cursor || 0 == cursor.getCount()) {
-            throw new PersistenceException(PersistenceException.Cause.SELECT_NO_RESULT.getCode(),
-                    PersistenceException.Cause.SELECT_NO_RESULT.getMessage().replace("{table}", tableName));
-        }
-        List<DatabaseEntity> databaseEntityList = new ArrayList<>();
-        if (cursor.moveToFirst()) {
-            while (!cursor.isAfterLast()) {
-                databaseEntityList.add(DatabaseUtil.mapResult(cursor, tableName));
-                cursor.moveToNext();
-            }
-        }
-        return databaseEntityList;
+        return cursor;
     }
 
     /**

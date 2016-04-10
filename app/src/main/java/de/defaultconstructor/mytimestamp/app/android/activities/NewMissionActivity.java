@@ -41,7 +41,11 @@ public class NewMissionActivity extends MyTimestampActivity implements Auftragge
     protected void onResume() {
         super.onResume();
         setContentView(R.layout.activity_newmission);
-        this.auftraggeberList = this.newMissionService.loadAuftraggeberList();
+        try {
+            this.auftraggeberList = this.newMissionService.loadAuftraggeberList();
+        } catch (ServiceException e) {
+            Log.e(TAG, e.getMessage());
+        }
         try {
             renderFragment(NeuerAuftragFragment.TAG, R.id.activityNewMissionWrapper, true);
         } catch (AndroidException e) {

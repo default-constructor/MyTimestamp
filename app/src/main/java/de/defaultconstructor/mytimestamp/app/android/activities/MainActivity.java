@@ -12,6 +12,7 @@ import de.defaultconstructor.mytimestamp.R;
 import de.defaultconstructor.mytimestamp.app.MyTimestamp;
 import de.defaultconstructor.mytimestamp.app.android.fragments.MainFragment;
 import de.defaultconstructor.mytimestamp.app.exception.AndroidException;
+import de.defaultconstructor.mytimestamp.app.exception.ServiceException;
 import de.defaultconstructor.mytimestamp.app.model.Auftrag;
 import de.defaultconstructor.mytimestamp.app.service.MainService;
 
@@ -25,14 +26,12 @@ public class MainActivity extends MyTimestampActivity {
     @Override
     public View onCreateView(String name, Context context, AttributeSet attrs) {
         View view = super.onCreateView(name, context, attrs);
-        Log.d(TAG, "on create view");
         return view;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "on resume");
         if (MyTimestamp.firstRun) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivityForResult(intent, RESULT_OK);
@@ -54,7 +53,18 @@ public class MainActivity extends MyTimestampActivity {
     private MainService mainService;
 
     public List<Auftrag> getAuftragList() {
-        return this.mainService.loadAuftragList();
+        List<Auftrag> auftragList = null;
+        try {
+            auftragList = this.mainService.loadAuftragList();
+        } catch (ServiceException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        if (null != auftragList) { // FIXME wieder ausbauen
+            for (Auftrag auftrag : auftragList) {
+                Log.d(TAG, auftrag.toString());
+            }
+        }
+        return auftragList;
     }
 
     public MainActivity() {

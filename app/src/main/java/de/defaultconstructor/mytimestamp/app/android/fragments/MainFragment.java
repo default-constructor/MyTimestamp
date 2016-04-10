@@ -3,6 +3,7 @@ package de.defaultconstructor.mytimestamp.app.android.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +23,6 @@ import de.defaultconstructor.mytimestamp.R;
 import de.defaultconstructor.mytimestamp.app.MyTimestamp;
 import de.defaultconstructor.mytimestamp.app.android.activities.MainActivity;
 import de.defaultconstructor.mytimestamp.app.android.activities.NewMissionActivity;
-import de.defaultconstructor.mytimestamp.app.exception.AndroidException;
 import de.defaultconstructor.mytimestamp.app.model.Auftrag;
 
 /**
@@ -49,28 +49,30 @@ public class MainFragment extends MyTimestampFragment {
     @Override
     public void onResume() {
         super.onResume();
-        this.buttonNeuerAuftrag = (Button) this.view.findViewById(R.id.buttonNeuerAuftrag);
+        this.buttonNeuerAuftrag = (FloatingActionButton) this.view.findViewById(R.id.buttonNeuerAuftrag);
         this.buttonNeuerAuftrag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), NewMissionActivity.class);
                 startActivityForResult(intent, Activity.RESULT_OK);
             }
-        });
+        });/*
         TextView userName = (TextView) view.findViewById(R.id.textview_user);
-        userName.setText(MyTimestamp.currentBenutzer.getVorname() + " " + MyTimestamp.currentBenutzer.getFamilienname());
-
-        this.containerAuftragWrapper = (LinearLayout) this.view.findViewById(R.id.fragmentMainAuftragWrapper);
-        List<Auftrag> auftragList = ((MainActivity) getActivity()).getAuftragList();
-        if (auftragList.isEmpty()) {
-            TextView textView = new TextView(getActivity());
-            textView.setText("Sie haben aktuell keine Aufträge.");
+        userName.setText(MyTimestamp.currentBenutzer.getVorname() + " " +
+                MyTimestamp.currentBenutzer.getFamilienname());*/
+        this.containerAuftragWrapper =
+                (LinearLayout) this.view.findViewById(R.id.fragmentMainAuftragWrapper);
+        this.auftragList = ((MainActivity) getActivity()).getAuftragList();
+        if (null == this.auftragList || this.auftragList.isEmpty()) {
+            this.containerAuftragWrapper.addView(getPlaceholderView());
+        } else {
+            this.containerAuftragWrapper.addView(getAuftragListView());
         }
     }
 
     Thread refreshThread;
 
-    private Button buttonNeuerAuftrag;
+    private FloatingActionButton buttonNeuerAuftrag;
 
     private LinearLayout containerAuftragWrapper;
 
@@ -78,11 +80,35 @@ public class MainFragment extends MyTimestampFragment {
 
     private View view;
 
+    private List<Auftrag> auftragList;
+
     public MainFragment() {
         super();
     }
 
-    private void setTextViewCurrentDate() {
+    private LinearLayout getAuftragListView() {
+        LinearLayout listWrapper = new LinearLayout(getActivity());
+        listWrapper.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        listWrapper.setOrientation(LinearLayout.VERTICAL);
+        for (Auftrag auftrag : this.auftragList) {
+            TextView textView = new TextView(getActivity());
+            textView.setText(auftrag.getAuftraggeber().getFirma());
+            textView.setTextSize(24);
+            listWrapper.addView(textView);
+        }
+        return listWrapper;
+    }
+
+    private TextView getPlaceholderView() {
+        TextView textViewPlaceholder = new TextView(getActivity());
+        textViewPlaceholder.setText("Du hast aktuell keine Aufträge.");
+        textViewPlaceholder.setTextSize(16);
+        textViewPlaceholder.setPadding(0, 16, 0, 16);
+        return textViewPlaceholder;
+    }
+
+    private void setTextViewCurrentDate() {/*
         this.textViewCurrentDate = (TextView) view.findViewById(R.id.textview_currentdate);
         this.refreshThread = new Thread(new Runnable() {
 
@@ -103,7 +129,7 @@ public class MainFragment extends MyTimestampFragment {
                 }
             }
         });
-        this.refreshThread.start();
+        this.refreshThread.start();*/
     }
 
     private String getCurrentDateString() {

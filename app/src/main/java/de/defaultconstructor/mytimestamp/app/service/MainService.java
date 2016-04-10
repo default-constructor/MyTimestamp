@@ -1,18 +1,19 @@
 package de.defaultconstructor.mytimestamp.app.service;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import de.defaultconstructor.mytimestamp.app.MyTimestamp;
 import de.defaultconstructor.mytimestamp.app.exception.PersistenceException;
+import de.defaultconstructor.mytimestamp.app.exception.ServiceException;
 import de.defaultconstructor.mytimestamp.app.model.Auftrag;
 import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
-import de.defaultconstructor.mytimestamp.app.model.Benutzer;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseAdapter;
-import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
+import de.defaultconstructor.mytimestamp.app.util.DatabaseUtil;
 import de.defaultconstructor.mytimestamp.app.util.DateUtil;
 
 /**
@@ -27,20 +28,37 @@ public class MainService extends MyTimestampService {
         this.databaseAdapter = new DatabaseAdapter(context);
     }
 
-    public List<Auftrag> loadAuftragList() {
-        List<Auftrag> auftragList = new ArrayList<>();
+    public List<Auftrag> loadAuftragList() throws ServiceException {
         try {
             this.databaseAdapter.open();
-            List<DatabaseEntity> databaseEntityList = this.databaseAdapter.select(Auftrag.class.getSimpleName().toLowerCase(),
-                    "beginn<='" + DateUtil.getStringFromDateISO8601(new Date()) + "'");
-            for (DatabaseEntity databaseEntity : databaseEntityList) {
-                auftragList.add((Auftrag) databaseEntity);
+            String tableNameAuftrag = Auftrag.class.getSimpleName().toLowerCase();
+            Cursor cursorAuftrag = this.databaseAdapter.select(tableNameAuftrag, "beginn<='" + DateUtil.getStringFromDateISO8601(new Date()) + "'");
+            if (null == cursorAuftrag || 0 == cursorAuftrag.getCount()) {
+                return new ArrayList<>();
             }
+            List<Auftrag> auftragList = new ArrayList<>();
+            if (!cursorAuftrag.isAfterLast()) {
+                while (cursorAuftrag.moveToNext()) {
+                    Auftrag auftrag = (Auftrag) DatabaseUtil.mapResult(cursorAuftrag, tableNameAuftrag);
+                    String tableNameAuftraggeber = Auftraggeber.class.getSimpleName().toLowerCase();
+                    long idAuftraggeber = cursorAuftrag.getLong(cursorAuftrag.getColumnIndex(tableNameAuftraggeber));
+                    Cursor cursorAuftraggeber = this.databaseAdapter.select(tableNameAuftraggeber,
+                            "id=" + idAuftraggeber);
+                    if (null == cursorAuftraggeber || 0 == cursorAuftraggeber.getCount()) {
+                        throw new ServiceException("Kein Ergebnis für Tabelle " + tableNameAuftraggeber);
+                    }
+                    if (cursorAuftraggeber.moveToFirst()) {
+                        auftrag.setAuftraggeber((Auftraggeber) DatabaseUtil.mapResult(cursorAuftraggeber, tableNameAuftraggeber));
+                    }
+                    auftragList.add(auftrag);
+                    cursorAuftrag.moveToNext();
+                }
+            }
+            return auftragList;
         } catch (PersistenceException e) {
-            //
+            return new ArrayList<>();
         } finally {
             this.databaseAdapter.close();
         }
-        return auftragList;
     }
 }
