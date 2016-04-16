@@ -2,13 +2,13 @@ package de.defaultconstructor.mytimestamp.app.android.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Locale;
 
 import de.defaultconstructor.mytimestamp.R;
-import de.defaultconstructor.mytimestamp.app.MyTimestamp;
 import de.defaultconstructor.mytimestamp.app.android.activities.MainActivity;
 import de.defaultconstructor.mytimestamp.app.android.activities.NewMissionActivity;
 import de.defaultconstructor.mytimestamp.app.model.Auftrag;
@@ -37,11 +36,13 @@ public class MainFragment extends MyTimestampFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "on create");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+        Log.d(TAG, "on create view");
         this.view = inflater.inflate(R.layout.fragment_main, container, false);
         return this.view;
     }
@@ -49,6 +50,15 @@ public class MainFragment extends MyTimestampFragment {
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG, "on resume");
+        this.textViewCurrentDate = new TextView(getActivity());
+        this.textViewCurrentDate.setTypeface(null, Typeface.BOLD);/*
+        TextView userName = (TextView) view.findViewById(R.id.textview_user);
+        userName.setText(MyTimestamp.currentBenutzer.getVorname() + " " +
+                MyTimestamp.currentBenutzer.getFamilienname());*/
+        this.containerInfoWrapper = (LinearLayout) this.view.findViewById(R.id.fragmentMainInfoWrapper);
+        this.containerInfoWrapper.addView(this.textViewCurrentDate);
+        setTextViewCurrentDate();
         this.buttonNeuerAuftrag = (FloatingActionButton) this.view.findViewById(R.id.buttonNeuerAuftrag);
         this.buttonNeuerAuftrag.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,10 +66,7 @@ public class MainFragment extends MyTimestampFragment {
                 Intent intent = new Intent(getActivity(), NewMissionActivity.class);
                 startActivityForResult(intent, Activity.RESULT_OK);
             }
-        });/*
-        TextView userName = (TextView) view.findViewById(R.id.textview_user);
-        userName.setText(MyTimestamp.currentBenutzer.getVorname() + " " +
-                MyTimestamp.currentBenutzer.getFamilienname());*/
+        });
         this.containerAuftragWrapper =
                 (LinearLayout) this.view.findViewById(R.id.fragmentMainAuftragWrapper);
         this.auftragList = ((MainActivity) getActivity()).getAuftragList();
@@ -75,6 +82,7 @@ public class MainFragment extends MyTimestampFragment {
     private FloatingActionButton buttonNeuerAuftrag;
 
     private LinearLayout containerAuftragWrapper;
+    private LinearLayout containerInfoWrapper;
 
     private TextView textViewCurrentDate;
 
@@ -102,14 +110,15 @@ public class MainFragment extends MyTimestampFragment {
 
     private TextView getPlaceholderView() {
         TextView textViewPlaceholder = new TextView(getActivity());
+        textViewPlaceholder.setTypeface(null, Typeface.BOLD);
+        textViewPlaceholder.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         textViewPlaceholder.setText("Du hast aktuell keine Aufträge.");
         textViewPlaceholder.setTextSize(16);
         textViewPlaceholder.setPadding(0, 16, 0, 16);
         return textViewPlaceholder;
     }
 
-    private void setTextViewCurrentDate() {/*
-        this.textViewCurrentDate = (TextView) view.findViewById(R.id.textview_currentdate);
+    private void setTextViewCurrentDate() {
         this.refreshThread = new Thread(new Runnable() {
 
             @Override
@@ -118,24 +127,20 @@ public class MainFragment extends MyTimestampFragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            MainFragment.this.textViewCurrentDate.setText(getCurrentDateString());
+                            Calendar calendar = Calendar.getInstance();
+                            Date dateTime = calendar.getTime();
+                            DateFormat dateFormatter = new SimpleDateFormat("EEEE', ' dd. MMMM yyyy", Locale.GERMAN);
+                            MainFragment.this.textViewCurrentDate.setText(dateFormatter.format(dateTime));
                         }
                     });
                     try {
                         Thread.sleep(SLEEPTIME);
                     } catch (InterruptedException e) {
-                        // Nothing to do...
+                        // Nothing to do ...
                     }
                 }
             }
         });
-        this.refreshThread.start();*/
-    }
-
-    private String getCurrentDateString() {
-        Calendar calendar = Calendar.getInstance();
-        Date dateTime = calendar.getTime();
-        DateFormat dateFormatter = new SimpleDateFormat("EEEE', ' dd. MMMM yyyy", Locale.GERMAN);
-        return dateFormatter.format(dateTime);
+        this.refreshThread.start();
     }
 }

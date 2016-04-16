@@ -6,6 +6,7 @@ import android.os.PersistableBundle;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import java.util.List;
 
@@ -26,6 +27,8 @@ public class NewMissionActivity extends MyTimestampActivity implements Auftragge
 
     public static final String TAG = "NewMissionActivity";
 
+    private View view;
+
     @Override
     public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
@@ -33,7 +36,7 @@ public class NewMissionActivity extends MyTimestampActivity implements Auftragge
 
     @Override
     public View onCreateView(String name, Context context, AttributeSet attrs) {
-        View view = super.onCreateView(name, context, attrs);
+        this.view = super.onCreateView(name, context, attrs);
         return view;
     }
 

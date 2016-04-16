@@ -105,6 +105,8 @@ public class BenutzerdatenFragment extends MyTimestampFragment implements Accord
         this.buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(BenutzerdatenFragment.this.view.getWindowToken(), 0);
                 mapAdressdaten();
                 mapBenutzerdaten();
                 mapKontaktdaten();
@@ -274,7 +276,6 @@ public class BenutzerdatenFragment extends MyTimestampFragment implements Accord
     }
 
     public interface Callback {
-
         void onSubmit(Benutzer benutzer);
     }
 }

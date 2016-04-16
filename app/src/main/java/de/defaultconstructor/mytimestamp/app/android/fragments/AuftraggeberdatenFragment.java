@@ -1,5 +1,6 @@
 package de.defaultconstructor.mytimestamp.app.android.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
@@ -7,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -64,6 +66,8 @@ public class AuftraggeberdatenFragment extends MyTimestampFragment {
         this.buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(AuftraggeberdatenFragment.this.view.getWindowToken(), 0);
                 mapArbeitgeberdaten();
                 mapKontaktdaten();
                 ((NewMissionActivity) getActivity()).onSubmit(AuftraggeberdatenFragment.this.auftraggeber);

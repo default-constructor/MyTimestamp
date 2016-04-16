@@ -1,6 +1,8 @@
 package de.defaultconstructor.mytimestamp.app.android.fragments;
 
 import android.app.Fragment;
+import android.content.Context;
+import android.view.inputmethod.InputMethodManager;
 
 import de.defaultconstructor.mytimestamp.app.exception.AndroidException;
 
