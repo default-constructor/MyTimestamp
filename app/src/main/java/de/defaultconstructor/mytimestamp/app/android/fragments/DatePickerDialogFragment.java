@@ -55,7 +55,7 @@ public class DatePickerDialogFragment extends DialogFragment {
                     throw e;
                 }
                 if (null != callback) {
-                    callback.onDatePicked(calendar.getTime());
+                    callback.onDatePicked(getTag(), calendar.getTime());
                 }
             }
         });
@@ -82,6 +82,6 @@ public class DatePickerDialogFragment extends DialogFragment {
     }
 
     public interface Callback {
-        void onDatePicked(Object result);
+        void onDatePicked(String tag, Date result);
     }
 }

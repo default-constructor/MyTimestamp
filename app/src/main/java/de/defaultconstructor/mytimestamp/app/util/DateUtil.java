@@ -69,8 +69,8 @@ public final class DateUtil {
         }
     }
 
-    public static String getStringFromDate(Date date) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+    public static String getDateStringFromDate(Date date) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
         return formatter.format(date);
     }
 

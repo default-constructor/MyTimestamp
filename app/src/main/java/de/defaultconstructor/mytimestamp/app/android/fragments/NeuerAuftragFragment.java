@@ -14,6 +14,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.regex.Pattern;
 
 import de.defaultconstructor.mytimestamp.R;
@@ -21,11 +24,12 @@ import de.defaultconstructor.mytimestamp.app.android.activities.NewMissionActivi
 import de.defaultconstructor.mytimestamp.app.enumeration.Berechnungsfaktor;
 import de.defaultconstructor.mytimestamp.app.exception.AndroidException;
 import de.defaultconstructor.mytimestamp.app.model.Auftrag;
+import de.defaultconstructor.mytimestamp.app.util.DateUtil;
 
 /**
  * Created by Thomas Reno on 09.04.2016.
  */
-public class NeuerAuftragFragment extends MyTimestampFragment implements SelectionDialogFragment.Callback {
+public class NeuerAuftragFragment extends MyTimestampFragment implements DatePickerDialogFragment.Callback, SelectionDialogFragment.Callback {
 
     public static final String TAG = "NeuerAuftragFragment";
 
@@ -36,6 +40,15 @@ public class NeuerAuftragFragment extends MyTimestampFragment implements Selecti
         super.onCreateView(inflater, container, savedInstanceState);
         this.view = inflater.inflate(R.layout.fragment_neuerauftrag, container, false);
         return this.view;
+    }
+
+    @Override
+    public void onDatePicked(String tag, Date result) {
+        if (tag.contains("datepicker-auftragsbeginn")) {
+            this.editTextBeginn.setText(DateUtil.getDateStringFromDate(result));
+        } else if (tag.contains("datepicker-auftragsende")) {
+            this.editTextEnde.setText(DateUtil.getDateStringFromDate(result));
+        }
     }
 
     @Override
@@ -67,8 +80,11 @@ public class NeuerAuftragFragment extends MyTimestampFragment implements Selecti
     private Button buttonNeuerAuftraggeber;
 
     private TextInputEditText editTextAuftraggeber;
+    private TextInputEditText editTextAuftragsgegenstand;
     private TextInputEditText editTextArbeitsentgelt;
+    private TextInputEditText editTextBeginn;
     private TextInputEditText editTextBerechnungsfaktor;
+    private TextInputEditText editTextEnde;
     private TextInputEditText editTextNotiz;
 
     private View view;
@@ -118,6 +134,39 @@ public class NeuerAuftragFragment extends MyTimestampFragment implements Selecti
                 ((NewMissionActivity) getActivity()).onSubmit(NeuerAuftragFragment.this.auftrag);
             }
         });
+        this.editTextAuftragsgegenstand = (TextInputEditText) this.view.findViewById(R.id.editTextNeuerAuftragAuftragsgegenstand);
+        this.editTextAuftragsgegenstand.addTextChangedListener(getTextWatcherForEditText(null, this.editTextAuftragsgegenstand));
+
+        this.editTextBeginn = (TextInputEditText) this.view.findViewById(R.id.editTextNeuerAuftragBeginn);
+        this.editTextBeginn.setFocusable(false);
+        this.editTextBeginn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                Calendar calendar = new GregorianCalendar();
+                DatePickerDialogFragment dialogFragment = DatePickerDialogFragment.newInstance("Auftragsbeginn auswählen", calendar.getTime());
+                dialogFragment.setTargetFragment(NeuerAuftragFragment.this, 2);
+                ((NewMissionActivity) getActivity()).showDialogFragment(dialogFragment, "datepicker-auftragsbeginn");
+            }
+        });
+        this.editTextBeginn.addTextChangedListener(getTextWatcherForEditText(null, this.editTextBeginn));
+
+        this.editTextEnde = (TextInputEditText) this.view.findViewById(R.id.editTextNeuerAuftragEnde);
+        this.editTextEnde.setFocusable(false);
+        this.editTextEnde.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                Calendar calendar = new GregorianCalendar();
+                DatePickerDialogFragment dialogFragment = DatePickerDialogFragment.newInstance("Auftragsende auswählen", calendar.getTime());
+                dialogFragment.setTargetFragment(NeuerAuftragFragment.this, 3);
+                ((NewMissionActivity) getActivity()).showDialogFragment(dialogFragment, "datepicker-auftragsende");
+            }
+        });
+        this.editTextEnde.addTextChangedListener(getTextWatcherForEditText(null, this.editTextEnde));
+
         this.editTextAuftraggeber = (TextInputEditText) this.view.findViewById(R.id.editTextNeuerAuftragAuftraggeber);
         this.editTextAuftraggeber.setFocusable(false);
         this.editTextAuftraggeber.setOnClickListener(new View.OnClickListener() {

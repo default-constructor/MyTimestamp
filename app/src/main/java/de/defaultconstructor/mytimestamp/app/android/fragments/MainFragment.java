@@ -1,11 +1,15 @@
 package de.defaultconstructor.mytimestamp.app.android.fragments;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +27,7 @@ import de.defaultconstructor.mytimestamp.R;
 import de.defaultconstructor.mytimestamp.app.android.activities.MainActivity;
 import de.defaultconstructor.mytimestamp.app.android.activities.NewMissionActivity;
 import de.defaultconstructor.mytimestamp.app.model.Auftrag;
+import de.defaultconstructor.mytimestamp.app.util.DateUtil;
 
 /**
  * Created by Thomas Reno on 10.04.2016.
@@ -100,12 +105,31 @@ public class MainFragment extends MyTimestampFragment {
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         listWrapper.setOrientation(LinearLayout.VERTICAL);
         for (Auftrag auftrag : this.auftragList) {
-            TextView textView = new TextView(getActivity());
-            textView.setText(auftrag.getAuftraggeber().getFirma());
-            textView.setTextSize(24);
-            listWrapper.addView(textView);
+            listWrapper.addView(getAuftragListItem(auftrag));
         }
         return listWrapper;
+    }
+
+    private LinearLayout getAuftragListItem(Auftrag auftrag) {
+        TextView textViewFirma = new TextView(getActivity());
+        textViewFirma.setGravity(Gravity.CENTER_VERTICAL);
+        textViewFirma.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 10));
+        textViewFirma.setText(auftrag.getAuftraggeber().getFirma());
+        textViewFirma.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+        textViewFirma.setTextSize(16);
+        TextView textViewBeginn = new TextView(getActivity());
+        textViewBeginn.setGravity(Gravity.CENTER_VERTICAL);
+        textViewBeginn.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 5));
+        textViewBeginn.setText(DateUtil.getDateStringFromDate(auftrag.getBeginn()));
+        textViewBeginn.setTextSize(12);
+        LinearLayout auftragListItem = new LinearLayout(getActivity());
+        auftragListItem.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 48));
+        auftragListItem.setOrientation(LinearLayout.HORIZONTAL);
+        auftragListItem.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.drawable_auftraglist_item));
+        auftragListItem.addView(textViewFirma);
+        auftragListItem.addView(textViewBeginn);
+        return auftragListItem;
     }
 
     private TextView getPlaceholderView() {
@@ -119,16 +143,16 @@ public class MainFragment extends MyTimestampFragment {
     }
 
     private void setTextViewCurrentDate() {
+        final Activity activity = getActivity();
         this.refreshThread = new Thread(new Runnable() {
 
             @Override
             public void run() {
                 while (true) {
-                    getActivity().runOnUiThread(new Runnable() {
+                    activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Calendar calendar = Calendar.getInstance();
-                            Date dateTime = calendar.getTime();
+                            Date dateTime = new Date();
                             DateFormat dateFormatter = new SimpleDateFormat("EEEE', ' dd. MMMM yyyy", Locale.GERMAN);
                             MainFragment.this.textViewCurrentDate.setText(dateFormatter.format(dateTime));
                         }

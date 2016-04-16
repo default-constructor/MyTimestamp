@@ -3,7 +3,6 @@ package de.defaultconstructor.mytimestamp.app.model;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import de.defaultconstructor.mytimestamp.app.enumeration.Berufsstatus;
@@ -30,7 +29,7 @@ public class Benutzer extends Person implements DatabaseEntity {
         contentValues.put("aktiv", entity.aktiv);
         contentValues.put("berufsstatus", entity.berufsstatus.name());
         contentValues.put("familienname", entity.familienname);
-        contentValues.put("geburtsdatum", DateUtil.getStringFromDate(entity.geburtsdatum));
+        contentValues.put("geburtsdatum", DateUtil.getDateStringFromDate(entity.geburtsdatum));
         contentValues.put("vorname", entity.vorname);
         contentValues.put("adresse", (entity.adresse.getId()));
         contentValues.put("kontakt", (entity.kontakt.getId()));

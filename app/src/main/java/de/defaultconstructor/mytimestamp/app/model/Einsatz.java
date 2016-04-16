@@ -25,9 +25,9 @@ public class Einsatz implements DatabaseEntity {
         if (0 < entity.getId()) {
             contentValues.put("id", entity.getId());
         }
-        contentValues.put("beginn", DateUtil.getStringFromDate(entity.beginn));
+        contentValues.put("beginn", DateUtil.getDateStringFromDate(entity.beginn));
         contentValues.put("beschreibung", entity.beschreibung);
-        contentValues.put("ende", DateUtil.getStringFromDate(entity.ende));
+        contentValues.put("ende", DateUtil.getDateStringFromDate(entity.ende));
         contentValues.put("fahrtzeit", String.valueOf(entity.fahrtzeit));
         contentValues.put("pause", String.valueOf(entity.pause));
         return contentValues;

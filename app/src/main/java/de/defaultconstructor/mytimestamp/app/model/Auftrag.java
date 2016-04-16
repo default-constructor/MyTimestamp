@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Date;
 
 import de.defaultconstructor.mytimestamp.app.enumeration.Berechnungsfaktor;
@@ -28,10 +27,10 @@ public class Auftrag implements DatabaseEntity {
             contentValues.put("id", entity.getId());
         }
         contentValues.put("arbeitsentgelt", String.valueOf(entity.arbeitsentgelt));
-        contentValues.put("beginn", DateUtil.getStringFromDate(entity.beginn));
+        contentValues.put("beginn", DateUtil.getDateStringFromDate(entity.beginn));
         contentValues.put("berechnungsfaktor", entity.berechnungsfaktor.getKuerzel());
         if (null != entity.ende) {
-            contentValues.put("ende", DateUtil.getStringFromDate(entity.ende));
+            contentValues.put("ende", DateUtil.getDateStringFromDate(entity.ende));
         }
         contentValues.put("notiz", entity.notiz);
         contentValues.put("auftraggeber", entity.auftraggeber.getId());

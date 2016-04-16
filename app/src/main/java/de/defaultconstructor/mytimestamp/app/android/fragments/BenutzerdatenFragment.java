@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,8 +55,8 @@ public class BenutzerdatenFragment extends MyTimestampFragment implements Accord
     }
 
     @Override
-    public void onDatePicked(Object result) {
-        this.editTextGeburtsdatum.setText(new SimpleDateFormat("dd.MM.yyyy").format((Date) result));
+    public void onDatePicked(String tag, Date result) {
+        this.editTextGeburtsdatum.setText(DateUtil.getDateStringFromDate(result));
     }
 
     @Override
