@@ -12,15 +12,16 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.defaultconstructor.mytimestamp.R;
 import de.defaultconstructor.mytimestamp.app.android.activities.NewMissionActivity;
+import de.defaultconstructor.mytimestamp.app.android.widgets.components.AccordionView;
 import de.defaultconstructor.mytimestamp.app.enumeration.Berechnungsfaktor;
 import de.defaultconstructor.mytimestamp.app.exception.AndroidException;
 import de.defaultconstructor.mytimestamp.app.model.Auftrag;
@@ -29,26 +30,22 @@ import de.defaultconstructor.mytimestamp.app.util.DateUtil;
 /**
  * Created by Thomas Reno on 09.04.2016.
  */
-public class NeuerAuftragFragment extends MyTimestampFragment implements DatePickerDialogFragment.Callback, SelectionDialogFragment.Callback {
+public class AuftragsdatenFragment extends MyTimestampFragment implements AccordionView.Listener, SelectionDialogFragment.Callback {
 
-    public static final String TAG = "NeuerAuftragFragment";
+    public static final String TAG = "AuftragsdatenFragment";
 
     private static final String TEXT_MESSAGE_ERROR = "Zu besoffen oder was?";
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        this.view = inflater.inflate(R.layout.fragment_neuerauftrag, container, false);
-        return this.view;
+    public void onClickCaption(TextView positionY) {
+        Log.d(TAG, "on click caption");
     }
 
     @Override
-    public void onDatePicked(String tag, Date result) {
-        if (tag.contains("datepicker-auftragsbeginn")) {
-            this.editTextBeginn.setText(DateUtil.getDateStringFromDate(result));
-        } else if (tag.contains("datepicker-auftragsende")) {
-            this.editTextEnde.setText(DateUtil.getDateStringFromDate(result));
-        }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        this.view = inflater.inflate(R.layout.fragment_auftragsdaten, container, false);
+        return this.view;
     }
 
     @Override
@@ -63,35 +60,39 @@ public class NeuerAuftragFragment extends MyTimestampFragment implements DatePic
 
     @Override
     public void onSelected(String tag, String result) {
-        switch (tag) {
-            case "dialog-selection-auftraggeber":
-                this.editTextAuftraggeber.setText(result);
-                this.auftrag.setAuftraggeber(((NewMissionActivity) getActivity()).getAuftraggeber(result));
-                break;
-            case "dialog-selection-berechnungsfaktor":
-                this.editTextBerechnungsfaktor.setText(result);
-                break;
-            default:
-                //
+        if (tag.contains("selection-auftraggeber")) {
+            this.editTextAuftraggeber.setText(result);
+            this.auftrag.setAuftraggeber(((NewMissionActivity) getActivity()).getAuftraggeber(result));
+        } else if (tag.contains("selection-berechnungsfaktor")) {
+            this.editTextBerechnungsfaktor.setText(result);
+        } else if (tag.contains("selection-waehrung")) {
+            Matcher matcher = Pattern.compile("^\\S*").matcher(result);
+            if (matcher.find()) {
+                String waehrungszeichen = matcher.group();
+                this.buttonWaehrung.setText(waehrungszeichen);
+            }
         }
+    }
+
+    @Override
+    protected void setEnableButtonSubmit() {
+        this.buttonSubmit.setEnabled(true);
     }
 
     private Button buttonSubmit;
     private Button buttonNeuerAuftraggeber;
+    private Button buttonWaehrung;
 
     private TextInputEditText editTextAuftraggeber;
-    private TextInputEditText editTextAuftragsgegenstand;
     private TextInputEditText editTextArbeitsentgelt;
-    private TextInputEditText editTextBeginn;
     private TextInputEditText editTextBerechnungsfaktor;
-    private TextInputEditText editTextEnde;
     private TextInputEditText editTextNotiz;
 
     private View view;
 
     private Auftrag auftrag;
 
-    public NeuerAuftragFragment() {
+    public AuftragsdatenFragment() {
         super();
     }
 
@@ -118,56 +119,24 @@ public class NeuerAuftragFragment extends MyTimestampFragment implements DatePic
         };
     }
 
-    private boolean hasStringValue(String input) {
+    protected boolean hasStringValue(String input) {
         return null != input && !input.isEmpty();
     }
 
     protected void initialize() {
-        getActivity().setTitle("Neuer Auftrag");
-        this.buttonSubmit = (Button) this.view.findViewById(R.id.buttonSubmitNeuerAuftrag);
+        getActivity().setTitle("Auftragsdaten");
+        this.buttonSubmit = (Button) this.view.findViewById(R.id.buttonSubmitAuftragsdaten);
         this.buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(NeuerAuftragFragment.this.view.getWindowToken(), 0);
+                imm.hideSoftInputFromWindow(AuftragsdatenFragment.this.view.getWindowToken(), 0);
                 mapAuftragsdaten();
-                ((NewMissionActivity) getActivity()).onSubmit(NeuerAuftragFragment.this.auftrag);
+                ((NewMissionActivity) getActivity()).onSubmit(AuftragsdatenFragment.this.auftrag);
             }
         });
-        this.editTextAuftragsgegenstand = (TextInputEditText) this.view.findViewById(R.id.editTextNeuerAuftragAuftragsgegenstand);
-        this.editTextAuftragsgegenstand.addTextChangedListener(getTextWatcherForEditText(null, this.editTextAuftragsgegenstand));
 
-        this.editTextBeginn = (TextInputEditText) this.view.findViewById(R.id.editTextNeuerAuftragBeginn);
-        this.editTextBeginn.setFocusable(false);
-        this.editTextBeginn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                Calendar calendar = new GregorianCalendar();
-                DatePickerDialogFragment dialogFragment = DatePickerDialogFragment.newInstance("Auftragsbeginn auswählen", calendar.getTime());
-                dialogFragment.setTargetFragment(NeuerAuftragFragment.this, 2);
-                ((NewMissionActivity) getActivity()).showDialogFragment(dialogFragment, "datepicker-auftragsbeginn");
-            }
-        });
-        this.editTextBeginn.addTextChangedListener(getTextWatcherForEditText(null, this.editTextBeginn));
-
-        this.editTextEnde = (TextInputEditText) this.view.findViewById(R.id.editTextNeuerAuftragEnde);
-        this.editTextEnde.setFocusable(false);
-        this.editTextEnde.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                Calendar calendar = new GregorianCalendar();
-                DatePickerDialogFragment dialogFragment = DatePickerDialogFragment.newInstance("Auftragsende auswählen", calendar.getTime());
-                dialogFragment.setTargetFragment(NeuerAuftragFragment.this, 3);
-                ((NewMissionActivity) getActivity()).showDialogFragment(dialogFragment, "datepicker-auftragsende");
-            }
-        });
-        this.editTextEnde.addTextChangedListener(getTextWatcherForEditText(null, this.editTextEnde));
-
-        this.editTextAuftraggeber = (TextInputEditText) this.view.findViewById(R.id.editTextNeuerAuftragAuftraggeber);
+        this.editTextAuftraggeber = (TextInputEditText) this.view.findViewById(R.id.editTextAuftragsdatenAuftraggeber);
         this.editTextAuftraggeber.setFocusable(false);
         this.editTextAuftraggeber.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,7 +144,7 @@ public class NeuerAuftragFragment extends MyTimestampFragment implements DatePic
                 String[] itemList = ((NewMissionActivity) getActivity()).getArrayAuftraggeberFirma();
                 if (null != itemList && 0 < itemList.length) {
                     SelectionDialogFragment dialogFragment = SelectionDialogFragment.newInstance("Auftraggeber auswählen", itemList);
-                    dialogFragment.setTargetFragment(NeuerAuftragFragment.this, 1);
+                    dialogFragment.setTargetFragment(AuftragsdatenFragment.this, 1);
                     ((NewMissionActivity) getActivity()).showDialogFragment(dialogFragment, "selection-auftraggeber");
                 } else {
                     try {
@@ -187,7 +156,7 @@ public class NeuerAuftragFragment extends MyTimestampFragment implements DatePic
             }
         });
         this.editTextAuftraggeber.addTextChangedListener(getTextWatcherForEditText(null, this.editTextAuftraggeber));
-        this.buttonNeuerAuftraggeber = (Button) this.view.findViewById(R.id.buttonNeuerAuftragNeuerAuftraggeber);
+        this.buttonNeuerAuftraggeber = (Button) this.view.findViewById(R.id.buttonAuftragsdatenNeuerAuftraggeber);
         this.buttonNeuerAuftraggeber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -198,18 +167,28 @@ public class NeuerAuftragFragment extends MyTimestampFragment implements DatePic
                 }
             }
         });
-        this.editTextArbeitsentgelt = (TextInputEditText) this.view.findViewById(R.id.editTextNeuerAuftragArbeitsentgelt);
-        this.editTextBerechnungsfaktor = (TextInputEditText) this.view.findViewById(R.id.editTextNeuerAuftragBerechnungsfaktor);
+        this.editTextArbeitsentgelt = (TextInputEditText) this.view.findViewById(R.id.editTextAuftragsdatenArbeitsentgelt);
+        this.buttonWaehrung = (Button) this.view.findViewById(R.id.buttonAuftragsdatenWaehrung);
+        this.buttonWaehrung.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SelectionDialogFragment dialogFragment = SelectionDialogFragment.newInstance("Währung auswählen", getResources().getStringArray(R.array.listWaehrung));
+                dialogFragment.setTargetFragment(AuftragsdatenFragment.this, 2);
+                ((NewMissionActivity) getActivity()).showDialogFragment(dialogFragment, "selection-waehrung");
+            }
+        });
+        this.buttonWaehrung.setText("€");
+        this.editTextBerechnungsfaktor = (TextInputEditText) this.view.findViewById(R.id.editTextAuftragsdatenBerechnungsfaktor);
         this.editTextBerechnungsfaktor.setFocusable(false);
         this.editTextBerechnungsfaktor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SelectionDialogFragment dialogFragment = SelectionDialogFragment.newInstance("Berechnungsfaktor auswählen", getResources().getStringArray(R.array.listBerechnungsfaktor));
-                dialogFragment.setTargetFragment(NeuerAuftragFragment.this, 2);
+                dialogFragment.setTargetFragment(AuftragsdatenFragment.this, 3);
                 ((NewMissionActivity) getActivity()).showDialogFragment(dialogFragment, "selection-berechnungsfaktor");
             }
         });
-        this.editTextNotiz = (TextInputEditText) this.view.findViewById(R.id.editTextNeuerAuftragNotiz);
+        this.editTextNotiz = (TextInputEditText) this.view.findViewById(R.id.editTextAuftragsdatenNotiz);
     }
 
     private void mapAuftragsdaten() {
@@ -226,10 +205,6 @@ public class NeuerAuftragFragment extends MyTimestampFragment implements DatePic
         if (hasStringValue(value = String.valueOf(this.editTextAuftraggeber.getText()))) {
             this.auftrag.setAuftraggeber(((NewMissionActivity) getActivity()).getAuftraggeber(value));
         }
-    }
-
-    private void setEnableButtonSubmit() {
-        this.buttonSubmit.setEnabled(true);
     }
 
     public interface Callback {

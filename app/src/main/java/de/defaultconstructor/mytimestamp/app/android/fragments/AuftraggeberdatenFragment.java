@@ -42,6 +42,11 @@ public class AuftraggeberdatenFragment extends MyTimestampFragment {
         return this.view;
     }
 
+    @Override
+    protected void setEnableButtonSubmit() {
+        this.buttonSubmit.setEnabled(hasStringValue(String.valueOf(this.editTextFirma.getText())));
+    }
+
     private Button buttonSubmit;
 
     private TextInputEditText editTextEmail;
@@ -60,7 +65,7 @@ public class AuftraggeberdatenFragment extends MyTimestampFragment {
         super();
     }
 
-    protected void initialize() {
+    private void initialize() {
         getActivity().setTitle("Neuer Auftraggeber");
         this.buttonSubmit = (Button) this.view.findViewById(R.id.buttonSubmitArbeitgeberdaten);
         this.buttonSubmit.setOnClickListener(new View.OnClickListener() {
@@ -99,10 +104,6 @@ public class AuftraggeberdatenFragment extends MyTimestampFragment {
                 //
             }
         };
-    }
-
-    private boolean hasStringValue(String input) {
-        return null != input && !input.isEmpty();
     }
 
     private void initializeAdressdaten() {
@@ -165,10 +166,6 @@ public class AuftraggeberdatenFragment extends MyTimestampFragment {
         if (hasStringValue(value = String.valueOf(this.editTextWebseite.getText()))) {
             this.auftraggeber.getKontakt().setWebseite(value);
         }
-    }
-
-    private void setEnableButtonSubmit() {
-        this.buttonSubmit.setEnabled(hasStringValue(String.valueOf(this.editTextFirma.getText())));
     }
 
     public interface Callback {

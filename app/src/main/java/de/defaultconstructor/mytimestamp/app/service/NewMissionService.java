@@ -15,6 +15,7 @@ import de.defaultconstructor.mytimestamp.app.model.Auftrag;
 import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
 import de.defaultconstructor.mytimestamp.app.model.Benutzer;
 import de.defaultconstructor.mytimestamp.app.model.Kontakt;
+import de.defaultconstructor.mytimestamp.app.model.Projekt;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseAdapter;
 import de.defaultconstructor.mytimestamp.app.util.DatabaseUtil;
 
@@ -73,6 +74,38 @@ public class NewMissionService extends MyTimestampService {
         }
     }
 
+    public List<Projekt> loadProjektList() throws ServiceException {
+        try {
+            this.databaseAdapter.open();
+            String tableNameProjekt = Projekt.class.getSimpleName().toLowerCase();
+            Cursor cursorProjekt = this.databaseAdapter.select(tableNameProjekt,
+                    Benutzer.class.getSimpleName().toLowerCase() + "=" + MyTimestamp.currentBenutzer.getId());
+            if (null == cursorProjekt || 0 == cursorProjekt.getCount()) {
+                return new ArrayList<>();
+            }
+            List<Projekt> projektList = new ArrayList<>();
+            while (!cursorProjekt.isAfterLast()) {
+                Projekt projekt = (Projekt) DatabaseUtil.mapResult(cursorProjekt, tableNameProjekt);
+                String tableNameAdresse = Adresse.class.getSimpleName().toLowerCase();
+                Cursor cursorAdresse = this.databaseAdapter.select(tableNameAdresse, "id=" +
+                        cursorProjekt.getLong(cursorProjekt.getColumnIndex(tableNameAdresse)));
+                if (null == cursorAdresse || 0 == cursorAdresse.getCount()) {
+                    throw new ServiceException("Kein Ergebnis für Tabelle " + tableNameAdresse);
+                }
+                if (cursorAdresse.moveToFirst()) {
+                    projekt.setAdresse((Adresse) DatabaseUtil.mapResult(cursorAdresse, tableNameAdresse));
+                }
+                projektList.add(projekt);
+                cursorProjekt.moveToNext();
+            }
+            return projektList;
+        } catch (PersistenceException e) {
+            return new ArrayList<>();
+        } finally {
+            this.databaseAdapter.close();
+        }
+    }
+
     public Auftraggeber saveAuftraggeber(Auftraggeber auftraggeber) throws ServiceException {
         try {
             this.databaseAdapter.open();
@@ -102,6 +135,22 @@ public class NewMissionService extends MyTimestampService {
             return auftrag;
         } catch (PersistenceException e) {
             throw new ServiceException(Auftrag.class.getSimpleName() +
+                    " konnte nicht gespeichert werden.");
+        } finally {
+            this.databaseAdapter.close();
+        }
+    }
+
+    public Projekt saveProjekt(Projekt projekt) throws ServiceException {
+        try {
+            this.databaseAdapter.open();
+            if (null == this.databaseAdapter.insert(projekt)) {
+                throw new ServiceException(Projekt.class.getSimpleName() +
+                        " konnte nicht gespeichert werden.");
+            }
+            return projekt;
+        } catch (PersistenceException e) {
+            throw new ServiceException(Projekt.class.getSimpleName() +
                     " konnte nicht gespeichert werden.");
         } finally {
             this.databaseAdapter.close();

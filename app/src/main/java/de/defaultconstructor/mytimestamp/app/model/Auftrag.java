@@ -27,13 +27,10 @@ public class Auftrag implements DatabaseEntity {
             contentValues.put("id", entity.getId());
         }
         contentValues.put("arbeitsentgelt", String.valueOf(entity.arbeitsentgelt));
-        contentValues.put("beginn", DateUtil.getDateStringFromDate(entity.beginn));
         contentValues.put("berechnungsfaktor", entity.berechnungsfaktor.getKuerzel());
-        if (null != entity.ende) {
-            contentValues.put("ende", DateUtil.getDateStringFromDate(entity.ende));
-        }
         contentValues.put("notiz", entity.notiz);
         contentValues.put("auftraggeber", entity.auftraggeber.getId());
+        contentValues.put("projekt", entity.projekt.getId());
         return contentValues;
     }
 
@@ -46,9 +43,7 @@ public class Auftrag implements DatabaseEntity {
         Auftrag auftrag = new Auftrag();
         auftrag.setId(cursor.getLong(cursor.getColumnIndex("id")));
         auftrag.setArbeitsentgelt(BigDecimal.valueOf(cursor.getDouble(cursor.getColumnIndex("arbeitsentgelt"))));
-        auftrag.setBeginn(DateUtil.getDateFromString(cursor.getString(cursor.getColumnIndex("beginn"))));
         auftrag.setBerechnungsfaktor(Berechnungsfaktor.getByKuerzel(cursor.getString(cursor.getColumnIndex("berechnungsfaktor"))));
-        auftrag.setEnde(DateUtil.getDateFromString(cursor.getString(cursor.getColumnIndex("ende"))));
         auftrag.setNotiz(cursor.getString(cursor.getColumnIndex("notiz")));
         return auftrag;
     }
@@ -63,50 +58,13 @@ public class Auftrag implements DatabaseEntity {
         if (getId() != auftrag.getId()) return false;
         if (getArbeitsentgelt() != null ? !getArbeitsentgelt().equals(auftrag.getArbeitsentgelt()) : auftrag.getArbeitsentgelt() != null)
             return false;
-        if (getBeginn() != null ? !getBeginn().equals(auftrag.getBeginn()) : auftrag.getBeginn() != null)
-            return false;
         if (getBerechnungsfaktor() != auftrag.getBerechnungsfaktor()) return false;
-        if (getEnde() != null ? !getEnde().equals(auftrag.getEnde()) : auftrag.getEnde() != null)
-            return false;
         if (getNotiz() != null ? !getNotiz().equals(auftrag.getNotiz()) : auftrag.getNotiz() != null)
             return false;
-        return !(getAuftraggeber() != null ? !getAuftraggeber().equals(auftrag.getAuftraggeber()) : auftrag.getAuftraggeber() != null);
+        if (getAuftraggeber() != null ? !getAuftraggeber().equals(auftrag.getAuftraggeber()) : auftrag.getAuftraggeber() != null)
+            return false;
+        return !(getProjekt() != null ? !getProjekt().equals(auftrag.getProjekt()) : auftrag.getProjekt() != null);
     }
-
-    @Override
-    public int hashCode() {
-        int result = (int) (getId() ^ (getId() >>> 32));
-        result = 31 * result + (getArbeitsentgelt() != null ? getArbeitsentgelt().hashCode() : 0);
-        result = 31 * result + (getBeginn() != null ? getBeginn().hashCode() : 0);
-        result = 31 * result + (getBerechnungsfaktor() != null ? getBerechnungsfaktor().hashCode() : 0);
-        result = 31 * result + (getEnde() != null ? getEnde().hashCode() : 0);
-        result = 31 * result + (getNotiz() != null ? getNotiz().hashCode() : 0);
-        result = 31 * result + (getAuftraggeber() != null ? getAuftraggeber().hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Auftrag {id=").append(this.id).append(", ");
-        builder.append("arbeitsentgelt=").append(this.arbeitsentgelt).append(", ");
-        builder.append("beginn=").append(this.beginn).append(", ");
-        builder.append("berechnungsfaktor=").append(this.berechnungsfaktor).append(", ");
-        builder.append("ende=").append(this.ende).append(", ");
-        builder.append("notiz='").append(this.notiz).append("', ");
-        builder.append("auftraggeber=").append(this.auftraggeber.toString()).append("}");
-        return builder.toString();
-    }
-
-    private long id;
-
-    private BigDecimal arbeitsentgelt;
-    private Date beginn;
-    private Berechnungsfaktor berechnungsfaktor;
-    private Date ende;
-    private String notiz;
-
-    private Auftraggeber auftraggeber;
 
     @Override
     public long getId() {
@@ -114,9 +72,41 @@ public class Auftrag implements DatabaseEntity {
     }
 
     @Override
+    public int hashCode() {
+        int result = (int) (getId() ^ (getId() >>> 32));
+        result = 31 * result + (getArbeitsentgelt() != null ? getArbeitsentgelt().hashCode() : 0);
+        result = 31 * result + (getBerechnungsfaktor() != null ? getBerechnungsfaktor().hashCode() : 0);
+        result = 31 * result + (getNotiz() != null ? getNotiz().hashCode() : 0);
+        result = 31 * result + (getAuftraggeber() != null ? getAuftraggeber().hashCode() : 0);
+        result = 31 * result + (getProjekt() != null ? getProjekt().hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public void setId(long id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Auftrag {id=").append(this.id).append(", ");
+        builder.append("arbeitsentgelt=").append(this.arbeitsentgelt).append(", ");
+        builder.append("berechnungsfaktor=").append(this.berechnungsfaktor).append(", ");
+        builder.append("notiz='").append(this.notiz).append("', ");
+        builder.append("auftraggeber=").append(this.auftraggeber.toString()).append(", ");
+        builder.append("projekt=").append(this.projekt.toString()).append("}");
+        return builder.toString();
+    }
+
+    private long id;
+
+    private BigDecimal arbeitsentgelt;
+    private Berechnungsfaktor berechnungsfaktor;
+    private String notiz;
+
+    private Auftraggeber auftraggeber;
+    private Projekt projekt;
 
     public BigDecimal getArbeitsentgelt() {
         return this.arbeitsentgelt;
@@ -126,28 +116,12 @@ public class Auftrag implements DatabaseEntity {
         this.arbeitsentgelt = arbeitsentgelt;
     }
 
-    public Date getBeginn() {
-        return this.beginn;
-    }
-
-    public void setBeginn(Date beginn) {
-        this.beginn = beginn;
-    }
-
     public Berechnungsfaktor getBerechnungsfaktor() {
         return this.berechnungsfaktor;
     }
 
     public void setBerechnungsfaktor(Berechnungsfaktor berechnungsfaktor) {
         this.berechnungsfaktor = berechnungsfaktor;
-    }
-
-    public Date getEnde() {
-        return this.ende;
-    }
-
-    public void setEnde(Date ende) {
-        this.ende = ende;
     }
 
     public String getNotiz() {
@@ -166,10 +140,18 @@ public class Auftrag implements DatabaseEntity {
         this.auftraggeber = auftraggeber;
     }
 
+    public Projekt getProjekt() {
+        return this.projekt;
+    }
+
+    public void setProjekt(Projekt projekt) {
+        this.projekt = projekt;
+    }
+
     public Auftrag() {
         setArbeitsentgelt(BigDecimal.valueOf(0.0));
         setAuftraggeber(new Auftraggeber());
-        setBeginn(new Date());
         setBerechnungsfaktor(Berechnungsfaktor.STUENDLICH);
+        setProjekt(new Projekt());
     }
 }

@@ -64,12 +64,22 @@ public class Benutzer extends Person implements DatabaseEntity {
     }
 
     @Override
+    public long getId() {
+        return this.id;
+    }
+
+    @Override
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + getFamilienname().hashCode();
         result = 31 * result + getGeburtsdatum().hashCode();
         result = 31 * result + getVorname().hashCode();
         return result;
+    }
+
+    @Override
+    public void setId(long id) {
+        this.id = id;
     }
 
     @Override
@@ -95,14 +105,6 @@ public class Benutzer extends Person implements DatabaseEntity {
 
     private Adresse adresse;
     private Kontakt kontakt;
-
-    public long getId() {
-        return this.id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public boolean isAktiv() {
         return this.aktiv;
@@ -145,7 +147,7 @@ public class Benutzer extends Person implements DatabaseEntity {
     }
 
     public Adresse getAdresse() {
-        return adresse;
+        return this.adresse;
     }
 
     public void setAdresse(Adresse adresse) {
@@ -153,7 +155,7 @@ public class Benutzer extends Person implements DatabaseEntity {
     }
 
     public Kontakt getKontakt() {
-        return kontakt;
+        return this.kontakt;
     }
 
     public void setKontakt(Kontakt kontakt) {
@@ -161,7 +163,7 @@ public class Benutzer extends Person implements DatabaseEntity {
     }
 
     public Benutzer() {
-        this.adresse = new Adresse();
-        this.kontakt = new Kontakt();
+        setAdresse(new Adresse());
+        setKontakt(new Kontakt());
     }
 }

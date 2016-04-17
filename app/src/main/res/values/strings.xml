@@ -17,4 +17,11 @@
         <item>jährlich</item>
         <item>einmalig</item>
     </string-array>
+    <string-array name="listWaehrung">
+        <item>£ (Britische Pfund)</item>
+        <item>€ (Euro)</item>
+        <item>руб (Russische Rubel)</item>
+        <item>CHF (Schweizer Franken)</item>
+        <item>$ (US-Dollar)</item>
+    </string-array>
 </resources>

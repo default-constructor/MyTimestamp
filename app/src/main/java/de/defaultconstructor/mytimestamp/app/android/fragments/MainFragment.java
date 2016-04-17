@@ -82,6 +82,11 @@ public class MainFragment extends MyTimestampFragment {
         }
     }
 
+    @Override
+    protected void setEnableButtonSubmit() {
+        //
+    }
+
     Thread refreshThread;
 
     private FloatingActionButton buttonNeuerAuftrag;
@@ -117,18 +122,12 @@ public class MainFragment extends MyTimestampFragment {
         textViewFirma.setText(auftrag.getAuftraggeber().getFirma());
         textViewFirma.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
         textViewFirma.setTextSize(16);
-        TextView textViewBeginn = new TextView(getActivity());
-        textViewBeginn.setGravity(Gravity.CENTER_VERTICAL);
-        textViewBeginn.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 5));
-        textViewBeginn.setText(DateUtil.getDateStringFromDate(auftrag.getBeginn()));
-        textViewBeginn.setTextSize(12);
         LinearLayout auftragListItem = new LinearLayout(getActivity());
         auftragListItem.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 48));
         auftragListItem.setOrientation(LinearLayout.HORIZONTAL);
         auftragListItem.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.drawable_auftraglist_item));
         auftragListItem.addView(textViewFirma);
-        auftragListItem.addView(textViewBeginn);
         return auftragListItem;
     }
 

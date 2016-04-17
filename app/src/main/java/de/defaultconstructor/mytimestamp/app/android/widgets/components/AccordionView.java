@@ -33,12 +33,7 @@ public class AccordionView extends LinearLayout {
         handleFlyout();
     }
 
-    public interface Listener {
-
-        void onClickCaption(TextView positionY);
-    }
-
-    private List<TextInputLayout> itemListView;
+    private List<LinearLayout> itemListView;
     private Map<String, String> mapAttributes = new HashMap<>();
 
     private LinearLayout linearLayoutFlyout;
@@ -122,11 +117,12 @@ public class AccordionView extends LinearLayout {
 
         this.itemListView = new ArrayList<>();
         this.linearLayoutFlyout = new LinearLayout(getContext());
-        this.linearLayoutFlyout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+        this.linearLayoutFlyout.setLayoutParams(new LayoutParams(
+                LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         this.linearLayoutFlyout.setOrientation(VERTICAL);
 
         for (int i = 0; i < childCount; i++) {
-            TextInputLayout textInputLayout = (TextInputLayout) getChildAt(0);
+            LinearLayout textInputLayout = (LinearLayout) getChildAt(0);
             ((ViewManager) textInputLayout.getParent()).removeView(textInputLayout);
             this.itemListView.add(textInputLayout);
             this.linearLayoutFlyout.addView(this.itemListView.get(i));
@@ -146,5 +142,9 @@ public class AccordionView extends LinearLayout {
             ((ViewManager) this.linearLayoutFlyout.getParent()).removeView(this.linearLayoutFlyout);
             this.isCollapsed = false;
         }
+    }
+
+    public interface Listener {
+        void onClickCaption(TextView positionY);
     }
 }

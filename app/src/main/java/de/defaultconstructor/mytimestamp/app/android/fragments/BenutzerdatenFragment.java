@@ -36,6 +36,15 @@ public class BenutzerdatenFragment extends MyTimestampFragment implements Accord
 
     public static final String TAG = "BenutzerdatenFragment";
 
+    private static final Pattern PATTERN_STREETHOUSENUMBER_TEXT_NO = Pattern.compile("^[\\w.-]+");
+    private static final Pattern PATTERN_EMAIL_TEXT_NO = Pattern.compile("[^°!\"²§³$%&/{([)]=}ß?\\´`€+*~#'<>|µ,;:]");
+    private static final Pattern PATTERN_EMAIL_TEXT_YES = Pattern.compile("^[A-Za-z0-9_.-]+@[A-Za-z0-9_-]+.[A-Za-z]{2,11}$");
+    private static final Pattern PATTERN_PHONE_TEXT_NO = Pattern.compile("[A-Za-z^°!\"²§³$%&{=}ß?´`€*~#'<>|µ,;:]");
+    private static final Pattern PATTERN_POSTCODE_TEXT_NO = Pattern.compile("\\D");
+    private static final Pattern PATTERN_NAME_TEXT_NO = Pattern.compile("[\\d°^!\"²§³$%&/([)]=}?\\\\@€+*~#<>|µ,;.:_]");
+
+    private static final String TEXT_MESSAGE_ERROR = "Zu besoffen oder was?";
+
     @Override
     public void onClickCaption(TextView caption) {
         caption.scrollTo(0, 900);
@@ -71,14 +80,13 @@ public class BenutzerdatenFragment extends MyTimestampFragment implements Accord
         this.editTextBerufsstatus.setText(result);
     }
 
-    private static final Pattern PATTERN_STREETHOUSENUMBER_TEXT_NO = Pattern.compile("^[\\w.-]+");
-    private static final Pattern PATTERN_EMAIL_TEXT_NO = Pattern.compile("[^°!\"²§³$%&/{([)]=}ß?\\´`€+*~#'<>|µ,;:]");
-    private static final Pattern PATTERN_EMAIL_TEXT_YES = Pattern.compile("^[A-Za-z0-9_.-]+@[A-Za-z0-9_-]+.[A-Za-z]{2,11}$");
-    private static final Pattern PATTERN_PHONE_TEXT_NO = Pattern.compile("[A-Za-z^°!\"²§³$%&{=}ß?´`€*~#'<>|µ,;:]");
-    private static final Pattern PATTERN_POSTCODE_TEXT_NO = Pattern.compile("\\D");
-    private static final Pattern PATTERN_NAME_TEXT_NO = Pattern.compile("[\\d°^!\"²§³$%&/([)]=}?\\\\@€+*~#<>|µ,;.:_]");
-
-    private static final String TEXT_MESSAGE_ERROR = "Zu besoffen oder was?";
+    @Override
+    protected void setEnableButtonSubmit() {
+        this.buttonSubmit.setEnabled(hasStringValue(String.valueOf(this.editTextBerufsstatus.getText()))
+                && hasStringValue(String.valueOf(this.editTextFamilienname.getText()))
+                && hasStringValue(String.valueOf(this.editTextGeburtsdatum.getText()))
+                && hasStringValue(String.valueOf(this.editTextVorname.getText())));
+    }
 
     private Button buttonSubmit;
 
@@ -119,42 +127,18 @@ public class BenutzerdatenFragment extends MyTimestampFragment implements Accord
         initializeKontaktdaten();
     }
 
-    private TextWatcher getTextWatcherForEditText(final Pattern pattern, final EditText editText) {
-        return new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                //
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (null != pattern) {
-                    boolean valid = !pattern.matcher(String.valueOf(s)).find();
-                    editText.setError(!valid ? TEXT_MESSAGE_ERROR : null);
-                }
-                setEnableButtonSubmit();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                //
-            }
-        };
-    }
-
-    private boolean hasStringValue(String input) {
-        return null != input && !input.isEmpty();
-    }
-
     private void initializeAdressdaten() {
         this.editTextPostleitzahl = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenPostleitzahl);
-        this.editTextPostleitzahl.addTextChangedListener(getTextWatcherForEditText(PATTERN_POSTCODE_TEXT_NO, this.editTextPostleitzahl));
+        this.editTextPostleitzahl.addTextChangedListener(getTextWatcherForEditText(
+                this.editTextPostleitzahl, PATTERN_POSTCODE_TEXT_NO, TEXT_MESSAGE_ERROR));
 
         this.editTextStraszeUndHausnummer = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenStraszeUndHausnummer);
-        this.editTextStraszeUndHausnummer.addTextChangedListener(getTextWatcherForEditText(PATTERN_STREETHOUSENUMBER_TEXT_NO, this.editTextStraszeUndHausnummer));
+        this.editTextStraszeUndHausnummer.addTextChangedListener(getTextWatcherForEditText(
+                this.editTextStraszeUndHausnummer, PATTERN_STREETHOUSENUMBER_TEXT_NO, TEXT_MESSAGE_ERROR));
 
         this.editTextWohnsitz = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenWohnsitz);
-        this.editTextWohnsitz.addTextChangedListener(getTextWatcherForEditText(PATTERN_NAME_TEXT_NO, this.editTextWohnsitz));
+        this.editTextWohnsitz.addTextChangedListener(getTextWatcherForEditText(
+                this.editTextWohnsitz, PATTERN_NAME_TEXT_NO, TEXT_MESSAGE_ERROR));
 
         if (!MyTimestamp.firstRun) {
             this.editTextPostleitzahl.setText(this.benutzer.getAdresse().getPostleitzahl());
@@ -177,10 +161,12 @@ public class BenutzerdatenFragment extends MyTimestampFragment implements Accord
                 ((SettingsActivity) getActivity()).showDialogFragment(dialogFragment, "selection-berufsstatus");
             }
         });
-        this.editTextBerufsstatus.addTextChangedListener(getTextWatcherForEditText(null, this.editTextBerufsstatus));
+        this.editTextBerufsstatus.addTextChangedListener(getTextWatcherForEditText(
+                this.editTextBerufsstatus, null, null));
 
         this.editTextFamilienname = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenFamilienname);
-        this.editTextFamilienname.addTextChangedListener(getTextWatcherForEditText(PATTERN_NAME_TEXT_NO, this.editTextFamilienname));
+        this.editTextFamilienname.addTextChangedListener(getTextWatcherForEditText(
+                this.editTextFamilienname, PATTERN_NAME_TEXT_NO, TEXT_MESSAGE_ERROR));
 
         this.editTextGeburtsdatum = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenGeburtsdatum);
         this.editTextGeburtsdatum.setFocusable(false);
@@ -196,10 +182,12 @@ public class BenutzerdatenFragment extends MyTimestampFragment implements Accord
                 ((SettingsActivity) getActivity()).showDialogFragment(dialogFragment, "datepicker-geburtsdatum");
             }
         });
-        this.editTextGeburtsdatum.addTextChangedListener(getTextWatcherForEditText(null, this.editTextGeburtsdatum));
+        this.editTextGeburtsdatum.addTextChangedListener(getTextWatcherForEditText(
+                this.editTextGeburtsdatum, null, null));
 
         this.editTextVorname = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenVorname);
-        this.editTextVorname.addTextChangedListener(getTextWatcherForEditText(PATTERN_NAME_TEXT_NO, this.editTextVorname));
+        this.editTextVorname.addTextChangedListener(getTextWatcherForEditText(
+                this.editTextVorname, PATTERN_NAME_TEXT_NO, TEXT_MESSAGE_ERROR));
 
         if (!MyTimestamp.firstRun) {
             this.editTextBerufsstatus.setText(this.benutzer.getBerufsstatus().getBezeichnung());
@@ -212,13 +200,16 @@ public class BenutzerdatenFragment extends MyTimestampFragment implements Accord
 
     private void initializeKontaktdaten() {
         this.editTextEmail = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenEmail);
-        this.editTextEmail.addTextChangedListener(getTextWatcherForEditText(PATTERN_EMAIL_TEXT_NO, this.editTextEmail));
+        this.editTextEmail.addTextChangedListener(getTextWatcherForEditText(
+                this.editTextEmail, PATTERN_EMAIL_TEXT_NO, TEXT_MESSAGE_ERROR));
 
         this.editTextMobil = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenMobil);
-        this.editTextMobil.addTextChangedListener(getTextWatcherForEditText(PATTERN_PHONE_TEXT_NO, this.editTextMobil));
+        this.editTextMobil.addTextChangedListener(getTextWatcherForEditText(
+                this.editTextMobil, PATTERN_PHONE_TEXT_NO, TEXT_MESSAGE_ERROR));
 
         this.editTextTelefon = (TextInputEditText) this.view.findViewById(R.id.editTextBenutzerdatenTelefon);
-        this.editTextTelefon.addTextChangedListener(getTextWatcherForEditText(PATTERN_PHONE_TEXT_NO, this.editTextTelefon));
+        this.editTextTelefon.addTextChangedListener(getTextWatcherForEditText(
+                this.editTextTelefon, PATTERN_PHONE_TEXT_NO, TEXT_MESSAGE_ERROR));
 
         if (!MyTimestamp.firstRun) {
             this.editTextEmail.setText(this.benutzer.getKontakt().getEmail());
@@ -267,13 +258,6 @@ public class BenutzerdatenFragment extends MyTimestampFragment implements Accord
         if (hasStringValue(value = String.valueOf(this.editTextTelefon.getText()))) {
             this.benutzer.getKontakt().setTelefon(value);
         }
-    }
-
-    protected void setEnableButtonSubmit() {
-        this.buttonSubmit.setEnabled(hasStringValue(String.valueOf(this.editTextBerufsstatus.getText()))
-                && hasStringValue(String.valueOf(this.editTextFamilienname.getText()))
-                && hasStringValue(String.valueOf(this.editTextGeburtsdatum.getText()))
-                && hasStringValue(String.valueOf(this.editTextVorname.getText())));
     }
 
     public interface Callback {

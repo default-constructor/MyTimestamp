@@ -66,7 +66,6 @@ public class SettingsActivity extends MyTimestampActivity implements Benutzerdat
     }
 
     private Benutzer benutzer;
-    private Auftraggeber auftraggeber;
 
     private SettingsService settingsService;
 
@@ -78,9 +77,6 @@ public class SettingsActivity extends MyTimestampActivity implements Benutzerdat
     public Person getPersonendaten(String tagFragment) {
         Person person;
         switch (tagFragment) {
-            case AuftraggeberdatenFragment.TAG:
-                person = this.auftraggeber = new Auftraggeber();
-                break;
             case BenutzerdatenFragment.TAG:
                 this.benutzer = MyTimestamp.currentBenutzer;
                 if (null == this.benutzer) {

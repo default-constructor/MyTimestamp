@@ -32,7 +32,7 @@ public class MainService extends MyTimestampService {
         try {
             this.databaseAdapter.open();
             String tableNameAuftrag = Auftrag.class.getSimpleName().toLowerCase();
-            Cursor cursorAuftrag = this.databaseAdapter.select(tableNameAuftrag, "beginn<='" + DateUtil.getStringFromDateISO8601(new Date()) + "'");
+            Cursor cursorAuftrag = this.databaseAdapter.select(tableNameAuftrag, null);
             if (null == cursorAuftrag || 0 == cursorAuftrag.getCount()) {
                 return new ArrayList<>();
             }

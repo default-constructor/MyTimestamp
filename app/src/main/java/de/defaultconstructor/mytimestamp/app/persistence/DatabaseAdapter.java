@@ -97,7 +97,7 @@ public class DatabaseAdapter {
      * @param whereClause
      *              String
      *
-     * @return a list of selected entities
+     * @return the cursor with the selected entities
      *
      * @throws {@link PersistenceException}
      */
@@ -189,7 +189,7 @@ public class DatabaseAdapter {
         public static final String[] COLUMNS_TABLE_ADRESSE = new String[] {
                 "id", "adresszusatz", "ortschaft", "postleitzahl", "staat", "straszeUndHaus" };
         public static final String[] COLUMNS_TABLE_AUFTRAG = new String[] {
-                "id", "arbeitsentgelt", "beginn", "berechnungsfaktor", "ende", "notiz", NAME_TABLE_AUFTRAGGEBER };
+                "id", "arbeitsentgelt", "berechnungsfaktor", "notiz", "waehrung", NAME_TABLE_AUFTRAGGEBER, NAME_TABLE_PROJEKT };
         public static final String[] COLUMNS_TABLE_AUFTRAGGEBER = new String[] {
                 "id", "firma", NAME_TABLE_ADRESSE, NAME_TABLE_BENUTZER, NAME_TABLE_KONTAKT };
         public static final String[] COLUMNS_TABLE_BENUTZER = new String[] {
@@ -199,7 +199,7 @@ public class DatabaseAdapter {
         public static final String[] COLUMNS_TABLE_KONTAKT = new String[] {
                 "id", "email", "mobil", "telefax", "telefon", "webseite" };
         public static final String[] COLUMNS_TABLE_PROJEKT = new String[] {
-                "id", "beschreibung", "name", "nummer", NAME_TABLE_ADRESSE, NAME_TABLE_AUFTRAG, NAME_TABLE_KONTAKT };
+                "id", "beschreibung", "name", "nummer", NAME_TABLE_ADRESSE, NAME_TABLE_KONTAKT };
 
         protected static final String NAME_DATABASE = "myTimestamp";
 
@@ -215,13 +215,15 @@ public class DatabaseAdapter {
                 "CREATE TABLE " + NAME_TABLE_AUFTRAG + " (" +
                         COLUMNS_TABLE_AUFTRAG[0] + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         COLUMNS_TABLE_AUFTRAG[1] + " REAL, " +
-                        COLUMNS_TABLE_AUFTRAG[2] + " DATE, " +
+                        COLUMNS_TABLE_AUFTRAG[2] + " TEXT, " +
                         COLUMNS_TABLE_AUFTRAG[3] + " TEXT, " +
-                        COLUMNS_TABLE_AUFTRAG[4] + " DATE, " +
-                        COLUMNS_TABLE_AUFTRAG[5] + " TEXT, " +
+                        COLUMNS_TABLE_AUFTRAG[4] + " TEXT, " +
+                        COLUMNS_TABLE_AUFTRAG[5] + " INTEGER NOT NULL, " +
                         COLUMNS_TABLE_AUFTRAG[6] + " INTEGER NOT NULL, " +
+                        "FOREIGN KEY (" + COLUMNS_TABLE_AUFTRAG[5] + ") " +
+                        "REFERENCES " + NAME_TABLE_AUFTRAGGEBER + " (id), " +
                         "FOREIGN KEY (" + COLUMNS_TABLE_AUFTRAG[6] + ") " +
-                        "REFERENCES " + NAME_TABLE_AUFTRAGGEBER + " (id));";
+                        "REFERENCES " + NAME_TABLE_PROJEKT + "(id));";
         static final String SQL_CREATE_TABLE_AUFTRAGGEBER =
                 "CREATE TABLE " + NAME_TABLE_AUFTRAGGEBER + " (" +
                         COLUMNS_TABLE_AUFTRAGGEBER[0] + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -276,12 +278,9 @@ public class DatabaseAdapter {
                         COLUMNS_TABLE_PROJEKT[3] + " TEXT, " +
                         COLUMNS_TABLE_PROJEKT[4] + " INTEGER, " +
                         COLUMNS_TABLE_PROJEKT[5] + " INTEGER, " +
-                        COLUMNS_TABLE_PROJEKT[6] + " INTEGER, " +
                         "FOREIGN KEY (" + COLUMNS_TABLE_PROJEKT[4] + ") " +
                         "REFERENCES " + NAME_TABLE_ADRESSE + " (id), " +
                         "FOREIGN KEY (" + COLUMNS_TABLE_PROJEKT[5] + ") " +
-                        "REFERENCES " + NAME_TABLE_AUFTRAG + " (id), " +
-                        "FOREIGN KEY (" + COLUMNS_TABLE_PROJEKT[6] + ") " +
                         "REFERENCES " + NAME_TABLE_KONTAKT + " (id));";
 
         static final int VERSION_DATABASE = 1;

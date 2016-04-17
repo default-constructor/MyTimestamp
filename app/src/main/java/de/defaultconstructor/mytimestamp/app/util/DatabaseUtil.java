@@ -9,6 +9,7 @@ import de.defaultconstructor.mytimestamp.app.model.Auftrag;
 import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
 import de.defaultconstructor.mytimestamp.app.model.Benutzer;
 import de.defaultconstructor.mytimestamp.app.model.Kontakt;
+import de.defaultconstructor.mytimestamp.app.model.Projekt;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
 
 import static de.defaultconstructor.mytimestamp.app.persistence.DatabaseAdapter.DatabaseConstants.*;
@@ -42,6 +43,8 @@ public final class DatabaseUtil {
                 return specifyColumnNames(tableName, COLUMNS_TABLE_BENUTZER);
             case NAME_TABLE_KONTAKT:
                 return specifyColumnNames(tableName, COLUMNS_TABLE_KONTAKT);
+            case NAME_TABLE_PROJEKT:
+                return specifyColumnNames(tableName, COLUMNS_TABLE_PROJEKT);
             default:
                 throw new PersistenceException(PersistenceException.Cause.SELECT_TABLE_NOT_FOUND.getCode(),
                         PersistenceException.Cause.SELECT_TABLE_NOT_FOUND.getMessage().replace("{table}", tableName));
@@ -75,6 +78,8 @@ public final class DatabaseUtil {
                 return Benutzer.getInstance(cursor);
             case NAME_TABLE_KONTAKT:
                 return Kontakt.getInstance(cursor);
+            case NAME_TABLE_PROJEKT:
+                return Projekt.getInstance(cursor);
             default:
                 throw new PersistenceException(PersistenceException.Cause.SELECT_TABLE_NOT_FOUND.getCode(),
                         PersistenceException.Cause.SELECT_TABLE_NOT_FOUND.getMessage().replace("{table}", tableName));
@@ -101,6 +106,8 @@ public final class DatabaseUtil {
                 return Benutzer.getContentValues(databaseEntity);
             case NAME_TABLE_KONTAKT:
                 return Kontakt.getContentValues(databaseEntity);
+            case NAME_TABLE_PROJEKT:
+                return Projekt.getContentValues(databaseEntity);
             default:
                 throw new PersistenceException(PersistenceException.Cause.SELECT_TABLE_NOT_FOUND.getCode(),
                         PersistenceException.Cause.SELECT_TABLE_NOT_FOUND.getMessage().replace("{table}", tableName));

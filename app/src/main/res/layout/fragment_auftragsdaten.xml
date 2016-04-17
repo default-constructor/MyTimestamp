@@ -1,50 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="de.thre.mytimestamp.app.android.widgets.components"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
     android:padding="8dp">
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/editTextNeuerAuftragAuftragsgegenstand"
-            style="?android:editTextPreferenceStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Auftragsgegenstand"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:paddingTop="8dp"/>
-    </android.support.design.widget.TextInputLayout>
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/editTextNeuerAuftragBeginn"
-            style="?android:editTextPreferenceStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Beginn"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:paddingTop="8dp"/>
-    </android.support.design.widget.TextInputLayout>
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/editTextNeuerAuftragEnde"
-            style="?android:editTextPreferenceStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Ende"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:paddingTop="8dp"/>
-    </android.support.design.widget.TextInputLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -54,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="10">
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/editTextNeuerAuftragAuftraggeber"
+                android:id="@+id/editTextAuftragsdatenAuftraggeber"
                 style="?android:editTextPreferenceStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -64,31 +26,43 @@
                 android:paddingTop="8dp"/>
         </android.support.design.widget.TextInputLayout>
         <Button
-            android:id="@+id/buttonNeuerAuftragNeuerAuftraggeber"
+            android:id="@+id/buttonAuftragsdatenNeuerAuftraggeber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Neu"/>
     </LinearLayout>
-    <android.support.design.widget.TextInputLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/editTextNeuerAuftragArbeitsentgelt"
-            style="?android:editTextPreferenceStyle"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:hint="Arbeitsentgelt"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:paddingTop="8dp"/>
-    </android.support.design.widget.TextInputLayout>
+            android:layout_weight="10">
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/editTextAuftragsdatenArbeitsentgelt"
+                style="?android:editTextPreferenceStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:hint="Arbeitsentgelt"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:paddingTop="8dp"/>
+        </android.support.design.widget.TextInputLayout>
+        <Button
+            android:id="@+id/buttonAuftragsdatenWaehrung"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAllCaps="false"/>
+    </LinearLayout>
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/editTextNeuerAuftragBerechnungsfaktor"
+            android:id="@+id/editTextAuftragsdatenBerechnungsfaktor"
             style="?android:editTextPreferenceStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -101,7 +75,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/editTextNeuerAuftragNotiz"
+            android:id="@+id/editTextAuftragsdatenNotiz"
             style="?android:editTextPreferenceStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -117,10 +91,10 @@
         android:layout_height="wrap_content"
         android:padding="8dp">
         <Button
-            android:id="@+id/buttonSubmitNeuerAuftrag"
+            android:id="@+id/buttonSubmitAuftragsdaten"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Speichern"/>
+            android:text="Weiter"/>
     </LinearLayout>
 
 </LinearLayout>
