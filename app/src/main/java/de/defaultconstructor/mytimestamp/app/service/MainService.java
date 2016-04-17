@@ -12,6 +12,7 @@ import de.defaultconstructor.mytimestamp.app.exception.PersistenceException;
 import de.defaultconstructor.mytimestamp.app.exception.ServiceException;
 import de.defaultconstructor.mytimestamp.app.model.Auftrag;
 import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
+import de.defaultconstructor.mytimestamp.app.model.Projekt;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseAdapter;
 import de.defaultconstructor.mytimestamp.app.util.DatabaseUtil;
 import de.defaultconstructor.mytimestamp.app.util.DateUtil;
@@ -28,31 +29,42 @@ public class MainService extends MyTimestampService {
         this.databaseAdapter = new DatabaseAdapter(context);
     }
 
-    public List<Auftrag> loadAuftragList() throws ServiceException {
+    public List<Auftrag> loadAbgeschlosseneAuftraege() throws ServiceException {
+        return loadAuftragList("projekt.ende<'" + DateUtil.getStringFromDateISO8601(new Date()) + "'");
+    }
+
+    public List<Auftrag> loadAktuelleAuftraege() throws ServiceException {
+        return loadAuftragList("projekt.beginn<'" + DateUtil.getStringFromDateISO8601(new Date()) + "'");
+    }
+
+    public List<Auftrag> loadAnstehendeAuftraege() throws ServiceException {
+        return loadAuftragList("projekt.beginn>'" + DateUtil.getStringFromDateISO8601(new Date()) + "'");
+    }
+
+    private List<Auftrag> loadAuftragList(String whereClause) throws ServiceException {
         try {
             this.databaseAdapter.open();
             String tableNameAuftrag = Auftrag.class.getSimpleName().toLowerCase();
-            Cursor cursorAuftrag = this.databaseAdapter.select(tableNameAuftrag, null);
+            String tableNameProjekt = Projekt.class.getSimpleName().toLowerCase();
+            Cursor cursorAuftrag = this.databaseAdapter.selectInnerJoin(tableNameAuftrag, tableNameProjekt, "projekt=id", whereClause); // (tableNameAuftrag, null);
             if (null == cursorAuftrag || 0 == cursorAuftrag.getCount()) {
                 return new ArrayList<>();
             }
             List<Auftrag> auftragList = new ArrayList<>();
-            if (!cursorAuftrag.isAfterLast()) {
-                while (cursorAuftrag.moveToNext()) {
-                    Auftrag auftrag = (Auftrag) DatabaseUtil.mapResult(cursorAuftrag, tableNameAuftrag);
-                    String tableNameAuftraggeber = Auftraggeber.class.getSimpleName().toLowerCase();
-                    long idAuftraggeber = cursorAuftrag.getLong(cursorAuftrag.getColumnIndex(tableNameAuftraggeber));
-                    Cursor cursorAuftraggeber = this.databaseAdapter.select(tableNameAuftraggeber,
-                            "id=" + idAuftraggeber);
-                    if (null == cursorAuftraggeber || 0 == cursorAuftraggeber.getCount()) {
-                        throw new ServiceException("Kein Ergebnis für Tabelle " + tableNameAuftraggeber);
-                    }
-                    if (cursorAuftraggeber.moveToFirst()) {
-                        auftrag.setAuftraggeber((Auftraggeber) DatabaseUtil.mapResult(cursorAuftraggeber, tableNameAuftraggeber));
-                    }
-                    auftragList.add(auftrag);
-                    cursorAuftrag.moveToNext();
+            while (!cursorAuftrag.isAfterLast()) {
+                Auftrag auftrag = (Auftrag) DatabaseUtil.mapResult(cursorAuftrag, tableNameAuftrag);
+                String tableNameAuftraggeber = Auftraggeber.class.getSimpleName().toLowerCase();
+                long idAuftraggeber = cursorAuftrag.getLong(cursorAuftrag.getColumnIndex(tableNameAuftraggeber));
+                Cursor cursorAuftraggeber = this.databaseAdapter.select(tableNameAuftraggeber,
+                        "id=" + idAuftraggeber);
+                if (null == cursorAuftraggeber || 0 == cursorAuftraggeber.getCount()) {
+                    throw new ServiceException("Kein Ergebnis für Tabelle " + tableNameAuftraggeber);
                 }
+                if (cursorAuftraggeber.moveToFirst()) {
+                    auftrag.setAuftraggeber((Auftraggeber) DatabaseUtil.mapResult(cursorAuftraggeber, tableNameAuftraggeber));
+                }
+                auftragList.add(auftrag);
+                cursorAuftrag.moveToNext();
             }
             return auftragList;
         } catch (PersistenceException e) {

@@ -117,13 +117,17 @@ public class DatabaseAdapter {
      * @return
      * @throws PersistenceException
      */
-    public List<DatabaseEntity> selectInnerJoin(String tableName, String joinedTable, String onClause,
+    public Cursor selectInnerJoin(String tableName, String joinedTable, String onClause,
                                                 String whereClause) throws PersistenceException {
         String leftJoin = tableName + "." + onClause.substring(0, onClause.indexOf("="));
         String rightJoin = joinedTable + "." + onClause.substring(onClause.indexOf("=") + 1);
+        if (null == whereClause) {
+            whereClause = "id>0";
+        }
         String sql = "SELECT " + StringUtil.getStringedArray(DatabaseUtil.getColumnNames(tableName), ",") +
                 " FROM " + tableName + " INNER JOIN " + joinedTable + " ON " + leftJoin + "=" + rightJoin +
                 " WHERE " + whereClause + ";";
+        return this.database.rawQuery(sql, null);/*
         Cursor cursor = this.database.rawQuery(sql, null);
         if (null == cursor || 0 == cursor.getCount()) {
             throw new PersistenceException(PersistenceException.Cause.SELECT_NO_RESULT.getCode(),
@@ -136,7 +140,7 @@ public class DatabaseAdapter {
                 cursor.moveToNext();
             }
         }
-        return databaseEntityList;
+        return databaseEntityList;*/
     }
 
     /**
@@ -199,7 +203,7 @@ public class DatabaseAdapter {
         public static final String[] COLUMNS_TABLE_KONTAKT = new String[] {
                 "id", "email", "mobil", "telefax", "telefon", "webseite" };
         public static final String[] COLUMNS_TABLE_PROJEKT = new String[] {
-                "id", "beschreibung", "name", "nummer", NAME_TABLE_ADRESSE, NAME_TABLE_KONTAKT };
+                "id", "beginn", "beschreibung", "ende", "name", "nummer", NAME_TABLE_ADRESSE, NAME_TABLE_KONTAKT };
 
         protected static final String NAME_DATABASE = "myTimestamp";
 
@@ -273,14 +277,16 @@ public class DatabaseAdapter {
         static final String SQL_CREATE_TABLE_PROJEKT =
                 "CREATE TABLE " + NAME_TABLE_PROJEKT + " (" +
                         COLUMNS_TABLE_PROJEKT[0] + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        COLUMNS_TABLE_PROJEKT[1] + " TEXT, " +
+                        COLUMNS_TABLE_PROJEKT[1] + " DATE, " +
                         COLUMNS_TABLE_PROJEKT[2] + " TEXT, " +
-                        COLUMNS_TABLE_PROJEKT[3] + " TEXT, " +
-                        COLUMNS_TABLE_PROJEKT[4] + " INTEGER, " +
-                        COLUMNS_TABLE_PROJEKT[5] + " INTEGER, " +
-                        "FOREIGN KEY (" + COLUMNS_TABLE_PROJEKT[4] + ") " +
+                        COLUMNS_TABLE_PROJEKT[3] + " DATE, " +
+                        COLUMNS_TABLE_PROJEKT[4] + " TEXT, " +
+                        COLUMNS_TABLE_PROJEKT[5] + " TEXT, " +
+                        COLUMNS_TABLE_PROJEKT[6] + " INTEGER, " +
+                        COLUMNS_TABLE_PROJEKT[7] + " INTEGER, " +
+                        "FOREIGN KEY (" + COLUMNS_TABLE_PROJEKT[6] + ") " +
                         "REFERENCES " + NAME_TABLE_ADRESSE + " (id), " +
-                        "FOREIGN KEY (" + COLUMNS_TABLE_PROJEKT[5] + ") " +
+                        "FOREIGN KEY (" + COLUMNS_TABLE_PROJEKT[7] + ") " +
                         "REFERENCES " + NAME_TABLE_KONTAKT + " (id));";
 
         static final int VERSION_DATABASE = 1;

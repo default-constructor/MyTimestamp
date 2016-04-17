@@ -1,14 +1,11 @@
 package de.defaultconstructor.mytimestamp.app.android.fragments;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +15,6 @@ import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -27,7 +23,6 @@ import de.defaultconstructor.mytimestamp.R;
 import de.defaultconstructor.mytimestamp.app.android.activities.MainActivity;
 import de.defaultconstructor.mytimestamp.app.android.activities.NewMissionActivity;
 import de.defaultconstructor.mytimestamp.app.model.Auftrag;
-import de.defaultconstructor.mytimestamp.app.util.DateUtil;
 
 /**
  * Created by Thomas Reno on 10.04.2016.
@@ -41,13 +36,11 @@ public class MainFragment extends MyTimestampFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "on create");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        Log.d(TAG, "on create view");
         this.view = inflater.inflate(R.layout.fragment_main, container, false);
         return this.view;
     }
@@ -55,31 +48,10 @@ public class MainFragment extends MyTimestampFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "on resume");
-        this.textViewCurrentDate = new TextView(getActivity());
-        this.textViewCurrentDate.setTypeface(null, Typeface.BOLD);/*
-        TextView userName = (TextView) view.findViewById(R.id.textview_user);
-        userName.setText(MyTimestamp.currentBenutzer.getVorname() + " " +
-                MyTimestamp.currentBenutzer.getFamilienname());*/
-        this.containerInfoWrapper = (LinearLayout) this.view.findViewById(R.id.fragmentMainInfoWrapper);
-        this.containerInfoWrapper.addView(this.textViewCurrentDate);
-        setTextViewCurrentDate();
-        this.buttonNeuerAuftrag = (FloatingActionButton) this.view.findViewById(R.id.buttonNeuerAuftrag);
-        this.buttonNeuerAuftrag.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), NewMissionActivity.class);
-                startActivityForResult(intent, Activity.RESULT_OK);
-            }
-        });
-        this.containerAuftragWrapper =
-                (LinearLayout) this.view.findViewById(R.id.fragmentMainAuftragWrapper);
-        this.auftragList = ((MainActivity) getActivity()).getAuftragList();
-        if (null == this.auftragList || this.auftragList.isEmpty()) {
-            this.containerAuftragWrapper.addView(getPlaceholderView());
-        } else {
-            this.containerAuftragWrapper.addView(getAuftragListView());
-        }
+        initializeInfoContainer();
+        initializeAktuelleAuftraegeContainer();
+        initializeAnstehendeAuftraegeContainer();
+        initializeAbgeschlosseneAuftraegeContainer();
     }
 
     @Override
@@ -91,25 +63,29 @@ public class MainFragment extends MyTimestampFragment {
 
     private FloatingActionButton buttonNeuerAuftrag;
 
-    private LinearLayout containerAuftragWrapper;
-    private LinearLayout containerInfoWrapper;
+    private LinearLayout containerAbgeschlosseneAuftraege;
+    private LinearLayout containerAktuelleAuftraege;
+    private LinearLayout containerAnstehendeAuftraege;
+    private LinearLayout containerInfo;
 
     private TextView textViewCurrentDate;
 
     private View view;
 
-    private List<Auftrag> auftragList;
+    private List<Auftrag> aktuelleAuftraege;
+    private List<Auftrag> anstehendeAuftraege;
+    private List<Auftrag> abgeschlosseneAuftraege;
 
     public MainFragment() {
         super();
     }
 
-    private LinearLayout getAuftragListView() {
+    private LinearLayout getAuftragListView(List<Auftrag> auftragList) {
         LinearLayout listWrapper = new LinearLayout(getActivity());
         listWrapper.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         listWrapper.setOrientation(LinearLayout.VERTICAL);
-        for (Auftrag auftrag : this.auftragList) {
+        for (Auftrag auftrag : auftragList) {
             listWrapper.addView(getAuftragListItem(auftrag));
         }
         return listWrapper;
@@ -131,14 +107,64 @@ public class MainFragment extends MyTimestampFragment {
         return auftragListItem;
     }
 
-    private TextView getPlaceholderView() {
+    private TextView getPlaceholderView(String text) {
         TextView textViewPlaceholder = new TextView(getActivity());
-        textViewPlaceholder.setTypeface(null, Typeface.BOLD);
-        textViewPlaceholder.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        textViewPlaceholder.setText("Du hast aktuell keine Aufträge.");
+        textViewPlaceholder.setText(text);
         textViewPlaceholder.setTextSize(16);
         textViewPlaceholder.setPadding(0, 16, 0, 16);
         return textViewPlaceholder;
+    }
+
+    private void initializeAbgeschlosseneAuftraegeContainer() {
+        this.containerAbgeschlosseneAuftraege =
+                (LinearLayout) this.view.findViewById(R.id.fragmentMainAbgeschlosseneAuftraegeWrapper);
+        this.abgeschlosseneAuftraege = ((MainActivity) getActivity()).getAbgeschlosseneAuftraege();
+        if (null == this.abgeschlosseneAuftraege || this.abgeschlosseneAuftraege.isEmpty()) {
+            this.containerAbgeschlosseneAuftraege.addView(getPlaceholderView("Keine abgeschlossenen Aufträge."));
+        } else {
+            this.containerAbgeschlosseneAuftraege.addView(getAuftragListView(this.abgeschlosseneAuftraege));
+        }
+    }
+
+    private void initializeAktuelleAuftraegeContainer() {
+        this.containerAktuelleAuftraege =
+                (LinearLayout) this.view.findViewById(R.id.fragmentMainAktuelleAuftraegeWrapper);
+        this.aktuelleAuftraege = ((MainActivity) getActivity()).getAktuelleAuftraege();
+        if (null == this.aktuelleAuftraege || this.aktuelleAuftraege.isEmpty()) {
+            this.containerAktuelleAuftraege.addView(getPlaceholderView("Keine aktuellen Aufträge."));
+        } else {
+            this.containerAktuelleAuftraege.addView(getAuftragListView(this.aktuelleAuftraege));
+        }
+    }
+
+    private void initializeAnstehendeAuftraegeContainer() {
+        this.containerAnstehendeAuftraege =
+                (LinearLayout) this.view.findViewById(R.id.fragmentMainAnstehendeAuftraegeWrapper);
+        this.anstehendeAuftraege = ((MainActivity) getActivity()).getAnstehendeAuftraege();
+        if (null == this.anstehendeAuftraege || this.anstehendeAuftraege.isEmpty()) {
+            this.containerAnstehendeAuftraege.addView(getPlaceholderView("Keine anstehenden Aufträge."));
+        } else {
+            this.containerAnstehendeAuftraege.addView(getAuftragListView(this.anstehendeAuftraege));
+        }
+    }
+
+    private void initializeInfoContainer() {
+        this.textViewCurrentDate = new TextView(getActivity());
+        this.textViewCurrentDate.setTypeface(null, Typeface.BOLD);/*
+        TextView userName = (TextView) view.findViewById(R.id.textview_user);
+        userName.setText(MyTimestamp.currentBenutzer.getVorname() + " " +
+                MyTimestamp.currentBenutzer.getFamilienname());*/
+        this.containerInfo = (LinearLayout) this.view.findViewById(R.id.fragmentMainInfoWrapper);
+        this.containerInfo.addView(this.textViewCurrentDate);
+        setTextViewCurrentDate();
+        this.buttonNeuerAuftrag = (FloatingActionButton) this.view.findViewById(R.id.buttonNeuerAuftrag);
+        this.buttonNeuerAuftrag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), NewMissionActivity.class);
+                startActivityForResult(intent, Activity.RESULT_OK);
+            }
+        });
     }
 
     private void setTextViewCurrentDate() {

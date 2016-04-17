@@ -52,10 +52,15 @@ public class MainActivity extends MyTimestampActivity {
 
     private MainService mainService;
 
-    public List<Auftrag> getAuftragList() {
+    public MainActivity() {
+        super();
+        this.mainService = new MainService(this);
+    }
+
+    public List<Auftrag> getAbgeschlosseneAuftraege() {
         List<Auftrag> auftragList = null;
         try {
-            auftragList = this.mainService.loadAuftragList();
+            auftragList = this.mainService.loadAbgeschlosseneAuftraege();
         } catch (ServiceException e) {
             Log.e(TAG, e.getMessage());
         }
@@ -67,8 +72,33 @@ public class MainActivity extends MyTimestampActivity {
         return auftragList;
     }
 
-    public MainActivity() {
-        super();
-        this.mainService = new MainService(this);
+    public List<Auftrag> getAktuelleAuftraege() {
+        List<Auftrag> auftragList = null;
+        try {
+            auftragList = this.mainService.loadAktuelleAuftraege();
+        } catch (ServiceException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        if (null != auftragList) { // FIXME wieder ausbauen
+            for (Auftrag auftrag : auftragList) {
+                Log.d(TAG, auftrag.toString());
+            }
+        }
+        return auftragList;
+    }
+
+    public List<Auftrag> getAnstehendeAuftraege() {
+        List<Auftrag> auftragList = null;
+        try {
+            auftragList = this.mainService.loadAnstehendeAuftraege();
+        } catch (ServiceException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        if (null != auftragList) { // FIXME wieder ausbauen
+            for (Auftrag auftrag : auftragList) {
+                Log.d(TAG, auftrag.toString());
+            }
+        }
+        return auftragList;
     }
 }

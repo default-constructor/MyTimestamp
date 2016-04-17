@@ -90,7 +90,7 @@ public class NewMissionActivity extends MyTimestampActivity implements Auftragge
                 finish();
             }
         } catch (ServiceException e) {
-            Log.e(TAG, "Save failure: " + e);
+            Log.e(TAG, e.getMessage());
         }
     }
 
