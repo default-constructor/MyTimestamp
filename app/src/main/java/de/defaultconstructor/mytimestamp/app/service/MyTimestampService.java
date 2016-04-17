@@ -99,6 +99,23 @@ public class MyTimestampService {
         }
     }
 
+    protected DatabaseEntity saveDatabaseEntity(DatabaseEntity databaseEntity) throws ServiceException {
+        try {
+            this.databaseAdapter.open();
+            long id = this.databaseAdapter.insert(databaseEntity);
+            if (0 == id) {
+                throw new ServiceException(databaseEntity.getClass().getSimpleName() +
+                        " konnte nicht gespeichert werden.");
+            }
+            databaseEntity.setId(id);
+            return databaseEntity;
+        } catch (PersistenceException e) {
+            throw new ServiceException(e.getMessage());
+        } finally {
+            this.databaseAdapter.close();
+        }
+    }
+
     private Benutzer getDummyBenutzer() { // FIXME wieder ausbauen
         Benutzer benutzer = new Benutzer();
         benutzer.setAktiv(true);

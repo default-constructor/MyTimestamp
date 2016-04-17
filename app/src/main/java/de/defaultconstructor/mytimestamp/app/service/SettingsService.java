@@ -5,8 +5,10 @@ import android.content.Context;
 import de.defaultconstructor.mytimestamp.app.MyTimestamp;
 import de.defaultconstructor.mytimestamp.app.exception.PersistenceException;
 import de.defaultconstructor.mytimestamp.app.exception.ServiceException;
+import de.defaultconstructor.mytimestamp.app.model.Adresse;
 import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
 import de.defaultconstructor.mytimestamp.app.model.Benutzer;
+import de.defaultconstructor.mytimestamp.app.model.Kontakt;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseAdapter;
 
 /**
@@ -22,20 +24,8 @@ public class SettingsService extends MyTimestampService {
     }
 
     public Benutzer saveBenutzer(Benutzer benutzer) throws ServiceException {
-        this.databaseAdapter.open();
-        try {
-            benutzer.getAdresse().setId(this.databaseAdapter.insert(benutzer.getAdresse()).getId());
-            benutzer.getKontakt().setId(this.databaseAdapter.insert(benutzer.getKontakt()).getId());
-            if (null == this.databaseAdapter.insert(benutzer)) {
-                throw new ServiceException(Auftraggeber.class.getSimpleName() +
-                        " konnte nicht gespeichert werden.");
-            }
-            return benutzer;
-        } catch (PersistenceException e) {
-            throw new ServiceException(Auftraggeber.class.getSimpleName() +
-                    " konnte nicht gespeichert werden.");
-        } finally {
-            this.databaseAdapter.close();
-        }
+        benutzer.setAdresse((Adresse) saveDatabaseEntity(benutzer.getAdresse()));
+        benutzer.setKontakt((Kontakt) saveDatabaseEntity(benutzer.getKontakt()));
+        return (Benutzer) saveDatabaseEntity(benutzer);
     }
 }

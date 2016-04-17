@@ -37,9 +37,9 @@ public class Projekt implements DatabaseEntity {
     public static Projekt getInstance(Cursor cursor) {
         Projekt projekt = new Projekt();
         projekt.setId(cursor.getLong(cursor.getColumnIndex("id")));
-        projekt.setBeginn(DateUtil.getDateFromString(cursor.getString(cursor.getColumnIndex("beginn"))));
+        projekt.setBeginn(DateUtil.getDateFromStringISO8601(cursor.getString(cursor.getColumnIndex("beginn"))));
         projekt.setBeschreibung(cursor.getString(cursor.getColumnIndex("beschreibung")));
-        projekt.setEnde(DateUtil.getDateFromString(cursor.getString(cursor.getColumnIndex("ende"))));
+        projekt.setEnde(DateUtil.getDateFromStringISO8601(cursor.getString(cursor.getColumnIndex("ende"))));
         projekt.setName(cursor.getString(cursor.getColumnIndex("name")));
         projekt.setNummer(cursor.getString(cursor.getColumnIndex("nummer")));
         return projekt;

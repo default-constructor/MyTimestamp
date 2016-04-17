@@ -17,6 +17,7 @@ import de.defaultconstructor.mytimestamp.app.model.Benutzer;
 import de.defaultconstructor.mytimestamp.app.model.Kontakt;
 import de.defaultconstructor.mytimestamp.app.model.Projekt;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseAdapter;
+import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
 import de.defaultconstructor.mytimestamp.app.util.DatabaseUtil;
 
 /**
@@ -107,53 +108,14 @@ public class NewMissionService extends MyTimestampService {
     }
 
     public Auftraggeber saveAuftraggeber(Auftraggeber auftraggeber) throws ServiceException {
-        try {
-            this.databaseAdapter.open();
-            auftraggeber.getAdresse().setId(this.databaseAdapter.insert(auftraggeber.getAdresse()).getId());
-            auftraggeber.getKontakt().setId(this.databaseAdapter.insert(auftraggeber.getKontakt()).getId());
-            auftraggeber.setBenutzer(MyTimestamp.currentBenutzer);
-            if (null == this.databaseAdapter.insert(auftraggeber)) {
-                throw new ServiceException(Auftraggeber.class.getSimpleName() +
-                        " konnte nicht gespeichert werden.");
-            }
-            return auftraggeber;
-        } catch (PersistenceException e) {
-            throw new ServiceException(Auftraggeber.class.getSimpleName() +
-                    " konnte nicht gespeichert werden.");
-        } finally {
-            this.databaseAdapter.close();
-        }
+        auftraggeber.setAdresse((Adresse) saveDatabaseEntity(auftraggeber.getAdresse()));
+        auftraggeber.setKontakt((Kontakt) saveDatabaseEntity(auftraggeber.getKontakt()));
+        return (Auftraggeber) saveDatabaseEntity(auftraggeber);
     }
 
     public Auftrag saveAuftrag(Auftrag auftrag) throws ServiceException {
-        try {
-            this.databaseAdapter.open();
-            if (null == this.databaseAdapter.insert(auftrag)) {
-                throw new ServiceException(Auftrag.class.getSimpleName() +
-                        " konnte nicht gespeichert werden.");
-            }
-            return auftrag;
-        } catch (PersistenceException e) {
-            throw new ServiceException(Auftrag.class.getSimpleName() +
-                    " konnte nicht gespeichert werden.");
-        } finally {
-            this.databaseAdapter.close();
-        }
-    }
-
-    public Projekt saveProjekt(Projekt projekt) throws ServiceException {
-        try {
-            this.databaseAdapter.open();
-            if (null == this.databaseAdapter.insert(projekt)) {
-                throw new ServiceException(Projekt.class.getSimpleName() +
-                        " konnte nicht gespeichert werden.");
-            }
-            return projekt;
-        } catch (PersistenceException e) {
-            throw new ServiceException(Projekt.class.getSimpleName() +
-                    " konnte nicht gespeichert werden.");
-        } finally {
-            this.databaseAdapter.close();
-        }
+        Projekt projekt = (Projekt) saveDatabaseEntity(auftrag.getProjekt());
+        auftrag.setProjekt(projekt);
+        return (Auftrag) saveDatabaseEntity(auftrag);
     }
 }

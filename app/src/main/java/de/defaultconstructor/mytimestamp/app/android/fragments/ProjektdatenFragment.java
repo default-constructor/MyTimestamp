@@ -107,8 +107,11 @@ public class ProjektdatenFragment extends MyTimestampFragment implements DatePic
             public void onClick(View v) {
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                Calendar calendar = new GregorianCalendar();
-                DatePickerDialogFragment dialogFragment = DatePickerDialogFragment.newInstance("Projektende auswählen", calendar.getTime());
+                Date ende = DateUtil.getDateFromStringISO8601(String.valueOf(ProjektdatenFragment.this.editTextEnde.getText()));
+                if (null == ende) {
+                    ende = new GregorianCalendar().getTime();
+                }
+                DatePickerDialogFragment dialogFragment = DatePickerDialogFragment.newInstance("Projektende auswählen", ende);
                 dialogFragment.setTargetFragment(ProjektdatenFragment.this, 3);
                 ((NewMissionActivity) getActivity()).showDialogFragment(dialogFragment, "datepicker-projektende");
             }

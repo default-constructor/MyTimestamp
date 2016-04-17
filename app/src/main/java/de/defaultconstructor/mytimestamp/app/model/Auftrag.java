@@ -6,6 +6,7 @@ import android.database.Cursor;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import de.defaultconstructor.mytimestamp.app.MyTimestamp;
 import de.defaultconstructor.mytimestamp.app.enumeration.Berechnungsfaktor;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
 import de.defaultconstructor.mytimestamp.app.util.DateUtil;
@@ -30,6 +31,7 @@ public class Auftrag implements DatabaseEntity {
         contentValues.put("berechnungsfaktor", entity.berechnungsfaktor.getKuerzel());
         contentValues.put("notiz", entity.notiz);
         contentValues.put("auftraggeber", entity.auftraggeber.getId());
+        contentValues.put("benutzer", entity.benutzer.getId());
         contentValues.put("projekt", entity.projekt.getId());
         return contentValues;
     }
@@ -63,6 +65,8 @@ public class Auftrag implements DatabaseEntity {
             return false;
         if (getAuftraggeber() != null ? !getAuftraggeber().equals(auftrag.getAuftraggeber()) : auftrag.getAuftraggeber() != null)
             return false;
+        if (getBenutzer() != null ? !getBenutzer().equals(auftrag.getBenutzer()) : auftrag.getBenutzer() != null)
+            return false;
         return !(getProjekt() != null ? !getProjekt().equals(auftrag.getProjekt()) : auftrag.getProjekt() != null);
     }
 
@@ -78,6 +82,7 @@ public class Auftrag implements DatabaseEntity {
         result = 31 * result + (getBerechnungsfaktor() != null ? getBerechnungsfaktor().hashCode() : 0);
         result = 31 * result + (getNotiz() != null ? getNotiz().hashCode() : 0);
         result = 31 * result + (getAuftraggeber() != null ? getAuftraggeber().hashCode() : 0);
+        result = 31 * result + (getBenutzer() != null ? getBenutzer().hashCode() : 0);
         result = 31 * result + (getProjekt() != null ? getProjekt().hashCode() : 0);
         return result;
     }
@@ -95,6 +100,7 @@ public class Auftrag implements DatabaseEntity {
         builder.append("berechnungsfaktor=").append(this.berechnungsfaktor).append(", ");
         builder.append("notiz='").append(this.notiz).append("', ");
         builder.append("auftraggeber=").append(this.auftraggeber.toString()).append(", ");
+        builder.append("benutzer=").append(this.benutzer.toString()).append(", ");
         builder.append("projekt=").append(this.projekt.toString()).append("}");
         return builder.toString();
     }
@@ -106,6 +112,7 @@ public class Auftrag implements DatabaseEntity {
     private String notiz;
 
     private Auftraggeber auftraggeber;
+    private Benutzer benutzer;
     private Projekt projekt;
 
     public BigDecimal getArbeitsentgelt() {
@@ -140,6 +147,14 @@ public class Auftrag implements DatabaseEntity {
         this.auftraggeber = auftraggeber;
     }
 
+    public Benutzer getBenutzer() {
+        return this.benutzer;
+    }
+
+    public void setBenutzer(Benutzer benutzer) {
+        this.benutzer = benutzer;
+    }
+
     public Projekt getProjekt() {
         return this.projekt;
     }
@@ -151,6 +166,7 @@ public class Auftrag implements DatabaseEntity {
     public Auftrag() {
         setArbeitsentgelt(BigDecimal.valueOf(0.0));
         setAuftraggeber(new Auftraggeber());
+        setBenutzer(MyTimestamp.currentBenutzer);
         setBerechnungsfaktor(Berechnungsfaktor.STUENDLICH);
         setProjekt(new Projekt());
     }

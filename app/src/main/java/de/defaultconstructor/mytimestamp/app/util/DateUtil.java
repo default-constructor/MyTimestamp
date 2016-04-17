@@ -71,11 +71,30 @@ public final class DateUtil {
 
     public static String getDateStringFromDate(Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
-        return formatter.format(date);
+        try {
+            return formatter.format(date);
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     public static String getStringFromDateISO8601(Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-        return formatter.format(date);
+        try {
+            return formatter.format(date);
+        } catch (NullPointerException e) {
+            return null;
+        }
+    }
+
+    public static Date getDateFromStringISO8601(String string) {
+        if (null == string) {
+            return null;
+        }
+        try {
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse(string);
+        } catch (ParseException e) {
+            return null;
+        }
     }
 }

@@ -79,14 +79,9 @@ public class DatabaseAdapter {
      *
      * @throws PersistenceException
      */
-    public DatabaseEntity insert(DatabaseEntity databaseEntity) throws PersistenceException {
+    public long insert(DatabaseEntity databaseEntity) throws PersistenceException {
         String tableName = databaseEntity.getClass().getSimpleName().toLowerCase();
-        long id = insert(tableName, databaseEntity);
-        if (0 < id) {
-            databaseEntity.setId(id);
-            return databaseEntity;
-        }
-        return null;
+        return insert(tableName, databaseEntity);
     }
 
     /**
@@ -122,11 +117,12 @@ public class DatabaseAdapter {
         String leftJoin = tableName + "." + onClause.substring(0, onClause.indexOf("="));
         String rightJoin = joinedTable + "." + onClause.substring(onClause.indexOf("=") + 1);
         if (null == whereClause) {
-            whereClause = "id>0";
+            whereClause = tableName + ".id>0";
         }
         String sql = "SELECT " + StringUtil.getStringedArray(DatabaseUtil.getColumnNames(tableName), ",") +
                 " FROM " + tableName + " INNER JOIN " + joinedTable + " ON " + leftJoin + "=" + rightJoin +
                 " WHERE " + whereClause + ";";
+        Log.d(TAG, sql);
         return this.database.rawQuery(sql, null);/*
         Cursor cursor = this.database.rawQuery(sql, null);
         if (null == cursor || 0 == cursor.getCount()) {
@@ -193,17 +189,22 @@ public class DatabaseAdapter {
         public static final String[] COLUMNS_TABLE_ADRESSE = new String[] {
                 "id", "adresszusatz", "ortschaft", "postleitzahl", "staat", "straszeUndHaus" };
         public static final String[] COLUMNS_TABLE_AUFTRAG = new String[] {
-                "id", "arbeitsentgelt", "berechnungsfaktor", "notiz", "waehrung", NAME_TABLE_AUFTRAGGEBER, NAME_TABLE_PROJEKT };
+                "id", "arbeitsentgelt", "berechnungsfaktor", "notiz", "waehrung",
+                NAME_TABLE_AUFTRAGGEBER, NAME_TABLE_BENUTZER, NAME_TABLE_PROJEKT };
         public static final String[] COLUMNS_TABLE_AUFTRAGGEBER = new String[] {
-                "id", "firma", NAME_TABLE_ADRESSE, NAME_TABLE_BENUTZER, NAME_TABLE_KONTAKT };
+                "id", "firma",
+                NAME_TABLE_ADRESSE, NAME_TABLE_BENUTZER, NAME_TABLE_KONTAKT }; // FIXME arbeitgeber.benutzer entfernen da redundant mit auftrag.benutzer
         public static final String[] COLUMNS_TABLE_BENUTZER = new String[] {
-                "id", "aktiv", "berufsstatus", "familienname", "geburtsdatum", "vorname", NAME_TABLE_ADRESSE, NAME_TABLE_KONTAKT };
+                "id", "aktiv", "berufsstatus", "familienname", "geburtsdatum", "vorname",
+                NAME_TABLE_ADRESSE, NAME_TABLE_KONTAKT };
         public static final String[] COLUMNS_TABLE_EINSATZ = new String[] {
-                "id", "beginn", "beschreibung", "ende", "fahrtzeit", "pause", NAME_TABLE_PROJEKT };
+                "id", "beginn", "beschreibung", "ende", "fahrtzeit", "pause",
+                NAME_TABLE_PROJEKT };
         public static final String[] COLUMNS_TABLE_KONTAKT = new String[] {
                 "id", "email", "mobil", "telefax", "telefon", "webseite" };
         public static final String[] COLUMNS_TABLE_PROJEKT = new String[] {
-                "id", "beginn", "beschreibung", "ende", "name", "nummer", NAME_TABLE_ADRESSE, NAME_TABLE_KONTAKT };
+                "id", "beginn", "beschreibung", "ende", "name", "nummer",
+                NAME_TABLE_ADRESSE, NAME_TABLE_KONTAKT };
 
         protected static final String NAME_DATABASE = "myTimestamp";
 
@@ -224,9 +225,12 @@ public class DatabaseAdapter {
                         COLUMNS_TABLE_AUFTRAG[4] + " TEXT, " +
                         COLUMNS_TABLE_AUFTRAG[5] + " INTEGER NOT NULL, " +
                         COLUMNS_TABLE_AUFTRAG[6] + " INTEGER NOT NULL, " +
+                        COLUMNS_TABLE_AUFTRAG[7] + " INTEGER NOT NULL, " +
                         "FOREIGN KEY (" + COLUMNS_TABLE_AUFTRAG[5] + ") " +
                         "REFERENCES " + NAME_TABLE_AUFTRAGGEBER + " (id), " +
                         "FOREIGN KEY (" + COLUMNS_TABLE_AUFTRAG[6] + ") " +
+                        "REFERENCES " + NAME_TABLE_BENUTZER + " (id), " +
+                        "FOREIGN KEY (" + COLUMNS_TABLE_AUFTRAG[7] + ") " +
                         "REFERENCES " + NAME_TABLE_PROJEKT + "(id));";
         static final String SQL_CREATE_TABLE_AUFTRAGGEBER =
                 "CREATE TABLE " + NAME_TABLE_AUFTRAGGEBER + " (" +

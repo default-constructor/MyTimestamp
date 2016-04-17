@@ -57,6 +57,21 @@ public class MainActivity extends MyTimestampActivity {
         this.mainService = new MainService(this);
     }
 
+    public List<Auftrag> getAuftragList() {
+        List<Auftrag> auftragList = null;
+        try {
+            auftragList = this.mainService.loadAuftragList();
+        } catch (ServiceException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        if (null != auftragList) { // FIXME wieder ausbauen
+            for (Auftrag auftrag : auftragList) {
+                Log.d(TAG, auftrag.toString());
+            }
+        }
+        return auftragList;
+    }
+
     public List<Auftrag> getAbgeschlosseneAuftraege() {
         List<Auftrag> auftragList = null;
         try {
