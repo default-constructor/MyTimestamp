@@ -2,7 +2,6 @@ package de.defaultconstructor.mytimestamp.app.service;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,19 +25,6 @@ public class MainService extends MyTimestampService {
     public MainService(Context context) {
         super(context);
         this.databaseAdapter = new DatabaseAdapter(context);
-    }
-
-    public List<Auftrag> loadAbgeschlosseneAuftraege() throws ServiceException {
-        return loadAuftragList();
-    }
-
-    public List<Auftrag> loadAktuelleAuftraege() throws ServiceException {
-        return loadAuftragList();
-    }
-
-    public List<Auftrag> loadAnstehendeAuftraege() throws ServiceException {
-        List<Auftrag> auftragList = loadAuftragList();
-        return auftragList;
     }
 
     public List<Auftrag> loadAuftragList() throws ServiceException {
@@ -72,7 +58,6 @@ public class MainService extends MyTimestampService {
                     cursorAuftrag.moveToNext();
                 }
             }
-            Log.d(TAG, auftragList.toString());
             return auftragList;
         } catch (PersistenceException e) {
             return new ArrayList<>();

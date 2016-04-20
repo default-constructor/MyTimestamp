@@ -2,9 +2,9 @@ package de.defaultconstructor.mytimestamp.app.android.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.widget.DatePicker;
 
@@ -39,7 +39,6 @@ public class DatePickerDialogFragment extends DialogFragment {
         this.builder.setTitle(getArguments().getString("title"));
         this.builder.setView(this.datePicker);
         this.builder.setPositiveButton("Übernehmen", new DialogInterface.OnClickListener() {
-
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 int dayOfMonth = DatePickerDialogFragment.this.datePicker.getDayOfMonth();
@@ -60,7 +59,6 @@ public class DatePickerDialogFragment extends DialogFragment {
             }
         });
         this.builder.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
-
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // TODO on click negative button

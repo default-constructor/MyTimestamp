@@ -1,9 +1,9 @@
 package de.defaultconstructor.mytimestamp.app.android.activities;
 
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import java.util.HashMap;
@@ -28,7 +28,7 @@ public class MyTimestampActivity extends AppCompatActivity {
     }
 
     public void showDialogFragment(DialogFragment dialogFragment, String id) {
-        dialogFragment.show(getFragmentManager(), "dialog-" + id);
+        dialogFragment.show(getSupportFragmentManager(), "dialog-" + id);
     }
 
     public void renderFragment(String tag, int containerViewId, boolean forceNewInstance) throws AndroidException {
@@ -42,7 +42,7 @@ public class MyTimestampActivity extends AppCompatActivity {
         if (null == fragment) {
             return;
         }
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(containerViewId, fragment);
         fragmentTransaction.addToBackStack(null);

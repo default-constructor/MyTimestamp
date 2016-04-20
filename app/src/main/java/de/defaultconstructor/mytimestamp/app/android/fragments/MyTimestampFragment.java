@@ -1,6 +1,6 @@
 package de.defaultconstructor.mytimestamp.app.android.fragments;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;

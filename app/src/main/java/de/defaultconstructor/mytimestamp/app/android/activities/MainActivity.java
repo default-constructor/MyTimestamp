@@ -50,56 +50,6 @@ public class MainActivity extends MyTimestampActivity {
         } catch (ServiceException e) {
             Log.e(TAG, e.getMessage());
         }
-        if (null != auftragList) { // FIXME wieder ausbauen
-            for (Auftrag auftrag : auftragList) {
-                Log.d(TAG, auftrag.toString());
-            }
-        }
-        return auftragList;
-    }
-
-    public List<Auftrag> getAbgeschlosseneAuftraege() {
-        List<Auftrag> auftragList = null;
-        try {
-            auftragList = this.mainService.loadAbgeschlosseneAuftraege();
-        } catch (ServiceException e) {
-            Log.e(TAG, e.getMessage());
-        }
-        if (null != auftragList) { // FIXME wieder ausbauen
-            for (Auftrag auftrag : auftragList) {
-                Log.d(TAG, auftrag.toString());
-            }
-        }
-        return auftragList;
-    }
-
-    public List<Auftrag> getAktuelleAuftraege() {
-        List<Auftrag> auftragList = null;
-        try {
-            auftragList = this.mainService.loadAktuelleAuftraege();
-        } catch (ServiceException e) {
-            Log.e(TAG, e.getMessage());
-        }
-        if (null != auftragList) { // FIXME wieder ausbauen
-            for (Auftrag auftrag : auftragList) {
-                Log.d(TAG, auftrag.toString());
-            }
-        }
-        return auftragList;
-    }
-
-    public List<Auftrag> getAnstehendeAuftraege() {
-        List<Auftrag> auftragList = null;
-        try {
-            auftragList = this.mainService.loadAnstehendeAuftraege();
-        } catch (ServiceException e) {
-            Log.e(TAG, e.getMessage());
-        }
-        if (null != auftragList) { // FIXME wieder ausbauen
-            for (Auftrag auftrag : auftragList) {
-                Log.d(TAG, auftrag.toString());
-            }
-        }
         return auftragList;
     }
 }
