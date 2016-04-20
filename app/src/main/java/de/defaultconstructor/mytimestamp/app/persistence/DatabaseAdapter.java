@@ -8,11 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.defaultconstructor.mytimestamp.app.MyTimestamp;
-import de.defaultconstructor.mytimestamp.app.enumeration.Berechnungsfaktor;
 import de.defaultconstructor.mytimestamp.app.exception.PersistenceException;
 import de.defaultconstructor.mytimestamp.app.util.DatabaseUtil;
 import de.defaultconstructor.mytimestamp.app.util.StringUtil;

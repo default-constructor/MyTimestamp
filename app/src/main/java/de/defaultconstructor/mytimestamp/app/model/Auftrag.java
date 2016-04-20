@@ -4,12 +4,10 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 import de.defaultconstructor.mytimestamp.app.MyTimestamp;
 import de.defaultconstructor.mytimestamp.app.enumeration.Berechnungsfaktor;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
-import de.defaultconstructor.mytimestamp.app.util.DateUtil;
 
 /**
  * Created by Thomas Reno on 19.03.2016.

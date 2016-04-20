@@ -1,10 +1,7 @@
 package de.defaultconstructor.mytimestamp.app.android.activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.View;
 
 import java.util.List;
 
@@ -24,21 +21,10 @@ public class MainActivity extends MyTimestampActivity {
     public static final String TAG = "MainActivity";
 
     @Override
-    public View onCreateView(String name, Context context, AttributeSet attrs) {
-        View view = super.onCreateView(name, context, attrs);
-        return view;
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         if (MyTimestamp.firstRun) {
             Intent intent = new Intent(this, SettingsActivity.class);
-            startActivityForResult(intent, RESULT_OK);
-            return;
-        }
-        if (false) {
-            Intent intent = new Intent(this, NewMissionActivity.class);
             startActivityForResult(intent, RESULT_OK);
             return;
         }

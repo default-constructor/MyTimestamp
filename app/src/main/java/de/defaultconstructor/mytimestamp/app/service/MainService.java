@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import de.defaultconstructor.mytimestamp.app.MyTimestamp;
@@ -16,7 +15,6 @@ import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
 import de.defaultconstructor.mytimestamp.app.model.Projekt;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseAdapter;
 import de.defaultconstructor.mytimestamp.app.util.DatabaseUtil;
-import de.defaultconstructor.mytimestamp.app.util.DateUtil;
 
 /**
  * Created by Thomas Reno on 10.04.2016.

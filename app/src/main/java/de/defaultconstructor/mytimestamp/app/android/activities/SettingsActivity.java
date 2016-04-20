@@ -1,19 +1,12 @@
 package de.defaultconstructor.mytimestamp.app.android.activities;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.View;
 
 import de.defaultconstructor.mytimestamp.R;
 import de.defaultconstructor.mytimestamp.app.MyTimestamp;
-import de.defaultconstructor.mytimestamp.app.android.fragments.AuftraggeberdatenFragment;
 import de.defaultconstructor.mytimestamp.app.android.fragments.BenutzerdatenFragment;
 import de.defaultconstructor.mytimestamp.app.exception.AndroidException;
 import de.defaultconstructor.mytimestamp.app.exception.ServiceException;
-import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
 import de.defaultconstructor.mytimestamp.app.model.Benutzer;
 import de.defaultconstructor.mytimestamp.app.model.Person;
 import de.defaultconstructor.mytimestamp.app.service.SettingsService;
@@ -24,17 +17,6 @@ import de.defaultconstructor.mytimestamp.app.service.SettingsService;
 public class SettingsActivity extends MyTimestampActivity implements BenutzerdatenFragment.Callback {
 
     private static final String TAG = "SettingsActivity";
-
-    @Override
-    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
-    }
-
-    @Override
-    public View onCreateView(String name, Context context, AttributeSet attrs) {
-        View view = super.onCreateView(name, context, attrs);
-        return view;
-    }
 
     @Override
     protected void onResume() {

@@ -1,8 +1,6 @@
 package de.defaultconstructor.mytimestamp.app.android.activities;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -29,14 +27,9 @@ public class NewMissionActivity extends MyTimestampActivity implements Auftragge
     public static final String TAG = "NewMissionActivity";
 
     @Override
-    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
-    }
-
-    @Override
     public View onCreateView(String name, Context context, AttributeSet attrs) {
         this.view = super.onCreateView(name, context, attrs);
-        return view;
+        return this.view;
     }
 
     @Override

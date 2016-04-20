@@ -52,7 +52,7 @@ public abstract class MyTimestampFragment extends Fragment {
         this.fragmentTag = fragmentTag;
     }
 
-    protected TextWatcher getTextWatcherForEditText(final EditText editText, final Pattern pattern,
+    protected TextWatcher getTextWatcherForEditText(final EditText view, final Pattern pattern,
                                                   final String errorMessage) {
         return new TextWatcher() {
             @Override
@@ -64,7 +64,7 @@ public abstract class MyTimestampFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (null != pattern) {
                     boolean valid = !pattern.matcher(String.valueOf(s)).find();
-                    editText.setError(!valid ? errorMessage : null);
+                    view.setError(!valid ? errorMessage : null);
                 }
                 setEnableButtonSubmit();
             }

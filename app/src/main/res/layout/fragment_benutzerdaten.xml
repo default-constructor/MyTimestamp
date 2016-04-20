@@ -72,7 +72,7 @@
         </android.support.design.widget.TextInputLayout>
     </LinearLayout>
     <de.defaultconstructor.mytimestamp.app.android.widgets.components.AccordionView
-        android:id="@+id/accordionViewAdressdaten"
+        android:id="@+id/fragmentBenutzerdatenAccordionViewAdressdaten"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         custom:caption_paddingBottom="16dp"
@@ -121,7 +121,7 @@
         </android.support.design.widget.TextInputLayout>
     </de.defaultconstructor.mytimestamp.app.android.widgets.components.AccordionView>
     <de.defaultconstructor.mytimestamp.app.android.widgets.components.AccordionView
-        android:id="@+id/accordionViewKontaktdaten"
+        android:id="@+id/fragmentBenutzerdatenAccordionViewKontaktdaten"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         custom:caption_paddingBottom="16dp"

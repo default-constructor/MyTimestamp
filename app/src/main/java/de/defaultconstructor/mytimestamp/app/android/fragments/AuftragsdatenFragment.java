@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,7 +24,6 @@ import de.defaultconstructor.mytimestamp.app.android.widgets.components.Accordio
 import de.defaultconstructor.mytimestamp.app.enumeration.Berechnungsfaktor;
 import de.defaultconstructor.mytimestamp.app.exception.AndroidException;
 import de.defaultconstructor.mytimestamp.app.model.Auftrag;
-import de.defaultconstructor.mytimestamp.app.util.DateUtil;
 
 /**
  * Created by Thomas Reno on 09.04.2016.

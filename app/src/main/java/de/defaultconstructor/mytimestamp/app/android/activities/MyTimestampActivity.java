@@ -4,12 +4,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
-import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.inputmethod.InputMethodManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,12 +28,7 @@ public class MyTimestampActivity extends AppCompatActivity {
     }
 
     public void showDialogFragment(DialogFragment dialogFragment, String id) {
-        FragmentManager manager = getFragmentManager();
-        dialogFragment.show(manager, "dialog-" + id);
-    }
-
-    public void renderFragment(String tag, int containerViewId) throws AndroidException {
-        renderFragment(tag, containerViewId, false);
+        dialogFragment.show(getFragmentManager(), "dialog-" + id);
     }
 
     public void renderFragment(String tag, int containerViewId, boolean forceNewInstance) throws AndroidException {

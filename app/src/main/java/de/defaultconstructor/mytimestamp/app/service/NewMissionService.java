@@ -2,7 +2,6 @@ package de.defaultconstructor.mytimestamp.app.service;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,6 @@ import de.defaultconstructor.mytimestamp.app.model.Benutzer;
 import de.defaultconstructor.mytimestamp.app.model.Kontakt;
 import de.defaultconstructor.mytimestamp.app.model.Projekt;
 import de.defaultconstructor.mytimestamp.app.persistence.DatabaseAdapter;
-import de.defaultconstructor.mytimestamp.app.persistence.DatabaseEntity;
 import de.defaultconstructor.mytimestamp.app.util.DatabaseUtil;
 
 /**
