@@ -1,6 +1,5 @@
 package de.defaultconstructor.mytimestamp.app.android.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
@@ -9,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -20,7 +18,7 @@ import java.util.regex.Pattern;
 
 import de.defaultconstructor.mytimestamp.R;
 import de.defaultconstructor.mytimestamp.app.android.activities.NewMissionActivity;
-import de.defaultconstructor.mytimestamp.app.android.widgets.components.AccordionView;
+import de.defaultconstructor.mytimestamp.app.android.components.AccordionView;
 import de.defaultconstructor.mytimestamp.app.enumeration.Berechnungsfaktor;
 import de.defaultconstructor.mytimestamp.app.exception.AndroidException;
 import de.defaultconstructor.mytimestamp.app.model.Auftrag;
@@ -127,8 +125,7 @@ public class AuftragsdatenFragment extends MyTimestampFragment implements Accord
         this.buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(AuftragsdatenFragment.this.view.getWindowToken(), 0);
+                hideSoftKeyboard(v);
                 mapAuftragsdaten();
                 ((NewMissionActivity) getActivity()).onSubmit(AuftragsdatenFragment.this.auftrag);
             }
@@ -141,6 +138,7 @@ public class AuftragsdatenFragment extends MyTimestampFragment implements Accord
             public void onClick(View v) {
                 String[] itemList = ((NewMissionActivity) getActivity()).getArrayAuftraggeberFirma();
                 if (null != itemList && 0 < itemList.length) {
+                    hideSoftKeyboard(v);
                     SelectionDialogFragment dialogFragment = SelectionDialogFragment.newInstance("Auftraggeber auswählen", itemList);
                     dialogFragment.setTargetFragment(AuftragsdatenFragment.this, 1);
                     ((NewMissionActivity) getActivity()).showDialogFragment(dialogFragment, "selection-auftraggeber");
@@ -170,6 +168,7 @@ public class AuftragsdatenFragment extends MyTimestampFragment implements Accord
         this.buttonWaehrung.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideSoftKeyboard(v);
                 SelectionDialogFragment dialogFragment = SelectionDialogFragment.newInstance("Währung auswählen", getResources().getStringArray(R.array.listWaehrung));
                 dialogFragment.setTargetFragment(AuftragsdatenFragment.this, 2);
                 ((NewMissionActivity) getActivity()).showDialogFragment(dialogFragment, "selection-waehrung");
@@ -181,6 +180,7 @@ public class AuftragsdatenFragment extends MyTimestampFragment implements Accord
         this.editTextBerechnungsfaktor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideSoftKeyboard(v);
                 SelectionDialogFragment dialogFragment = SelectionDialogFragment.newInstance("Berechnungsfaktor auswählen", getResources().getStringArray(R.array.listBerechnungsfaktor));
                 dialogFragment.setTargetFragment(AuftragsdatenFragment.this, 3);
                 ((NewMissionActivity) getActivity()).showDialogFragment(dialogFragment, "selection-berechnungsfaktor");

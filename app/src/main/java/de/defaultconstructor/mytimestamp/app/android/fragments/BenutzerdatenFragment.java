@@ -1,24 +1,20 @@
 package de.defaultconstructor.mytimestamp.app.android.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.regex.Pattern;
 
 import de.defaultconstructor.mytimestamp.R;
 import de.defaultconstructor.mytimestamp.app.android.activities.SettingsActivity;
-import de.defaultconstructor.mytimestamp.app.android.widgets.components.AccordionView;
+import de.defaultconstructor.mytimestamp.app.android.components.AccordionView;
+import de.defaultconstructor.mytimestamp.app.android.components.DateTimeEditText;
 import de.defaultconstructor.mytimestamp.app.enumeration.Berufsstatus;
 import de.defaultconstructor.mytimestamp.app.model.Benutzer;
 import de.defaultconstructor.mytimestamp.app.util.DateUtil;
@@ -27,7 +23,7 @@ import de.defaultconstructor.mytimestamp.app.util.DateUtil;
  * Created by Thomas Reno on 28.02.2016.
  */
 public class BenutzerdatenFragment extends MyTimestampFragment implements AccordionView.Listener,
-        SelectionDialogFragment.Callback, DatePickerDialogFragment.Callback {
+        SelectionDialogFragment.Callback {
 
     public static final String TAG = "BenutzerdatenFragment";
 
@@ -64,11 +60,6 @@ public class BenutzerdatenFragment extends MyTimestampFragment implements Accord
     }
 
     @Override
-    public void onDatePicked(String tag, Date result) {
-        this.editTextGeburtsdatum.setText(DateUtil.getDateStringFromDate(result));
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         initialize();
@@ -94,7 +85,7 @@ public class BenutzerdatenFragment extends MyTimestampFragment implements Accord
     private TextInputEditText editTextBerufsstatus;
     private TextInputEditText editTextEmail;
     private TextInputEditText editTextFamilienname;
-    private TextInputEditText editTextGeburtsdatum;
+    private DateTimeEditText editTextGeburtsdatum;
     private TextInputEditText editTextMobil;
     private TextInputEditText editTextPostleitzahl;
     private TextInputEditText editTextStraszeUndHausnummer;
@@ -118,9 +109,7 @@ public class BenutzerdatenFragment extends MyTimestampFragment implements Accord
         this.buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
-                        Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(BenutzerdatenFragment.this.view.getWindowToken(), 0);
+                hideSoftKeyboard(v);
                 mapAdressdaten();
                 mapBenutzerdaten();
                 mapKontaktdaten();
@@ -162,9 +151,7 @@ public class BenutzerdatenFragment extends MyTimestampFragment implements Accord
         this.editTextBerufsstatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputMethodManager imm = (InputMethodManager) getActivity()
-                        .getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                hideSoftKeyboard(v);
                 SelectionDialogFragment dialogFragment = SelectionDialogFragment
                         .newInstance("Berufsstatus auswählen",
                                 getResources().getStringArray(R.array.listBerufsstatus));
@@ -184,29 +171,12 @@ public class BenutzerdatenFragment extends MyTimestampFragment implements Accord
         this.editTextFamilienname.addTextChangedListener(getTextWatcherForEditText(
                 this.editTextFamilienname, PATTERN_NAME_TEXT_NO, TEXT_MESSAGE_ERROR));
 
-        this.editTextGeburtsdatum = (TextInputEditText) this.view
+        this.editTextGeburtsdatum = (DateTimeEditText) this.view
                 .findViewById(R.id.editTextBenutzerdatenGeburtsdatum);
-        this.editTextGeburtsdatum.setFocusable(false);
-        this.editTextGeburtsdatum.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                InputMethodManager imm = (InputMethodManager) getActivity()
-                        .getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                Calendar calendar = new GregorianCalendar();
-                calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) - 18);
-                DatePickerDialogFragment dialogFragment = DatePickerDialogFragment
-                        .newInstance("Geburtsdatum auswählen", calendar.getTime());
-                dialogFragment.setTargetFragment(BenutzerdatenFragment.this, 1);
-                ((SettingsActivity) getActivity())
-                        .showDialogFragment(dialogFragment, "datepicker-geburtsdatum");
-            }
-        });
         this.editTextGeburtsdatum.setText(null != this.benutzer.getGeburtsdatum() ?
-                new SimpleDateFormat("dd.MM.yyyy").format(this.benutzer
-                        .getGeburtsdatum()) : "");
-        this.editTextGeburtsdatum.addTextChangedListener(getTextWatcherForEditText(
-                this.editTextGeburtsdatum, null, null));
+                DateUtil.getDateStringFromDate(this.benutzer.getGeburtsdatum()) : "");
+        EditText editTextGeburtsdatum = this.editTextGeburtsdatum.getEditTextDate();
+        editTextGeburtsdatum.addTextChangedListener(getTextWatcherForEditText(editTextGeburtsdatum, null, null));
 
         this.editTextVorname = (TextInputEditText) this.view
                 .findViewById(R.id.editTextBenutzerdatenVorname);

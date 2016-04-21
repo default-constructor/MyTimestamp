@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="de.thre.mytimestamp.app.android.widgets.components"
+    xmlns:custom="de.defaultconstructor.mytimestamp.app.android.components"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
             android:paddingRight="4dp"
             android:paddingTop="8dp"/>
     </android.support.design.widget.TextInputLayout>
-    <de.defaultconstructor.mytimestamp.app.android.widgets.components.AccordionView
+    <de.defaultconstructor.mytimestamp.app.android.components.AccordionView
         android:id="@+id/accordionViewArbeitgeberdatenKontaktdaten"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -133,7 +133,7 @@
                 android:paddingRight="4dp"
                 android:paddingTop="8dp"/>
         </android.support.design.widget.TextInputLayout>
-    </de.defaultconstructor.mytimestamp.app.android.widgets.components.AccordionView>
+    </de.defaultconstructor.mytimestamp.app.android.components.AccordionView>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"

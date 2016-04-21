@@ -1,28 +1,24 @@
 package de.defaultconstructor.mytimestamp.app.android.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import android.widget.EditText;
 
 import de.defaultconstructor.mytimestamp.R;
 import de.defaultconstructor.mytimestamp.app.android.activities.NewMissionActivity;
+import de.defaultconstructor.mytimestamp.app.android.components.DateTimeEditText;
 import de.defaultconstructor.mytimestamp.app.model.Projekt;
 import de.defaultconstructor.mytimestamp.app.util.DateUtil;
 
 /**
  * Created by Thomas Reno on 17.04.2016.
  */
-public class ProjektdatenFragment extends MyTimestampFragment implements DatePickerDialogFragment.Callback {
+public class ProjektdatenFragment extends MyTimestampFragment {
 
     public static final String TAG = "ProjektdatenFragment";
 
@@ -38,30 +34,28 @@ public class ProjektdatenFragment extends MyTimestampFragment implements DatePic
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         this.view = inflater.inflate(R.layout.fragment_projektdaten, container, false);
-        initialize();
-        setEnableButtonSubmit();
         return this.view;
     }
 
     @Override
-    public void onDatePicked(String tag, Date result) {
-        if (tag.contains("datepicker-projektbeginn")) {
-            this.editTextBeginn.setText(DateUtil.getDateStringFromDate(result));
-        } else if (tag.contains("datepicker-projektende")) {
-            this.editTextEnde.setText(DateUtil.getDateStringFromDate(result));
-        }
+    public void onResume() {
+        super.onResume();
+        initialize();
+        setEnableButtonSubmit();
     }
 
     @Override
     protected void setEnableButtonSubmit() {
         Log.d(TAG, "set enable button submit");
+        Log.d(TAG, "Projektbeginn: " + String.valueOf(this.editTextBeginn.getText()));
+        Log.d(TAG, "Projektende: " + String.valueOf(this.editTextEnde.getText()));
     }
 
     private Button buttonSubmit;
 
-    private TextInputEditText editTextBeginn;
+    private DateTimeEditText editTextBeginn;
     private TextInputEditText editTextBeschreibung;
-    private TextInputEditText editTextEnde;
+    private DateTimeEditText editTextEnde;
     private TextInputEditText editTextName;
     private TextInputEditText editTextNummer;
 
@@ -75,48 +69,26 @@ public class ProjektdatenFragment extends MyTimestampFragment implements DatePic
         this.buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(ProjektdatenFragment.this.view.getWindowToken(), 0);
+                hideSoftKeyboard(v);
                 mapProjektdaten();
                 ((NewMissionActivity) getActivity()).onSubmit(ProjektdatenFragment.this.projekt);
             }
         });
 
-        this.editTextBeginn = (TextInputEditText) this.view.findViewById(R.id.editTextProjektdatenBeginn);
-        this.editTextBeginn.setFocusable(false);
-        this.editTextBeginn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                Calendar calendar = new GregorianCalendar();
-                DatePickerDialogFragment dialogFragment = DatePickerDialogFragment.newInstance("Projektbeginn auswählen", calendar.getTime());
-                dialogFragment.setTargetFragment(ProjektdatenFragment.this, 2);
-                ((NewMissionActivity) getActivity()).showDialogFragment(dialogFragment, "datepicker-projektbeginn");
-            }
-        });
-        this.editTextBeginn.addTextChangedListener(getTextWatcherForEditText(this.editTextBeginn, null, null));
+        this.editTextBeginn = (DateTimeEditText) this.view.findViewById(R.id.editTextProjektdatenBeginn);
+        EditText editTextBeginnDatum = this.editTextBeginn.getEditTextDate();
+        editTextBeginnDatum.addTextChangedListener(getTextWatcherForEditText(editTextBeginnDatum, null, null));
+        EditText editTextBeginnUhrzeit = this.editTextBeginn.getEditTextTime();
+        editTextBeginnUhrzeit.addTextChangedListener(getTextWatcherForEditText(editTextBeginnUhrzeit, null, null));
 
         this.editTextBeschreibung = (TextInputEditText) this.view.findViewById(R.id.editTextProjektdatenBeschreibung);
         this.editTextBeschreibung.addTextChangedListener(getTextWatcherForEditText(this.editTextBeschreibung, null, null));
 
-        this.editTextEnde = (TextInputEditText) this.view.findViewById(R.id.editTextProjektdatenEnde);
-        this.editTextEnde.setFocusable(false);
-        this.editTextEnde.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                Date ende = DateUtil.getDateFromStringISO8601(String.valueOf(ProjektdatenFragment.this.editTextEnde.getText()));
-                if (null == ende) {
-                    ende = new GregorianCalendar().getTime();
-                }
-                DatePickerDialogFragment dialogFragment = DatePickerDialogFragment.newInstance("Projektende auswählen", ende);
-                dialogFragment.setTargetFragment(ProjektdatenFragment.this, 3);
-                ((NewMissionActivity) getActivity()).showDialogFragment(dialogFragment, "datepicker-projektende");
-            }
-        });
-        this.editTextEnde.addTextChangedListener(getTextWatcherForEditText(this.editTextEnde, null, null));
+        this.editTextEnde = (DateTimeEditText) this.view.findViewById(R.id.editTextProjektdatenEnde);
+        EditText editTextEndeDatum = this.editTextEnde.getEditTextDate();
+        editTextEndeDatum.addTextChangedListener(getTextWatcherForEditText(editTextEndeDatum, null, null));
+        EditText editTextEndeUhrzeit = this.editTextEnde.getEditTextTime();
+        editTextEndeUhrzeit.addTextChangedListener(getTextWatcherForEditText(editTextEndeUhrzeit, null, null));
 
         this.editTextName = (TextInputEditText) this.view.findViewById(R.id.editTextProjektdatenName);
         this.editTextName.addTextChangedListener(getTextWatcherForEditText(this.editTextName, null, null));

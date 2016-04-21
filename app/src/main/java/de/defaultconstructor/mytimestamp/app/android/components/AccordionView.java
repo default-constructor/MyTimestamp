@@ -1,4 +1,4 @@
-package de.defaultconstructor.mytimestamp.app.android.widgets.components;
+package de.defaultconstructor.mytimestamp.app.android.components;
 
 import android.content.Context;
 import android.content.res.Resources;

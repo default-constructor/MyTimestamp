@@ -1,85 +1,86 @@
 package de.defaultconstructor.mytimestamp.app.android.fragments;
 
-import android.app.AlertDialog;
+import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.widget.DatePicker;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
+
+import de.defaultconstructor.mytimestamp.app.util.DateUtil;
 
 /**
  * Created by Thomas Reno on 28.02.2016.
  */
-public class DatePickerDialogFragment extends DialogFragment {
+@SuppressLint("LongLogTag")
+public class DatePickerDialogFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
-    public static final String TAG = "fragment_dialog_datepicker";
+    public static final String TAG = "DatePickerDialogFragment";
+
+    public static DatePickerDialogFragment newInstance(String title, Date defaultDate, Handler handler) {
+        Bundle bundle = new Bundle();
+        bundle.putString("title", title);
+        bundle.putString("default-date", DateUtil.getDateStringFromDate(defaultDate));
+        DatePickerDialogFragment fragment = new DatePickerDialogFragment();
+        fragment.setArguments(bundle);
+        fragment.setHandler(handler);
+        return fragment;
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
-        Calendar calendar = calendar = new GregorianCalendar();
-        Date date = null;
-        try {
-            date = new SimpleDateFormat("dd.MM.yyyy").parse(getArguments().getString("default-date"));
-        } catch (ParseException e) {
-            e.printStackTrace();
+        final Date date = DateUtil.getDateFromString(getArguments().getString("default-date"));
+        int year = DateUtil.getYearFromDate(date);
+        int month = DateUtil.getMonthOfYearFromDate(date);
+        int dayOfMonth = DateUtil.getDayOfMonthFromDate(date);
+        final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), this, year, month, dayOfMonth);
+        datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Abbrechen", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (DialogInterface.BUTTON_NEGATIVE == which) {
+                    DatePickerDialogFragment.this.dateSelected = false;
+                    dialog.cancel();
+                }
+            }
+        });
+        datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Übernehmen", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (DialogInterface.BUTTON_POSITIVE == which) {
+                    DatePickerDialogFragment.this.dateSelected = true;
+                }
+            }
+        });
+        datePickerDialog.setCancelable(true);
+        datePickerDialog.setTitle(getArguments().getString("title"));
+        return datePickerDialog;
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        if (!this.dateSelected) {
+            return;
         }
-        calendar.setTime(date);
-        this.datePicker = new DatePicker(getActivity());
-        this.datePicker.setCalendarViewShown(false);
-        this.datePicker.init(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), null);
-        this.builder = new AlertDialog.Builder(getActivity());
-        this.builder.setTitle(getArguments().getString("title"));
-        this.builder.setView(this.datePicker);
-        this.builder.setPositiveButton("Übernehmen", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                int dayOfMonth = DatePickerDialogFragment.this.datePicker.getDayOfMonth();
-                int month = DatePickerDialogFragment.this.datePicker.getMonth();
-                int year = DatePickerDialogFragment.this.datePicker.getYear();
-                Calendar calendar = new GregorianCalendar();
-                calendar.set(year, month, dayOfMonth);
-                Callback callback = null;
-                try {
-                    callback = (Callback) getTargetFragment();
-                } catch (ClassCastException e) {
-                    Log.e(this.getClass().getSimpleName(), "Callback of this class must be implemented by target fragment!", e);
-                    throw e;
-                }
-                if (null != callback) {
-                    callback.onDatePicked(getTag(), calendar.getTime());
-                }
-            }
-        });
-        this.builder.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // TODO on click negative button
-            }
-        });
-        return this.builder.create();
+        Bundle bundle = new Bundle();
+        bundle.putInt("year", year);
+        bundle.putInt("monthOfYear", monthOfYear);
+        bundle.putInt("dayOfMonth", dayOfMonth);
+        Message message = new Message();
+        message.setData(bundle);
+        this.handler.sendMessage(message);
     }
 
-    private AlertDialog.Builder builder;
-    private DatePicker datePicker;
+    private Handler handler;
 
-    public static DatePickerDialogFragment newInstance(String title, Date date) {
-        Bundle args = new Bundle();
-        args.putString("title", title);
-        args.putString("default-date", new SimpleDateFormat("dd.MM.yyyy").format(date));
-        DatePickerDialogFragment fragment = new DatePickerDialogFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private boolean dateSelected = false;
 
-    public interface Callback {
-        void onDatePicked(String tag, Date result);
+    private void setHandler(Handler handler) {
+        this.handler = handler;
     }
 }

@@ -1,8 +1,11 @@
 package de.defaultconstructor.mytimestamp.app.android.fragments;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import java.util.regex.Pattern;
@@ -78,6 +81,11 @@ public abstract class MyTimestampFragment extends Fragment {
 
     protected boolean hasStringValue(String input) {
         return null != input && !"null".equals(input) && !input.isEmpty();
+    }
+
+    protected void hideSoftKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     protected abstract void setEnableButtonSubmit();

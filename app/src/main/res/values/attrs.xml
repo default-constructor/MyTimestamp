@@ -11,4 +11,9 @@
         <attr name="caption_textSize" format="dimension"/>
         <attr name="collapsed" format="boolean"/>
     </declare-styleable>
+    <declare-styleable name="DateTimeEditText">
+        <attr name="date_hint" format="string"/>
+        <attr name="time_hint" format="string"/>
+        <attr name="type" format="string"/>
+    </declare-styleable>
 </resources>

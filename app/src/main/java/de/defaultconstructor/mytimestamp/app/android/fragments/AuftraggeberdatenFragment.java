@@ -71,8 +71,7 @@ public class AuftraggeberdatenFragment extends MyTimestampFragment {
         this.buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(AuftraggeberdatenFragment.this.view.getWindowToken(), 0);
+                hideSoftKeyboard(v);
                 mapArbeitgeberdaten();
                 mapKontaktdaten();
                 ((NewMissionActivity) getActivity()).onSubmit(AuftraggeberdatenFragment.this.auftraggeber);

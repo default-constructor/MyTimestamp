@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,21 +69,17 @@ public class ProjekteFragment extends Fragment {
         for (Auftrag auftrag : this.auftragList) {
             switch (this.projektstatus) {
                 case STATUS_ABGESCHLOSSEN:
-                    Date ende = auftrag.getProjekt().getEnde();
-                    if (null != ende && new Date().after(ende)) {
-                        displayedProjekte.add(auftrag);
-                    }
-                    break;
-                case STATUS_LAUFEND:
-                    Projekt projekt = auftrag.getProjekt();
-                    ende = projekt.getEnde();
-                    Date jetzt = new Date();
-                    if (jetzt.after(projekt.getBeginn()) && (null == ende || jetzt.before(ende))) {
+                    if (isProjektAbgeschlossen(auftrag.getProjekt())) {
                         displayedProjekte.add(auftrag);
                     }
                     break;
                 case STATUS_ANSTEHEND:
-                    if (new Date().before(auftrag.getProjekt().getBeginn())) {
+                    if (isProjektAnstehend(auftrag.getProjekt())) {
+                        displayedProjekte.add(auftrag);
+                    }
+                    break;
+                case STATUS_LAUFEND:
+                    if (isProjektLaufend(auftrag.getProjekt())) {
                         displayedProjekte.add(auftrag);
                     }
                     break;
@@ -91,7 +88,8 @@ public class ProjekteFragment extends Fragment {
             }
         }
         if (displayedProjekte.isEmpty()) {
-            this.containerProjekte.addView(getPlaceholderView("Du hast keine\n" + this.projektstatus + "en Projekte."));
+            this.containerProjekte.addView(getPlaceholderView("Du hast keine\n" +
+                    this.projektstatus + "en Projekte."));
         } else {
             this.containerProjekte.addView(getAuftragListView(displayedProjekte));
         }
@@ -145,6 +143,33 @@ public class ProjekteFragment extends Fragment {
             ImageView imageViewRightIcon = (ImageView) this.view.findViewById(R.id.imageViewFragmentProjekteTitelIconRight);
             imageViewRightIcon.setImageResource(R.drawable.ic_keyboard_arrow_right_black_48dp);
         }
+    }
+
+    private boolean isProjektAbgeschlossen(Projekt projekt) {
+        Log.d(TAG, "is projekt abgeschlossen");
+        Date ende = projekt.getEnde();
+        Date jetzt = new Date();
+        Log.d(TAG, "Ende: " + ende.toString());
+        Log.d(TAG, "Jetzt: " + jetzt.toString());
+        return (null != ende && jetzt.after(ende));
+    }
+
+    private boolean isProjektAnstehend(Projekt projekt) {
+        Log.d(TAG, "is projekt anstehend");
+        Date beginn = projekt.getBeginn();
+        Date jetzt = new Date();
+        Log.d(TAG, "Beginn: " + beginn.toString());
+        Log.d(TAG, "Jetzt: " + jetzt.toString());
+        return jetzt.before(beginn);
+    }
+
+    private boolean isProjektLaufend(Projekt projekt) {
+        Log.d(TAG, "is projekt laufend");
+        Date ende = projekt.getEnde();
+        Date jetzt = new Date();
+        Log.d(TAG, "Ende: " + ende.toString());
+        Log.d(TAG, "Jetzt: " + jetzt.toString());
+        return (jetzt.after(projekt.getBeginn()) && (null == ende || jetzt.before(ende)));
     }
 
     public static class Adapter extends FragmentStatePagerAdapter {
