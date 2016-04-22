@@ -1,6 +1,5 @@
 package de.defaultconstructor.mytimestamp.app.android.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
@@ -8,14 +7,13 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
 import java.util.regex.Pattern;
 
 import de.defaultconstructor.mytimestamp.R;
-import de.defaultconstructor.mytimestamp.app.android.activities.NewMissionActivity;
+import de.defaultconstructor.mytimestamp.app.android.activities.NewProjectActivity;
 import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
 
 /**
@@ -74,7 +72,7 @@ public class AuftraggeberdatenFragment extends MyTimestampFragment {
                 hideSoftKeyboard(v);
                 mapArbeitgeberdaten();
                 mapKontaktdaten();
-                ((NewMissionActivity) getActivity()).onSubmit(AuftraggeberdatenFragment.this.auftraggeber);
+                ((NewProjectActivity) getActivity()).onSubmit(AuftraggeberdatenFragment.this.auftraggeber);
             }
         });
         initializeAdressdaten();

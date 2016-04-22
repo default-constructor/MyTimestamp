@@ -19,8 +19,15 @@ public class SettingsActivity extends MyTimestampActivity implements Benutzerdat
     private static final String TAG = "SettingsActivity";
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Log.d(TAG, "on back pressed");
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "on resume");
         if (MyTimestamp.firstRun) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }

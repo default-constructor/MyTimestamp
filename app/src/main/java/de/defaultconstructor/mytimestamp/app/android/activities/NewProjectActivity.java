@@ -11,20 +11,21 @@ import de.defaultconstructor.mytimestamp.R;
 import de.defaultconstructor.mytimestamp.app.MyTimestamp;
 import de.defaultconstructor.mytimestamp.app.android.fragments.AuftraggeberdatenFragment;
 import de.defaultconstructor.mytimestamp.app.android.fragments.AuftragsdatenFragment;
+import de.defaultconstructor.mytimestamp.app.android.fragments.MainFragment;
 import de.defaultconstructor.mytimestamp.app.android.fragments.ProjektdatenFragment;
 import de.defaultconstructor.mytimestamp.app.exception.AndroidException;
 import de.defaultconstructor.mytimestamp.app.exception.ServiceException;
 import de.defaultconstructor.mytimestamp.app.model.Auftrag;
 import de.defaultconstructor.mytimestamp.app.model.Auftraggeber;
 import de.defaultconstructor.mytimestamp.app.model.Projekt;
-import de.defaultconstructor.mytimestamp.app.service.NewMissionService;
+import de.defaultconstructor.mytimestamp.app.service.NewProjectService;
 
 /**
  * Created by Thomas Reno on 09.04.2016.
  */
-public class NewMissionActivity extends MyTimestampActivity implements AuftraggeberdatenFragment.Callback, AuftragsdatenFragment.Callback, ProjektdatenFragment.Callback {
+public class NewProjectActivity extends MyTimestampActivity implements AuftraggeberdatenFragment.Callback, AuftragsdatenFragment.Callback, ProjektdatenFragment.Callback {
 
-    public static final String TAG = "NewMissionActivity";
+    public static final String TAG = "NewProjectActivity";
 
     @Override
     public View onCreateView(String name, Context context, AttributeSet attrs) {
@@ -52,7 +53,7 @@ public class NewMissionActivity extends MyTimestampActivity implements Auftragge
     public void onSubmit(Auftrag auftrag) {
         this.auftrag = auftrag;
         try {
-            renderFragment(ProjektdatenFragment.TAG, R.id.activityNewMissionWrapper, true);
+            renderFragment(ProjektdatenFragment.TAG, R.id.activityNewMissionWrapper, true, true);
         } catch (AndroidException e) {
             Log.e(TAG, e.getMessage());
         }
@@ -66,7 +67,7 @@ public class NewMissionActivity extends MyTimestampActivity implements Auftragge
             if (null != this.newMissionService.saveAuftraggeber(this.auftrag.getAuftraggeber())) {
                 this.auftrag.setAuftraggeber(auftraggeber);
                 this.auftraggeberList.add(auftraggeber);
-                renderFragment(AuftragsdatenFragment.TAG, R.id.activityNewMissionWrapper, false);
+                renderFragment(AuftragsdatenFragment.TAG, R.id.activityNewMissionWrapper, true, true);
             }
         } catch (ServiceException e) {
             Log.e(TAG, e.getMessage());
@@ -80,6 +81,7 @@ public class NewMissionActivity extends MyTimestampActivity implements Auftragge
         this.auftrag.setProjekt(projekt);
         try {
             if (null != this.newMissionService.saveAuftrag(this.auftrag)) {
+                MainFragment.currentProjekt = this.auftrag.getProjekt();
                 finish();
             }
         } catch (ServiceException e) {
@@ -87,12 +89,11 @@ public class NewMissionActivity extends MyTimestampActivity implements Auftragge
         }
     }
 
-    private NewMissionService newMissionService;
+    private NewProjectService newMissionService;
 
     private Auftrag auftrag = new Auftrag();
 
     private List<Auftraggeber> auftraggeberList;
-    private List<Projekt> projektList;
 
     private View view;
 
@@ -100,9 +101,9 @@ public class NewMissionActivity extends MyTimestampActivity implements Auftragge
         return this.auftrag;
     }
 
-    public NewMissionActivity() {
+    public NewProjectActivity() {
         super();
-        this.newMissionService = new NewMissionService(this);
+        this.newMissionService = new NewProjectService(this);
     }
 
     public String[] getArrayAuftraggeberFirma() {
@@ -111,14 +112,6 @@ public class NewMissionActivity extends MyTimestampActivity implements Auftragge
             arrayAuftraggeberFirma[i] = this.auftraggeberList.get(i).getFirma();
         }
         return arrayAuftraggeberFirma;
-    }
-
-    public String[] getArrayProjektName() {
-        String[] arrayProjektName = new String[this.projektList.size()];
-        for (int i = 0; i < this.projektList.size(); i++) {
-            arrayProjektName[i] = this.projektList.get(i).getName();
-        }
-        return arrayProjektName;
     }
 
     public Auftraggeber getAuftraggeber(String firma) {

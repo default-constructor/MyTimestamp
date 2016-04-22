@@ -4,7 +4,7 @@
     android:id="@+id/scrollViewNewMissionActivity"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="de.defaultconstructor.mytimestamp.app.android.activities.NewMissionActivity">
+    tools:context=".app.android.activities.NewProjectActivity">
     <LinearLayout
         android:id="@+id/activityNewMissionWrapper"
         android:orientation="vertical"

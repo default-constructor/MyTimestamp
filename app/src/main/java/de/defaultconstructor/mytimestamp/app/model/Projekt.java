@@ -45,6 +45,37 @@ public class Projekt implements DatabaseEntity {
         return projekt;
     }
 
+    public static boolean isAbgeschlossen(Projekt projekt) {
+        try {
+            Date ende = projekt.getEnde();
+            Date jetzt = new Date();
+            return jetzt.after(ende);
+        } catch (NullPointerException e) {
+            return false;
+        }
+    }
+
+    public static boolean isAnstehend(Projekt projekt) {
+        try {
+            Date beginn = projekt.getBeginn();
+            Date jetzt = new Date();
+            return jetzt.before(beginn);
+        } catch (NullPointerException e) {
+            return false;
+        }
+    }
+
+    public static boolean isLaufend(Projekt projekt) {
+        try {
+            Date beginn = projekt.getBeginn();
+            Date ende = projekt.getEnde();
+            Date jetzt = new Date();
+            return jetzt.after(beginn) && (null == ende || jetzt.before(ende));
+        } catch (NullPointerException e) {
+            return false;
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

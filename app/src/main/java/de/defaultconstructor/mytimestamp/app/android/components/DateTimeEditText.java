@@ -81,7 +81,6 @@ public class DateTimeEditText extends LinearLayout {
         for (int i = 0; i < attrs.getAttributeCount(); i++) {
             this.mapAttributes.put(attrs.getAttributeName(i), attrs.getAttributeValue(i));
         }
-        setOrientation(HORIZONTAL);
         setEditTextDate();
         setEditTextTime();
     }
@@ -125,13 +124,6 @@ public class DateTimeEditText extends LinearLayout {
         return editText;
     }
 
-    private TextInputLayout getTextInputLayout(TextInputEditText editText) {
-        TextInputLayout textInputLayout = new TextInputLayout(this.activity);
-        textInputLayout.setLayoutParams(new LayoutParams(0, LayoutParams.WRAP_CONTENT, 1));
-        textInputLayout.addView(editText);
-        return textInputLayout;
-    }
-
     private Fragment getFragment(FragmentActivity activity) {
         FragmentManager fragmentManager = activity.getSupportFragmentManager();
         List<Fragment> fragmentList = fragmentManager.getFragments();
@@ -143,7 +135,15 @@ public class DateTimeEditText extends LinearLayout {
         return null;
     }
 
+    private TextInputLayout getTextInputLayout(TextInputEditText editText) {
+        TextInputLayout textInputLayout = new TextInputLayout(this.activity);
+        textInputLayout.setLayoutParams(new LayoutParams(0, LayoutParams.WRAP_CONTENT, 1));
+        textInputLayout.addView(editText);
+        return textInputLayout;
+    }
+
     private void initialize() {
+        setOrientation(HORIZONTAL);
         if (this.mapAttributes.containsKey("type")) {
             String value = this.mapAttributes.get("type");
             if (!value.contains("date")) {

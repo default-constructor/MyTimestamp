@@ -23,9 +23,11 @@ public class MainActivity extends MyTimestampActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "on resume");
         if (MyTimestamp.firstRun) {
             Intent intent = new Intent(this, SettingsActivity.class);
-            startActivityForResult(intent, RESULT_OK);
+            startActivity(intent);/*
+            startActivityForResult(intent, RESULT_OK);*/
             return;
         }
         setContentView(R.layout.activity_main);

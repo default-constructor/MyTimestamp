@@ -21,11 +21,11 @@ import de.defaultconstructor.mytimestamp.app.util.DatabaseUtil;
 /**
  * Created by Thomas Reno on 09.04.2016.
  */
-public class NewMissionService extends MyTimestampService {
+public class NewProjectService extends MyTimestampService {
 
-    public static final String TAG = "NewMissionService";
+    public static final String TAG = "NewProjectService";
 
-    public NewMissionService(Context context) {
+    public NewProjectService(Context context) {
         super(context);
         this.databaseAdapter = new DatabaseAdapter(context);
     }

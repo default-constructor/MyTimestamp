@@ -2,6 +2,7 @@ package de.defaultconstructor.mytimestamp.app.android.fragments;
 
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,6 +65,7 @@ public class BenutzerdatenFragment extends MyTimestampFragment implements Accord
         super.onResume();
         initialize();
         setEnableButtonSubmit();
+        Log.d(TAG, "on resume");
     }
 
     @Override
@@ -73,11 +75,10 @@ public class BenutzerdatenFragment extends MyTimestampFragment implements Accord
 
     @Override
     protected void setEnableButtonSubmit() {
-        this.buttonSubmit.setEnabled(hasStringValue(String.valueOf(this.editTextBerufsstatus
-                .getText()))
+        this.buttonSubmit.setEnabled(/*hasStringValue(String.valueOf(this.editTextBerufsstatus.getText()))
                 && hasStringValue(String.valueOf(this.editTextFamilienname.getText()))
                 && hasStringValue(String.valueOf(this.editTextGeburtsdatum.getText()))
-                && hasStringValue(String.valueOf(this.editTextVorname.getText())));
+                && hasStringValue(String.valueOf(this.editTextVorname.getText())) FIXME wieder einkommentieren */ true);
     }
 
     private Button buttonSubmit;

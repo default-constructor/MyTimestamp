@@ -17,7 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.defaultconstructor.mytimestamp.R;
-import de.defaultconstructor.mytimestamp.app.android.activities.NewMissionActivity;
+import de.defaultconstructor.mytimestamp.app.android.activities.NewProjectActivity;
 import de.defaultconstructor.mytimestamp.app.android.components.AccordionView;
 import de.defaultconstructor.mytimestamp.app.enumeration.Berechnungsfaktor;
 import de.defaultconstructor.mytimestamp.app.exception.AndroidException;
@@ -47,7 +47,7 @@ public class AuftragsdatenFragment extends MyTimestampFragment implements Accord
     @Override
     public void onResume() {
         super.onResume();
-        this.auftrag = ((NewMissionActivity) getActivity()).getAuftrag();
+        this.auftrag = ((NewProjectActivity) getActivity()).getAuftrag();
         initialize();
         String auftraggeber = this.auftrag.getAuftraggeber().getFirma();
         this.editTextAuftraggeber.setText(auftraggeber);
@@ -58,7 +58,7 @@ public class AuftragsdatenFragment extends MyTimestampFragment implements Accord
     public void onSelected(String tag, String result) {
         if (tag.contains("selection-auftraggeber")) {
             this.editTextAuftraggeber.setText(result);
-            this.auftrag.setAuftraggeber(((NewMissionActivity) getActivity()).getAuftraggeber(result));
+            this.auftrag.setAuftraggeber(((NewProjectActivity) getActivity()).getAuftraggeber(result));
         } else if (tag.contains("selection-berechnungsfaktor")) {
             this.editTextBerechnungsfaktor.setText(result);
         } else if (tag.contains("selection-waehrung")) {
@@ -127,7 +127,7 @@ public class AuftragsdatenFragment extends MyTimestampFragment implements Accord
             public void onClick(View v) {
                 hideSoftKeyboard(v);
                 mapAuftragsdaten();
-                ((NewMissionActivity) getActivity()).onSubmit(AuftragsdatenFragment.this.auftrag);
+                ((NewProjectActivity) getActivity()).onSubmit(AuftragsdatenFragment.this.auftrag);
             }
         });
 
@@ -136,15 +136,15 @@ public class AuftragsdatenFragment extends MyTimestampFragment implements Accord
         this.editTextAuftraggeber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String[] itemList = ((NewMissionActivity) getActivity()).getArrayAuftraggeberFirma();
+                String[] itemList = ((NewProjectActivity) getActivity()).getArrayAuftraggeberFirma();
                 if (null != itemList && 0 < itemList.length) {
                     hideSoftKeyboard(v);
                     SelectionDialogFragment dialogFragment = SelectionDialogFragment.newInstance("Auftraggeber auswählen", itemList);
                     dialogFragment.setTargetFragment(AuftragsdatenFragment.this, 1);
-                    ((NewMissionActivity) getActivity()).showDialogFragment(dialogFragment, "selection-auftraggeber");
+                    ((NewProjectActivity) getActivity()).showDialogFragment(dialogFragment, "selection-auftraggeber");
                 } else {
                     try {
-                        ((NewMissionActivity) getActivity()).renderFragment(AuftraggeberdatenFragment.TAG, R.id.activityNewMissionWrapper, true);
+                        ((NewProjectActivity) getActivity()).renderFragment(AuftraggeberdatenFragment.TAG, R.id.activityNewMissionWrapper, true, true);
                     } catch (AndroidException e) {
                         Log.e(TAG, e.getMessage());
                     }
@@ -157,7 +157,7 @@ public class AuftragsdatenFragment extends MyTimestampFragment implements Accord
             @Override
             public void onClick(View v) {
                 try {
-                    ((NewMissionActivity) getActivity()).renderFragment(AuftraggeberdatenFragment.TAG, R.id.activityNewMissionWrapper, true);
+                    ((NewProjectActivity) getActivity()).renderFragment(AuftraggeberdatenFragment.TAG, R.id.activityNewMissionWrapper, true, true);
                 } catch (AndroidException e) {
                     Log.e(TAG, e.getMessage());
                 }
@@ -171,7 +171,7 @@ public class AuftragsdatenFragment extends MyTimestampFragment implements Accord
                 hideSoftKeyboard(v);
                 SelectionDialogFragment dialogFragment = SelectionDialogFragment.newInstance("Währung auswählen", getResources().getStringArray(R.array.listWaehrung));
                 dialogFragment.setTargetFragment(AuftragsdatenFragment.this, 2);
-                ((NewMissionActivity) getActivity()).showDialogFragment(dialogFragment, "selection-waehrung");
+                ((NewProjectActivity) getActivity()).showDialogFragment(dialogFragment, "selection-waehrung");
             }
         });
         this.buttonWaehrung.setText("€");
@@ -183,7 +183,7 @@ public class AuftragsdatenFragment extends MyTimestampFragment implements Accord
                 hideSoftKeyboard(v);
                 SelectionDialogFragment dialogFragment = SelectionDialogFragment.newInstance("Berechnungsfaktor auswählen", getResources().getStringArray(R.array.listBerechnungsfaktor));
                 dialogFragment.setTargetFragment(AuftragsdatenFragment.this, 3);
-                ((NewMissionActivity) getActivity()).showDialogFragment(dialogFragment, "selection-berechnungsfaktor");
+                ((NewProjectActivity) getActivity()).showDialogFragment(dialogFragment, "selection-berechnungsfaktor");
             }
         });
         this.editTextNotiz = (TextInputEditText) this.view.findViewById(R.id.editTextAuftragsdatenNotiz);
@@ -201,7 +201,7 @@ public class AuftragsdatenFragment extends MyTimestampFragment implements Accord
             this.auftrag.setNotiz(value);
         }
         if (hasStringValue(value = String.valueOf(this.editTextAuftraggeber.getText()))) {
-            this.auftrag.setAuftraggeber(((NewMissionActivity) getActivity()).getAuftraggeber(value));
+            this.auftrag.setAuftraggeber(((NewProjectActivity) getActivity()).getAuftraggeber(value));
         }
     }
 

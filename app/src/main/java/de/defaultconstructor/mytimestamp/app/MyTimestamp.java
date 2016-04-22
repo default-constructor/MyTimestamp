@@ -6,6 +6,7 @@ import android.util.Log;
 
 import de.defaultconstructor.mytimestamp.app.exception.ServiceException;
 import de.defaultconstructor.mytimestamp.app.model.Benutzer;
+import de.defaultconstructor.mytimestamp.app.model.Projekt;
 import de.defaultconstructor.mytimestamp.app.service.MyTimestampService;
 
 /**

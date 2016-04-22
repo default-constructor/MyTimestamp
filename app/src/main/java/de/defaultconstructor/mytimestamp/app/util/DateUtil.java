@@ -13,8 +13,9 @@ public final class DateUtil {
 
     public static final String TAG = "DateUtil";
 
+    private static final SimpleDateFormat FORMATTER_DATE = new SimpleDateFormat("dd.MM.yyyy");
     private static final SimpleDateFormat FORMATTER_ISO8601 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-    private static final SimpleDateFormat FORMATTER_TIME = new SimpleDateFormat("hh:mm:ss");
+    private static final SimpleDateFormat FORMATTER_TIME = new SimpleDateFormat("hh:mm");
 
     private DateUtil() {
         //
@@ -27,13 +28,14 @@ public final class DateUtil {
      * @return
      */
     public static Date changeDateInDays(int days, Date date) {
-        if (null == date) {
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + days);
+            return calendar.getTime();
+        } catch (NullPointerException e) {
             return null;
         }
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + days);
-        return calendar.getTime();
     }
 
     /**
@@ -48,13 +50,14 @@ public final class DateUtil {
      * @return date, um months veraendert
      */
     public static Date changeDateInMonths(int months, Date date) {
-        if (null == date) {
+        try {
+            Calendar calendar = new GregorianCalendar();
+            calendar.setTime(date);
+            calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + months);
+            return calendar.getTime();
+        } catch (NullPointerException e) {
             return null;
         }
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(date);
-        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + months);
-        return calendar.getTime();
     }
 
     /**
@@ -69,13 +72,14 @@ public final class DateUtil {
      * @return date, um years veraendert
      */
     public static Date changeDateInYears(int years, Date date) {
-        if (null == date) {
+        try {
+            Calendar calendar = new GregorianCalendar();
+            calendar.setTime(date);
+            calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + years);
+            return calendar.getTime();
+        } catch (NullPointerException e) {
             return null;
         }
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(date);
-        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + years);
-        return calendar.getTime();
     }
 
     public static Date getDate(int year, int monthOfYear, int dayOfMonth, int hourOfDay, int minute, int second) {
@@ -95,12 +99,11 @@ public final class DateUtil {
      * @return
      */
     public static Date getDateFromString(String string) {
-        if (null == string) {
-            return null;
-        }
         try {
-            return new SimpleDateFormat("dd.MM.yyyy").parse(string);
+            return FORMATTER_DATE.parse(string);
         } catch (ParseException e) {
+            return null;
+        } catch (NullPointerException e) {
             return null;
         }
     }
@@ -110,40 +113,57 @@ public final class DateUtil {
             return FORMATTER_ISO8601.parse(string);
         } catch (ParseException e) {
             return null;
+        } catch (NullPointerException e) {
+            return null;
         }
     }
 
     public static String getDateStringFromDate(Date date) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
         try {
-            return formatter.format(date);
+            return FORMATTER_DATE.format(date);
         } catch (NullPointerException e) {
             return null;
         }
     }
 
     public static int getDayOfMonthFromDate(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        return calendar.get(Calendar.DAY_OF_MONTH);
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            return calendar.get(Calendar.DAY_OF_MONTH);
+        } catch (NullPointerException e) {
+            return -1;
+        }
     }
 
     public static int getHourFromDate(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        return calendar.get(Calendar.HOUR_OF_DAY);
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            return calendar.get(Calendar.HOUR_OF_DAY);
+        } catch (NullPointerException e) {
+            return -1;
+        }
     }
 
     public static int getMinutesFromDate(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        return calendar.get(Calendar.MINUTE);
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            return calendar.get(Calendar.MINUTE);
+        } catch (NullPointerException e) {
+            return -1;
+        }
     }
 
     public static int getMonthOfYearFromDate(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        return calendar.get(Calendar.MONTH);
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            return calendar.get(Calendar.MONTH);
+        } catch (NullPointerException e) {
+            return -1;
+        }
     }
 
     public static String getStringFromDateISO8601(Date date) {
@@ -171,8 +191,12 @@ public final class DateUtil {
     }
 
     public static int getYearFromDate(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        return calendar.get(Calendar.YEAR);
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            return calendar.get(Calendar.YEAR);
+        } catch (NullPointerException e) {
+            return -1;
+        }
     }
 }

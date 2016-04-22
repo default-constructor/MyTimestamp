@@ -165,5 +165,7 @@ public class Benutzer extends Person implements DatabaseEntity {
     public Benutzer() {
         setAdresse(new Adresse());
         setKontakt(new Kontakt());
+        setBerufsstatus(Berufsstatus.ANGESTELLT); // FIXME wieder ausbauen
+        setGeburtsdatum(new Date()); // FIXME wieder ausbauen
     }
 }

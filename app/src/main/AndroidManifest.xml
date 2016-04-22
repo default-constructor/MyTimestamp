@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="de.defaultconstructor.mytimestamp.app.android.activities.MainActivity"
+            android:name=".app.android.activities.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,14 +18,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="de.defaultconstructor.mytimestamp.app.android.activities.SettingsActivity"
+            android:name=".app.android.activities.SettingsActivity"
             android:label="Einstellungen"
-            android:parentActivityName="de.defaultconstructor.mytimestamp.app.android.activities.MainActivity"
-            android:windowSoftInputMode="stateHidden"/>
+            android:parentActivityName=".app.android.activities.MainActivity"
+            android:windowSoftInputMode="stateHidden">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".app.android.activities.MainActivity"/>
+        </activity>
         <activity
-            android:name="de.defaultconstructor.mytimestamp.app.android.activities.NewMissionActivity"
+            android:name=".app.android.activities.NewProjectActivity"
             android:label="Neuer Auftrag"
-            android:parentActivityName="de.defaultconstructor.mytimestamp.app.android.activities.MainActivity"
-            android:windowSoftInputMode="stateHidden"/>
+            android:parentActivityName=".app.android.activities.MainActivity"
+            android:windowSoftInputMode="stateHidden">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".app.android.activities.MainActivity"/>
+        </activity>
     </application>
 </manifest>

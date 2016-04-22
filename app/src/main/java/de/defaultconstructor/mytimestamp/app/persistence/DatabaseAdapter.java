@@ -245,10 +245,10 @@ public class DatabaseAdapter {
                 "CREATE TABLE " + NAME_TABLE_BENUTZER + " (" +
                         COLUMNS_TABLE_BENUTZER[0] + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         COLUMNS_TABLE_BENUTZER[1] + " INTEGER DEFAULT 0, " +
-                        COLUMNS_TABLE_BENUTZER[2] + " TEXT NOT NULL, " +
-                        COLUMNS_TABLE_BENUTZER[3] + " DATE NOT NULL, " +
-                        COLUMNS_TABLE_BENUTZER[4] + " TEXT NOT NULL, " +
-                        COLUMNS_TABLE_BENUTZER[5] + " TEXT NOT NULL, " +
+                        COLUMNS_TABLE_BENUTZER[2] + " TEXT NOT NULL," +
+                        COLUMNS_TABLE_BENUTZER[3] + " TEXT, " + // FIXME NOT NULL wieder einbauen
+                        COLUMNS_TABLE_BENUTZER[4] + " DATE NOT NULL, " +
+                        COLUMNS_TABLE_BENUTZER[5] + " TEXT, " + // FIXME NOT NULL wieder einbauen
                         COLUMNS_TABLE_BENUTZER[6] + " INTEGER, " +
                         COLUMNS_TABLE_BENUTZER[7] + " INTEGER, " +
                         "FOREIGN KEY (" + COLUMNS_TABLE_BENUTZER[6] + ") " +

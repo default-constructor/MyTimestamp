@@ -21,32 +21,31 @@ public class MyTimestampActivity extends AppCompatActivity {
 
     protected Map<String, MyTimestampFragment> mapFragments = new HashMap<>();
 
-    protected String tagCurrentFragment;
-
-    public MyTimestampFragment getCurrentFragment() {
-        return mapFragments.get(tagCurrentFragment);
-    }
-
     public void showDialogFragment(DialogFragment dialogFragment, String id) {
         dialogFragment.show(getSupportFragmentManager(), "dialog-" + id);
     }
 
-    public void renderFragment(String tag, int containerViewId, boolean forceNewInstance) throws AndroidException {
+    public void renderFragment(String tag, int containerViewId, boolean forceNewInstance, boolean addToBackStack) throws AndroidException {
         if (!this.mapFragments.containsKey(tag) || forceNewInstance) {
             this.mapFragments.put(tag, MyTimestampFragment.newInstance(tag));
         }
-        renderFragment(this.mapFragments.get(tag), containerViewId);
+        renderFragment(this.mapFragments.get(tag), containerViewId, addToBackStack);
     }
 
-    private void renderFragment(Fragment fragment, int containerViewId) {
+    public void renderFragment(String tag, int containerViewId, boolean forceNewInstance) throws AndroidException {
+        renderFragment(tag, containerViewId, forceNewInstance, false);
+    }
+
+    private void renderFragment(Fragment fragment, int containerViewId, boolean addToBackStack) {
         if (null == fragment) {
             return;
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        if (addToBackStack) {
+            fragmentTransaction.addToBackStack(fragment.getTag());
+        }
         fragmentTransaction.replace(containerViewId, fragment);
-        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-        this.tagCurrentFragment = ((MyTimestampFragment) fragment).getFragmentTag();
     }
 }

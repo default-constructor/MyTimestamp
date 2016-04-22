@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import de.defaultconstructor.mytimestamp.R;
-import de.defaultconstructor.mytimestamp.app.android.activities.NewMissionActivity;
+import de.defaultconstructor.mytimestamp.app.android.activities.NewProjectActivity;
 import de.defaultconstructor.mytimestamp.app.android.components.DateTimeEditText;
 import de.defaultconstructor.mytimestamp.app.model.Projekt;
 import de.defaultconstructor.mytimestamp.app.util.DateUtil;
@@ -71,7 +71,7 @@ public class ProjektdatenFragment extends MyTimestampFragment {
             public void onClick(View v) {
                 hideSoftKeyboard(v);
                 mapProjektdaten();
-                ((NewMissionActivity) getActivity()).onSubmit(ProjektdatenFragment.this.projekt);
+                ((NewProjectActivity) getActivity()).onSubmit(ProjektdatenFragment.this.projekt);
             }
         });
 
