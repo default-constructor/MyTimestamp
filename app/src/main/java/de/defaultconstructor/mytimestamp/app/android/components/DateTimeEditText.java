@@ -8,7 +8,6 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -17,9 +16,9 @@ import android.widget.LinearLayout;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import de.defaultconstructor.mytimestamp.app.android.util.FragmentUtil;
 import de.defaultconstructor.mytimestamp.app.android.fragments.DatePickerDialogFragment;
 import de.defaultconstructor.mytimestamp.app.android.fragments.TimePickerDialogFragment;
 import de.defaultconstructor.mytimestamp.app.util.DateUtil;
@@ -77,7 +76,7 @@ public class DateTimeEditText extends LinearLayout {
     public DateTimeEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.activity = (FragmentActivity) context;
-        this.fragment = getFragment(this.activity);
+        this.fragment = FragmentUtil.getFragment(this.activity);
         for (int i = 0; i < attrs.getAttributeCount(); i++) {
             this.mapAttributes.put(attrs.getAttributeName(i), attrs.getAttributeValue(i));
         }
@@ -99,7 +98,10 @@ public class DateTimeEditText extends LinearLayout {
             builder.append(String.valueOf(this.editTextDate.getText()));
         }
         if (this.withEditTextTime) {
-            builder.append(" ").append(String.valueOf(this.editTextTime.getText()));
+            if (this.withEditTextDate) {
+                builder.append(" ");
+            }
+            builder.append(String.valueOf(this.editTextTime.getText()));
         }
         return Editable.Factory.getInstance().newEditable(builder.toString());
     }
@@ -122,17 +124,6 @@ public class DateTimeEditText extends LinearLayout {
         editText.setHint(hint);
         editText.setOnClickListener(onClickListener);
         return editText;
-    }
-
-    private Fragment getFragment(FragmentActivity activity) {
-        FragmentManager fragmentManager = activity.getSupportFragmentManager();
-        List<Fragment> fragmentList = fragmentManager.getFragments();
-        for (Fragment fragment : fragmentList) {
-            if (fragment.isVisible()) {
-                return fragment;
-            }
-        }
-        return null;
     }
 
     private TextInputLayout getTextInputLayout(TextInputEditText editText) {

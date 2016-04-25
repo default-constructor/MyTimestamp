@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:context="de.defaultconstructor.mytimestamp.app.android.activities.SettingsActivity">
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/activitySettingsWrapper"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:padding="8dp"/>
 </ScrollView>

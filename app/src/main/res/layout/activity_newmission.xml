@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:context=".app.android.activities.NewProjectActivity">
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/activityNewMissionWrapper"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:padding="8dp"/>
 </ScrollView>

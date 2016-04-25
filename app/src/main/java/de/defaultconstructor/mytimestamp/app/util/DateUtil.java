@@ -15,7 +15,7 @@ public final class DateUtil {
 
     private static final SimpleDateFormat FORMATTER_DATE = new SimpleDateFormat("dd.MM.yyyy");
     private static final SimpleDateFormat FORMATTER_ISO8601 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-    private static final SimpleDateFormat FORMATTER_TIME = new SimpleDateFormat("hh:mm");
+    private static final SimpleDateFormat FORMATTER_TIME = new SimpleDateFormat("HH:mm");
 
     private DateUtil() {
         //

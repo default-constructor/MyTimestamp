@@ -1,5 +1,6 @@
 package de.defaultconstructor.mytimestamp.app.android.fragments;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -27,15 +29,21 @@ public class ProjekteFragment extends Fragment {
 
     public static final String TAG = "ProjekteFragment";
 
-    private static final String PROJEKTSTATUS_ABGESCHLOSSEN = "abgeschlossen";
-    private static final String PROJEKTSTATUS_LAUFEND = "laufend";
-    private static final String PROJEKTSTATUS_ANSTEHEND = "anstehend";
-
-    public static ProjekteFragment newInstance(String title, String projektstatus, String platzhalterText) {
+    public static ProjekteFragment newInstance(String title, boolean titleIconLeft,
+                                               boolean titleIconRight, List<Auftrag> auftragList) {
         Bundle bundle = new Bundle();
-        bundle.putString("titel", title);
+        bundle.putString("title", title);
+        bundle.putBoolean("titleIconLeft", titleIconLeft);
+        bundle.putBoolean("titleIconRight", titleIconRight);
+        ProjekteFragment fragment = new ProjekteFragment();
+        fragment.auftragList = auftragList;
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    public static ProjekteFragment newInstance(String platzhalterText) {
+        Bundle bundle = new Bundle();
         bundle.putString("platzhalterText", platzhalterText);
-        bundle.putString("projektstatus", projektstatus);
         ProjekteFragment fragment = new ProjekteFragment();
         fragment.setArguments(bundle);
         return fragment;
@@ -51,8 +59,8 @@ public class ProjekteFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        this.activity = (MainActivity) getActivity();
-        this.auftragList = this.activity.getAuftragList();
+        this.activity = (MainActivity) getActivity();/*
+        this.auftragList = this.activity.getAuftragList();*/
         this.bundle = getArguments();
         initialize();
     }
@@ -61,51 +69,22 @@ public class ProjekteFragment extends Fragment {
 
     private View view;
     private LinearLayout containerProjekte;
+    private RelativeLayout containerTitel;
 
     private String platzhalterText;
-    private String projektstatus;
     private String titel;
+    private boolean titleIconLeft;
+    private boolean titleIconRight;
 
     private Bundle bundle;
 
-    private List<Auftrag> auftragList;
-
-    private void displayProjekte() {
-        List<Auftrag> displayedProjekte = new ArrayList<>();
-        for (Auftrag auftrag : this.auftragList) {
-            switch (this.projektstatus) {
-                case PROJEKTSTATUS_ABGESCHLOSSEN:
-                    if (Projekt.isAbgeschlossen(auftrag.getProjekt())) {
-                        displayedProjekte.add(auftrag);
-                    }
-                    break;
-                case PROJEKTSTATUS_ANSTEHEND:
-                    if (Projekt.isAnstehend(auftrag.getProjekt())) {
-                        displayedProjekte.add(auftrag);
-                    }
-                    break;
-                case PROJEKTSTATUS_LAUFEND:
-                    if (Projekt.isLaufend(auftrag.getProjekt())) {
-                        displayedProjekte.add(auftrag);
-                    }
-                    break;
-                default:
-                    //
-            }
-        }
-        if (displayedProjekte.isEmpty()) {
-            this.containerProjekte.addView(getPlaceholderView());
-        } else {
-            this.containerProjekte.addView(getProjektListView(displayedProjekte));
-        }
-    }
+    private List<Auftrag> auftragList = new ArrayList<>();
 
     private LinearLayout getProjektListView(List<Auftrag> auftragList) {
         LinearLayout listWrapper = new LinearLayout(getActivity());
         listWrapper.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         listWrapper.setOrientation(LinearLayout.VERTICAL);
-        listWrapper.setPadding(8, 8, 8, 8);
         for (Auftrag auftrag : auftragList) {
             listWrapper.addView(getAuftragListItem(auftrag));
         }
@@ -115,12 +94,17 @@ public class ProjekteFragment extends Fragment {
     private ProjektListItemView getAuftragListItem(Auftrag auftrag) {
         ProjektListItemView listItemView = new ProjektListItemView(getActivity());
         listItemView.setPrimaryText(auftrag.getProjekt().getName());
+        Projekt projekt = auftrag.getProjekt();
         String secondaryText;
-        if (null != auftrag.getProjekt().getEnde()) {
-            secondaryText = "von " + DateUtil.getDateStringFromDate(auftrag.getProjekt().getBeginn()) +
-                    " bis " + DateUtil.getDateStringFromDate(auftrag.getProjekt().getEnde());
+        if (null != projekt.getEnde()) {
+            secondaryText = "von " + DateUtil.getDateStringFromDate(projekt.getBeginn()) +
+                    " bis " + DateUtil.getDateStringFromDate(projekt.getEnde());
         } else {
-            secondaryText = "ab " + DateUtil.getDateStringFromDate(auftrag.getProjekt().getBeginn());
+            if (Projekt.isAnstehend(projekt)) {
+                secondaryText = "ab " + DateUtil.getDateStringFromDate(projekt.getBeginn());
+            } else {
+                secondaryText = "seit " + DateUtil.getDateStringFromDate(projekt.getBeginn());
+            }
         }
         listItemView.setSecondaryText(secondaryText);
         listItemView.setPrimaryTextInfo(auftrag.getAuftraggeber().getFirma());
@@ -128,10 +112,21 @@ public class ProjekteFragment extends Fragment {
         auftragListItem.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.drawable_auftraglist_item));*/
     }
 
+    private RelativeLayout.LayoutParams getLayoutParams(int... rules) {
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout
+                .LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        if (null != rules) {
+            for (int rule : rules) {
+                layoutParams.addRule(rule);
+            }
+        }
+        return layoutParams;
+    }
+
     private TextView getPlaceholderView() {
-        TextView textViewPlaceholder = new TextView(getActivity());
+        TextView textViewPlaceholder = new TextView(this.activity);
         textViewPlaceholder.setGravity(Gravity.CENTER);
-        textViewPlaceholder.setHeight(256);
+        textViewPlaceholder.setHeight(128);
         textViewPlaceholder.setText(this.platzhalterText);
         textViewPlaceholder.setTextSize(16);
         return textViewPlaceholder;
@@ -139,23 +134,43 @@ public class ProjekteFragment extends Fragment {
 
     private void initialize() {
         this.platzhalterText = this.bundle.getString("platzhalterText");
-        this.projektstatus = this.bundle.getString("projektstatus");
-        this.titel = this.bundle.getString("titel");
-        this.containerProjekte = (LinearLayout) this.view.findViewById(R.id.linearLayoutFragmentProjekteWrapperProjekte);
+        this.titel = this.bundle.getString("title");
+        this.titleIconLeft = this.bundle.getBoolean("titleIconLeft");
+        this.titleIconRight = this.bundle.getBoolean("titleIconRight");
         initializeTitle();
-        displayProjekte();
+        initializeProjektList();
+    }
+
+    private void initializeProjektList() {
+        this.containerProjekte = (LinearLayout) this.view
+                .findViewById(R.id.linearLayoutFragmentProjekteWrapperProjekte);
+        if (this.auftragList.isEmpty()) {
+            this.containerProjekte.addView(getPlaceholderView());
+        } else {
+            this.containerProjekte.addView(getProjektListView(this.auftragList));
+        }
     }
 
     private void initializeTitle() {
-        if (!PROJEKTSTATUS_ABGESCHLOSSEN.equals(this.projektstatus)) {
-            ImageView imageViewLeftIcon = (ImageView) this.view.findViewById(R.id.imageViewFragmentProjekteTitelIconLeft);
-            imageViewLeftIcon.setImageResource(R.drawable.ic_keyboard_arrow_left_black_48dp);
+        this.containerTitel = (RelativeLayout) this.view.findViewById(R.id.fragmentProjekteTitel);
+        if (this.titleIconLeft) {
+            ImageView imageViewIconLeft = new ImageView(this.activity);
+            imageViewIconLeft.setImageResource(R.drawable.ic_keyboard_arrow_left_black_48dp);
+            this.containerTitel.addView(imageViewIconLeft, getLayoutParams(RelativeLayout.ALIGN_PARENT_START));
         }
-        TextView textView = (TextView) this.view.findViewById(R.id.textViewFragmentProjekteTitelText);
-        textView.setText(this.titel);
-        if (!PROJEKTSTATUS_ANSTEHEND.equals(this.projektstatus)) {
-            ImageView imageViewRightIcon = (ImageView) this.view.findViewById(R.id.imageViewFragmentProjekteTitelIconRight);
-            imageViewRightIcon.setImageResource(R.drawable.ic_keyboard_arrow_right_black_48dp);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup
+                .LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        TextView textViewTitel = new TextView(this.activity);
+        textViewTitel.setLayoutParams(layoutParams);
+        textViewTitel.setGravity(Gravity.CENTER);
+        textViewTitel.setText(this.titel);
+        textViewTitel.setTextSize(16);
+        textViewTitel.setTypeface(null, Typeface.BOLD);
+        this.containerTitel.addView(textViewTitel);
+        if (this.titleIconRight) {
+            ImageView imageViewIconRight = new ImageView(this.activity);
+            imageViewIconRight.setImageResource(R.drawable.ic_keyboard_arrow_right_black_48dp);
+            this.containerTitel.addView(imageViewIconRight, getLayoutParams(RelativeLayout.ALIGN_PARENT_END));
         }
     }
 }

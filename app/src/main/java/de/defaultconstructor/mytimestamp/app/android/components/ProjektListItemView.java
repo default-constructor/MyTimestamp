@@ -72,7 +72,7 @@ public class ProjektListItemView extends RelativeLayout {
     private void initialize() {
         setBackgroundColor(Color.GREEN);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 80);
-        layoutParams.setMargins(0, 8, 0, 0);
+        layoutParams.setMargins(0, 0, 0, 8);
         setLayoutParams(layoutParams);
         setPadding(16, 8, 16, 8);
 

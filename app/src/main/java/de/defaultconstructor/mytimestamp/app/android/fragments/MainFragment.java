@@ -13,18 +13,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import de.defaultconstructor.mytimestamp.R;
 import de.defaultconstructor.mytimestamp.app.android.activities.MainActivity;
 import de.defaultconstructor.mytimestamp.app.android.activities.NewProjectActivity;
+import de.defaultconstructor.mytimestamp.app.android.components.ProjektListView;
+import de.defaultconstructor.mytimestamp.app.model.Auftrag;
 import de.defaultconstructor.mytimestamp.app.model.Projekt;
 
 /**
@@ -52,25 +57,51 @@ public class MainFragment extends MyTimestampFragment {
         super.onResume();
         this.activity = (MainActivity) getActivity();
         initializeInfoContainer();
+        this.projektListView = new ProjektListView(this.activity);
+        this.projektListView.setAuftragList(this.activity.getAuftragList());
+        this.containerProjekteWrapper = (RelativeLayout) this.view.findViewById(R.id.fragmentMainProjekteWrapper );
+        this.containerProjekteWrapper.addView(this.projektListView);/*
         this.adapter = new Adapter(this.activity.getSupportFragmentManager());
+        this.adapter.initializeAdapter(this.activity.getAuftragList());
         this.viewPager = (ViewPager) this.view.findViewById(R.id.viewPagerFragmentMain);
         this.viewPager.setAdapter(this.adapter);
         MainFragment.currentPosition = getCurrentPosition();
         this.viewPager.setCurrentItem(MainFragment.currentPosition);
         this.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                //
-            }
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
             @Override
             public void onPageSelected(int position) {
                 MainFragment.currentPosition = position;
             }
             @Override
-            public void onPageScrollStateChanged(int state) {
-                //
-            }
-        });
+            public void onPageScrollStateChanged(int state) {}
+        });*/
+    }
+
+    @Override
+    protected void setEnableButtonSubmit() {}
+
+    Thread refreshThread;
+
+    private FloatingActionButton buttonNeuerAuftrag;
+
+    private LinearLayout containerInfo;
+
+    private TextView textViewCurrentDate;
+
+    private MainActivity activity;
+    private View view;
+    private RelativeLayout containerProjekteWrapper;
+    private ProjektListView projektListView;
+    private ViewPager viewPager;
+
+    public MainFragment() {
+        super();
+    }
+
+    public Projekt getCurrentProjekt() {
+        return MainFragment.currentProjekt;
     }
 
     private int getCurrentPosition() {
@@ -88,35 +119,13 @@ public class MainFragment extends MyTimestampFragment {
         }
     }
 
-    @Override
-    protected void setEnableButtonSubmit() {
-        //
-    }
-
-    Thread refreshThread;
-
-    private FloatingActionButton buttonNeuerAuftrag;
-
-    private LinearLayout containerInfo;
-
-    private TextView textViewCurrentDate;
-
-    private MainActivity activity;
-    private View view;
-    private ViewPager viewPager;
-    private Adapter adapter;
-
-    public MainFragment() {
-        super();
-    }
-
     private void initializeInfoContainer() {
         this.textViewCurrentDate = new TextView(this.activity);
         this.textViewCurrentDate.setTypeface(null, Typeface.BOLD);/*
         TextView userName = (TextView) view.findViewById(R.id.textview_user);
         userName.setText(MyTimestamp.currentBenutzer.getVorname() + " " +
                 MyTimestamp.currentBenutzer.getFamilienname());*/
-        this.containerInfo = (LinearLayout) this.view.findViewById(R.id.fragmentMainInfoWrapper);
+        this.containerInfo = (LinearLayout) this.view.findViewById(R.id.fragmentMainInfo);
         this.containerInfo.addView(this.textViewCurrentDate);
         setTextViewCurrentDate();
         this.buttonNeuerAuftrag = (FloatingActionButton) this.view.findViewById(R.id.buttonNeuerAuftrag);
@@ -151,40 +160,5 @@ public class MainFragment extends MyTimestampFragment {
             }
         });
         this.refreshThread.start();
-    }
-
-    private static class Adapter extends FragmentStatePagerAdapter {
-
-        private static final String[] PROJEKTSTATUS = new String[] {
-                "abgeschlossen", "laufend", "anstehend" };
-
-        @Override
-        public int getCount() {
-            return PROJEKTSTATUS.length;
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            ProjekteFragment fragment = this.fragmentMap.get(position);
-            if (null == fragment) {
-                return ProjekteFragment
-                        .newInstance(PROJEKTSTATUS[position] + "e Projekte", PROJEKTSTATUS[position],
-                                "Du hast keine\n" + PROJEKTSTATUS[position] + "en Projekte.");
-            }
-            return fragment;
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            ProjekteFragment fragment = (ProjekteFragment) super.instantiateItem(container, position);
-            this.fragmentMap.put(position, fragment);
-            return fragment;
-        }
-
-        private Map<Integer, ProjekteFragment> fragmentMap = new HashMap<>();
-
-        public Adapter(FragmentManager fm) {
-            super(fm);
-        }
     }
 }
